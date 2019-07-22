@@ -2,11 +2,12 @@
 #define PLAYER_H
 #include <vector>
 #include <string>
+#include "subject.h"
 
 // declaration
 Class Card;
 
-Class Player {
+Class Player : public Subject {
 	std::string playerName;
 	int life;
 	int magic;
@@ -33,6 +34,7 @@ public:
 
 	bool die();
 	void gainMagic();
+	void loadDeck();
 	void beAttacked(int damage);
 	// notify?
 

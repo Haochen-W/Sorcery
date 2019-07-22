@@ -5,12 +5,9 @@
 class Decorator: public Minion {
 protected:
 	Minion * component;
-	Minion * prevComponent
 public:
-	Decorator(Minion * component, Minion * prevComponent);
+	Decorator(Minion * component);
 	// virtual ~Decorator(); ??
-
-	Minion * unwrap(); // unwrap one step, return prevComponent
 };
 
 #endif
