@@ -7,7 +7,7 @@ protected:
 	Minion * component;
 public:
 	Decorator(Minion * component);
-	// virtual ~Decorator(); ??
+	virtual ~Decorator();
 };
 
 #endif

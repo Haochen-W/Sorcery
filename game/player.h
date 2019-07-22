@@ -5,15 +5,15 @@
 #include "subject.h"
 
 // declaration
-Class Card;
+class Card;
 
-Class Player : public Subject {
+class Player : public Subject {
 	std::string playerName;
 	int life;
 	int magic;
 	std::vector<Card *> deck;
 	std::vector<Card *> hand;
-	std::vector<Card *> minionSlot;
+	std::vector<Card *> minionslot;
 	std::vector<Card *> graveyard;
 	Card * activeRitual;
 
@@ -21,16 +21,16 @@ public:
 	Player(std::string playerName);
 	~Player();
 
-	void drawCard(); // draws a card from deck, add to hand, check if hand is full
+	void drawcard(); // draws a card from deck, add to hand, check if hand is full
 	void disgard(int i); // erase ith card in hand
-	void attack(int i, player * p); // use minion i to attack player
-	void attack(int i, player * p, int j); // use minion i to attack minion j
+	void attack(int i, Player * p); // use minion i to attack player
+	void attack(int i, Player * p, int j); // use minion i to attack minion j
 	void play(int i); // play the ith card, minion, ritual, spell
-	void play(int i, player * p); // play the ith card on player p's ritual
-	void play(int i, player * p, int t); // play the ith card on on player p's minion t
+	void play(int i, Player * p); // play the ith card on player p's ritual
+	void play(int i, Player * p, int t); // play the ith card on on player p's minion t
 	void use(int i); // use minion i
-	void use(int i, player * p); // use minion i on player p's ritual
-	void use(int i, player * p, int t); // use minion i on player p's minion t
+	void use(int i, Player * p); // use minion i on player p's ritual
+	void use(int i, Player * p, int t); // use minion i on player p's minion t
 
 	bool die();
 	void gainMagic();

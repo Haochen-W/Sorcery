@@ -11,7 +11,7 @@ public:
 	Card(std::string cardName, int cost);
 
 	virtual int minionAttack(); // return damage, override in minion only
-	virtual int minionAttack(Card * minioni); // attack ith minion, override in minion only
+	virtual int minionAttack(int i); // attack ith minion, override in minion only
 	virtual Card * playCard() = 0; // return minion / ritual, and place it into minion slot
 	virtual void playCard(Card * target) = 0; 
 	virtual void useMinion(); // override in minion only
