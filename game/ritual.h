@@ -4,7 +4,7 @@
 #include <iostream>
 #include "card.h"
 
-Class Ritual : public Card { // observer
+class Ritual : public Card { // observer
 	int activationCost;
 	int charge;
 	// effect

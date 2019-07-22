@@ -4,7 +4,7 @@
 #include <iostream>
 #include "card.h"
 
-Class Spell : public Card {
+class Spell : public Card {
 	// effect
 
 public:

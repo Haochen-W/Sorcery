@@ -3,7 +3,7 @@
 #include <string>
 #include <iostream>
 
-Class Card {
+class Card {
 	std::string cardName;
 	int cost;
 

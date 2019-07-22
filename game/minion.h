@@ -4,7 +4,7 @@
 #include <iostream>
 #include "card.h"
 
-Class Minion : public Card {
+class Minion : public Card {
 	int attactval;
 	int defenceval;
 	int action;

@@ -45,16 +45,38 @@ int main()
 		std::cout << EXTERNAL_BORDER_CHAR_UP_DOWN << std::endl;
 	}
 
-	std::cout << EXTERNAL_BORDER_CHAR_BOTTOM_LEFT;
-
-	for(int i = 0; i < 165; i++){
-		std::cout << EXTERNAL_BORDER_CHAR_LEFT_RIGHT;
-	}
-
-	std::cout << EXTERNAL_BORDER_CHAR_BOTTOM_RIGHT << std::endl;
-
 	for(int i = 0; i < CENTRE_GRAPHIC.size(); i++){
 		std::cout << CENTRE_GRAPHIC[i] << std::endl;
 	}
+
+	for(int i = 0; i < minion1.size(); i++){
+		std::cout << EXTERNAL_BORDER_CHAR_UP_DOWN;
+		std::cout << minion1[i];
+		std::cout << minion2[i];
+		std::cout << minion3[i];
+		std::cout << minion4[i];
+		std::cout << minion5[i];
+		std::cout << EXTERNAL_BORDER_CHAR_UP_DOWN << std::endl;
+	}
+
+	for(int i = 0; i < rit.size(); i++){
+		std::cout << EXTERNAL_BORDER_CHAR_UP_DOWN;
+		std::cout << rit[i];
+		for(int i = 0; i < 33; i++){
+			std::cout << " ";
+		}
+		std::cout << player1[i];
+		for(int i = 0; i < 33; i++){
+			std::cout << " ";
+		}
+		std::cout << minion1[i];
+		std::cout << EXTERNAL_BORDER_CHAR_UP_DOWN << std::endl;
+	}
+
+	std::cout << EXTERNAL_BORDER_CHAR_BOTTOM_LEFT;
+	for(int i = 0; i < 165; i++){
+		std::cout << EXTERNAL_BORDER_CHAR_LEFT_RIGHT;
+	}
+	std::cout << EXTERNAL_BORDER_CHAR_BOTTOM_RIGHT << std::endl;
 	return 0;
 }

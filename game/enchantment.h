@@ -4,7 +4,7 @@
 #include <iostream>
 #include "decorator.h"
 
-Class Enchantment : public Decorator { // decorator
+class Enchantment : public Decorator { // decorator
 	// effect
 
 public:
