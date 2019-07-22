@@ -1,6 +1,7 @@
 #ifndef CARD_H
 #define CARD_H
 #include <string>
+#include <iostream>
 
 Class Card {
 	std::string cardName;
@@ -9,15 +10,14 @@ Class Card {
 public:
 	Card(std::string cardName, int cost);
 
-	int attack(int i, int p); // use minion i to attact player, return damage
-	int attack(int i, int p, int j); // use minion i to attact minion j, return damage
-	void play(int i); // play the ith card, minion, ritual, spell
-	void play(int i, int p); // play the ith card on player p's ritual
-	void play(int i, int p, int t); // play the ith card on on player p's minion t
-	void use(int i); // use minion i
-	void use(int i, int p); // use minion i on player p's ritual
-	void use(int i, int p, int t); // use minion i on player p's minion t
+	virtual int minionAttack(); // return damage, override in minion only
+	virtual int minionAttack(Card * minioni); // attack ith minion, override in minion only
+	virtual Card * playCard() = 0; // return minion / ritual, and place it into minion slot
+	virtual void playCard(Card * target) = 0; 
+	virtual void useMinion(); // override in minion only
+	virtual void useMinion(Card * target); // override in minion only
 
+	// inspect i, hand
 	// friend std::ostream &operator<<(std::ostream &out, const Card c);
 };
 
