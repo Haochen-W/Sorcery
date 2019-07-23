@@ -16,20 +16,30 @@ TextDisplay::TextDisplay(Player * player, int playerNum){
 }
 
 
-TextDisplay::notify(Subject & whoNotified){
+void TextDisplay::notify(Subject & whoNotified){
 	if(whoNotified.getritual()) displayPlayer[0] = (whoNotified.getritual())->getoutput();
 	displayPlayer[2] = whoNotified.getplayercard();
 	if(!(whoNotified.getgraveyard()).empty) displayPlayer[4] = ((whoNotified.getgraveyard()).back())->getoutput();
 
-	for(int i = 0; i < whoNotified.getnumminions(); i++){
+	for(int i = 0; i < (whoNotified.getminionslot()).size(); i++){
 		displayMinionSlot[i] = ((whoNotified.getminionslot())[i])->getoutput();
 	}
-	for(int i = whoNotified.getnumminions(); i < 5; i++){
+	for(int i = (whoNotified.getminionslot()).size(); i < 5; i++){
 		displayMinionSlot[i] = CARD_TEMPLATE_BORDER;
+	}
+
+	for(int i = 0; i < (whoNotified.gethand()).size(); i++){
+		displayHand[i] = ((whoNotified.gethand())[i])->getoutput();
+	}
+	for(int i = (whoNotified.gethand()).size(); i < 5; i++){
+		displayHand[i] = CARD_TEMPLATE_BORDER;
 	}
 }
 
+// outputboard
+// outputhand
+
 std::ostream &operator<<(std::ostream &out, const TextDisplay &td){
-	
+
 }
 

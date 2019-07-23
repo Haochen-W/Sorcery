@@ -15,7 +15,7 @@ public:
 	virtual std::vector<std::string> & getoutput() = 0;
 
 	virtual void playCard(Player * playedby, Player * target) = 0; // place the card on ritual slot
-	virtual void playCard(Card * target) = 0; 
+	virtual void playCard(Player * playedby, Card * target) = 0; 
 
 	// inspect i, hand
 	// friend std::ostream &operator<<(std::ostream &out, const Card c);

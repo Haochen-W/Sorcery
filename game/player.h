@@ -12,7 +12,6 @@ class Player : public Subject {
 	int playerNum;
 	int life;
 	int magic;
-	int numMinions; // number of minions in minion slot
 	std::vector<Card *> deck;
 	std::vector<Card *> hand;
 	std::vector<Card *> minionslot;
@@ -23,6 +22,8 @@ class Player : public Subject {
 public:
 	Player(std::string playerName, int playerNum);
 	~Player();
+
+	std::vector<std::string> & getplayercard();
 
 	void drawcard(); // draws a card from deck, add to hand, check if hand is full
 	void disgard(int i); // erase ith card in hand

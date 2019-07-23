@@ -5,8 +5,10 @@
 #include "observer.h"
 
 class TextDisplay: public Observer { // observer of the player
-	std::vector<std::vector<std::string>> displayPlayer; 
+	std::vector<std::vector<std::string>> displayPlayer;
 	std::vector<std::vector<std::string>> displayMinionSlot;
+	std::vector<std::vector<std::string>> displayHand;
+
 
 public:
 	TextDisplay(); // attach player1 and player2

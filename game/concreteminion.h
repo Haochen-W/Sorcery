@@ -4,9 +4,9 @@
 #include <iostream>
 #include "minion.h"
 
-class Airelement : public Minion {
+class Airelemental : public Minion {
 public:
-	Airelement();
+	Airelemental();
 
 	std::vector<std::string> & getoutput() override;
 
