@@ -101,7 +101,7 @@ int main(int argc, char const *argv[]){
 			
 		} 
 		// play i: play the ith card
-		// minion, ritual, spell with no target
+		// minion, rituadl, spell with no target
 		// play i p t/r : play the ith card on player p's minion t, or on ritual
 		// enchantment and spell with targets
 		else if (cmd == "play"){

@@ -5,22 +5,25 @@
 #include "card.h"
 
 class Minion : public Card {
+protected:
 	int attackval;
 	int defenceval;
+	int abilityCost;
 	int action;
-	// effect
 
 public:
-	Minion(std::string cardName, int cost, int attackval, int defenceval); // effect
+	Minion(std::string cardName, int cost, int attackval, int defenceval, int abilityCost);
 
-	int minionAttack() override; // return damage
-	int minionAttack(int i) override; // call mbeattack on target minion
-	Card * playCard() override; // return the minion, place the minion into minion slot
-	void playCard(Card * target) override; // call effect function on target minion / ritural
-	void useMinion() override; // call effect function
-	void useMinion(Card * target) override; // call effect function on target minion / ritual
+	virtual std::vector<std::string> & getoutput() = 0;
 
-	void causeDamage(int damage); // cause damage on minion
+	void minionAttack(Player * target) override; // return damage
+	void minionAttack(Player * target, int i) override; // call mbeattack on target minion
+	void playCard(Player * playedby, Player * target) override; // place the minion into minion slot
+	void playCard(Player * playedby, Card * target) override; // do nothing
+	vitural void useMinion(Player * playedby, Player * target) = 0; // call activated ability
+	vitural void useMinion(Player * playedby, Card * target) = 0; // with target
+
+	void takeDamage(int damage); // cause damage on minion
 
 	// inspect i, hand
 	// friend std::ostream &operator<<(std::ostream &out, const Card c);

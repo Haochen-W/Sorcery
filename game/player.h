@@ -9,16 +9,19 @@ class Card;
 
 class Player : public Subject {
 	std::string playerName;
+	int playerNum;
 	int life;
 	int magic;
+	int numMinions; // number of minions in minion slot
 	std::vector<Card *> deck;
 	std::vector<Card *> hand;
 	std::vector<Card *> minionslot;
 	std::vector<Card *> graveyard;
 	Card * activeRitual;
+	std::vector<std::string> playerCard;
 
 public:
-	Player(std::string playerName);
+	Player(std::string playerName, int playerNum);
 	~Player();
 
 	void drawcard(); // draws a card from deck, add to hand, check if hand is full

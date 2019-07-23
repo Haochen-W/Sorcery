@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "ascii_graphics.h"
 
 int main()
@@ -78,5 +79,33 @@ int main()
 		std::cout << EXTERNAL_BORDER_CHAR_LEFT_RIGHT;
 	}
 	std::cout << EXTERNAL_BORDER_CHAR_BOTTOM_RIGHT << std::endl;
-	return 0;
+
+	std::cout << std::endl;
+	std::cout << std::endl;
+	std::cout << std::endl;
+
+	std::vector<std::vector<std::string>> displayPlayer; // each player's board
+	
+	displayPlayer.emplace_back(CARD_TEMPLATE_BORDER);
+	displayPlayer.emplace_back(CARD_TEMPLATE_EMPTY);
+	displayPlayer.emplace_back(PLAYER_1_TEMPLATE);
+	displayPlayer.emplace_back(CARD_TEMPLATE_EMPTY);
+	displayPlayer.emplace_back(CARD_TEMPLATE_BORDER);
+
+
+	std::cout << EXTERNAL_BORDER_CHAR_TOP_LEFT;
+
+	for(int i = 0; i < 165; i++){
+		std::cout << EXTERNAL_BORDER_CHAR_LEFT_RIGHT;
+	}
+
+	std::cout << EXTERNAL_BORDER_CHAR_TOP_RIGHT << std::endl;
+	for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
+		std::cout << EXTERNAL_BORDER_CHAR_UP_DOWN;
+		for(int j = 0; j < 5; j++){
+			std::cout << displayPlayer[j][i];
+		}
+		std::cout << EXTERNAL_BORDER_CHAR_UP_DOWN << std::endl;
+	}
+
 }

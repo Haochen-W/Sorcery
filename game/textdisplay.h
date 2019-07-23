@@ -1,16 +1,18 @@
 #ifndef TEXTDISPLAY_H
 #define TEXTDISPLAY_H
 #include <iostream>
+#include <vector>
 #include "observer.h"
 
 class TextDisplay: public Observer { // observer of the player
-	// std::vector<std::string> display ???
+	std::vector<std::vector<std::string>> displayPlayer; 
+	std::vector<std::vector<std::string>> displayMinionSlot;
 
 public:
-	TextDisplay(); // attach player1 and player2 ??
+	TextDisplay(); // attach player1 and player2
 	void notify(Subject & whoNotified) override;
 
-	// friend std::ostream &operator<<(std::ostream &out, const TextDisplay &td);
+	friend std::ostream &operator<<(std::ostream &out, const TextDisplay &td);
 };
 
 #endif
