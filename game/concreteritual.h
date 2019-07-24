@@ -8,7 +8,7 @@ class Darkritual : public Ritual {
 public:
 	Darkritual();
 
-	std::vector<std::string> & getoutput() override;
+	std::vector<std::string> getoutput() override;
 
 	void playCard(Player * playedby, Player * target) override;
 	void playCard(Player * playedby, Card * target) override;
@@ -22,7 +22,7 @@ class Auraofpower : public Ritual {
 public:
 	Auraofpower(); 
 
-	std::vector<std::string> & getoutput() override;
+	std::vector<std::string> getoutput() override;
 
 	void playCard(Player * playedby, Player * target) override;
 	void playCard(Player * playedby, Card * target) override;
@@ -36,7 +36,7 @@ class Standstill : public Ritual {
 public:
 	Standstill(); 
 
-	std::vector<std::string> & getoutput() override;
+	std::vector<std::string> getoutput() override;
 
 	void playCard(Player * playedby, Player * target) override;
 	void playCard(Player * playedby, Card * target) override;

@@ -8,7 +8,7 @@ class Giantstrength : public Enchantment {
 public:
 	Giantstrength();
 
-	std::vector<std::string> & getoutput() override;
+	std::vector<std::string> getoutput() override;
 
 	void playCard(Player * playedby, Player * target) override;
 	void playCard(Player * playedby, Card * target) override;
@@ -22,7 +22,7 @@ class Enrage : public Enchantment {
 public:
 	Enrage();
 
-	std::vector<std::string> & getoutput() override;
+	std::vector<std::string> getoutput() override;
 
 	void playCard(Player * playedby, Player * target) override;
 	void playCard(Player * playedby, Card * target) override;
@@ -36,7 +36,7 @@ class Haste : public Enchantment {
 public:
 	Haste();
 
-	std::vector<std::string> & getoutput() override;
+	std::vector<std::string> getoutput() override;
 
 	void playCard(Player * playedby, Player * target) override;
 	void playCard(Player * playedby, Card * target) override;
@@ -50,7 +50,7 @@ class Magicfatigue : public Enchantment {
 public:
 	Magicfatigue();
 
-	std::vector<std::string> & getoutput() override;
+	std::vector<std::string> getoutput() override;
 
 	void playCard(Player * playedby, Player * target) override;
 	void playCard(Player * playedby, Card * target) override;
@@ -64,7 +64,7 @@ class Silence : public Enchantment {
 public:
 	Silence();
 
-	std::vector<std::string> & getoutput() override;
+	std::vector<std::string> getoutput() override;
 
 	void playCard(Player * playedby, Player * target) override;
 	void playCard(Player * playedby, Card * target) override;

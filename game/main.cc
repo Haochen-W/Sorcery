@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include "player.h"
 #include "textdisplay.h"
@@ -57,18 +58,34 @@ int main(int argc, char const *argv[]){
 		cin >> playername2;
 	}
 	
-	// create players
+	// create players and textdisplay
 	vector<Player *> players;
 	players.emplace_back(new Player{playername1, 1});
 	players.emplace_back(new Player{playername2, 2});
 	int currentPlayer = 0;
 	TextDisplay td{players[0], players[1]};
 
+	// load card
+	if(!deck1State) deck1file.open("default.deck");
+	if(!deck2State) deck2file.open("default.deck");
+
+	string card;
+	while(getline(deck1file, card)){
+		players[0]->loadDeck(card);
+	}
+	
+	while(getline(deck2file, card)){
+		players[1]->loadDeck(card);
+	}
+
 	// enter game loop, change cin >> cmd to getline
 	while (true){
-		if (!(initfile >> cmd)){
-			cin >> cmd;
+		if (!(getline(initfile, cmd))){
+			getline(cin, cmd);
 		}
+		istringstream scmd{cmd};
+		scmd >> cmd;
+
 		// display help message
 		if (cmd == "help"){
 			ifstream helpfile{"help.txt"};
@@ -120,7 +137,7 @@ int main(int argc, char const *argv[]){
 		// inspect i: display minion i
 		else if (cmd == "inspect"){
 			int i;
-			cin >> i;
+			scmd >> i;
 			td.inspectCard(players[currentPlayer], i);
 		} 
 		// hand: display hand
