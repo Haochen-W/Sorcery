@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "player.h"
+#include "textdisplay.h"
 using namespace std;
 
 int main(int argc, char const *argv[]){
@@ -60,6 +62,7 @@ int main(int argc, char const *argv[]){
 	players.emplace_back(new Player{playername1});
 	players.emplace_back(new Player{playername2});
 	int currentPlayer = 0;
+	Textdisplay td;
 
 	// enter game loop, change cin >> cmd to getline
 	while (true){
@@ -116,16 +119,17 @@ int main(int argc, char const *argv[]){
 		} 
 		// inspect i: display minion i
 		else if (cmd == "inspect"){
-			// inspect i
-
+			int i;
+			cin >> i;
+			td.inspectCard(players[currentPlayer], i);
 		} 
 		// hand: display hand
 		else if (cmd == "hand"){
-			
+			td.displayHand(players[currentPlayer]);
 		} 
 		// board: display board
 		else if (cmd == "board"){
-			
+			td.displayBoard();
 		}
 	}
 	return 0;

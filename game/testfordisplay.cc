@@ -108,4 +108,12 @@ int main()
 		std::cout << EXTERNAL_BORDER_CHAR_UP_DOWN << std::endl;
 	}
 
+	for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
+		std::cout << EXTERNAL_BORDER_CHAR_UP_DOWN;
+		for(int j = 0; j < 5; j++){
+			std::cout << displayPlayer[j][i];
+		}
+		std::cout << EXTERNAL_BORDER_CHAR_UP_DOWN << std::endl;
+	}
+
 }

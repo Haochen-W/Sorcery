@@ -1,7 +1,7 @@
 CXX = g++
 CXXFLAGS = -std=c++14 -Wall -MMD
 EXEC = myprogram
-OBJECTS = testfordisplay.o ascii_graphics.o
+OBJECTS = textdisplay.o main.o player.o
 DEPENDS = ${OBJECTS:.o=.d}
 
 ${EXEC}: ${OBJECTS}

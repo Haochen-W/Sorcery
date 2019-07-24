@@ -5,16 +5,20 @@
 #include "observer.h"
 
 class TextDisplay: public Observer { // observer of the player
-	std::vector<std::vector<std::string>> displayPlayer;
-	std::vector<std::vector<std::string>> displayMinionSlot;
-	std::vector<std::vector<std::string>> displayHand;
-
+	std::vector<std::vector<std::string>> displayPlayer1;
+	std::vector<std::vector<std::string>> displayMinionSlot1;
+	std::vector<std::vector<std::string>> displayHand1;
+	std::vector<std::vector<std::string>> displayPlayer2;
+	std::vector<std::vector<std::string>> displayMinionSlot2;
+	std::vector<std::vector<std::string>> displayHand2;
 
 public:
-	TextDisplay(); // attach player1 and player2
+	TextDisplay();
 	void notify(Subject & whoNotified) override;
 
-	friend std::ostream &operator<<(std::ostream &out, const TextDisplay &td);
+	void displayBoard();
+	void displayHand(Player * player);
+	void inspectCard(Player * player, int i);
 };
 
 #endif
