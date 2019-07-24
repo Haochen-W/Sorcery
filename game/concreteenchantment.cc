@@ -3,7 +3,7 @@
 Giantstrength::Giantstrength(): Enchantment{"Giant Strength", 1} {}
 
 std::vector<std::string> Giantstrength::getoutput(){
-	std::vector<std::string> temp {display_enchantment_attack_defense("Giant Strength", 1, "", "+2", "+2")};
+	std::vector<std::string> temp {display_enchantment_attack_defence("Giant Strength", 1, "", "+2", "+2")};
 	return temp;
 }
 
@@ -11,7 +11,7 @@ std::vector<std::string> Giantstrength::getoutput(){
 Enrage::Enrage(): Enchantment{"Enrage", 2} {}
 
 std::vector<std::string> Enrage::getoutput(){
-	std::vector<std::string> temp {display_enchantment_attack_defense("Enrage", 2, "", "*2", "*2")};
+	std::vector<std::string> temp {display_enchantment_attack_defence("Enrage", 2, "", "*2", "*2")};
 	return temp;
 }
 

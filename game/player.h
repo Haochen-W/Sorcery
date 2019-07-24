@@ -25,19 +25,10 @@ class Player : public Subject {
 
 public:
 	Player(std::string playerName, int playerNum);
-	// ~Player();
+	~Player() = default;
 
-	std::string getplayerName() const;
-	int getplayerNum() const;
-	int getlife() const;
-	int getmagic() const;
-	std::vector<Card *> & getdeck() const;
-	std::vector<Card *> & gethand() const;
-	std::vector<Card *> & getminionslot() const;
-	std::vector<Card *> & getgraveyard() const;
-	Card * getactiveRitual() const;
-	std::vector<std::string> getplayerCard() const;
-
+	// getter and setter
+	std::string getplayerName();
 	int getplayerNum();
 	int getlife();
 	int getmagic();
@@ -48,17 +39,19 @@ public:
 	std::shared_ptr<Card> getactiveRitual();
 	std::vector<std::string> getplayerCard();
 
+	// do we need setter?
 	void setplayerNum(int nplayerNum);
 	void setlife (int nlife);
 	void setmagic (int nmagic);
-	void setdeck (std::vector<Card *> ndeck);
-	void sethand (std::vector<Card *> nhand);
-	void setminionslot (std::vector<Card *> nminionslot);
-	void setgraveyard (std::vector<Card *> ngraveyard);
-	void setactiveRitual (Card * nactiveRitual);
+	void setdeck (std::vector<std::shared_ptr<Card>> ndeck);
+	void sethand (std::vector<std::shared_ptr<Card>> nhand);
+	void setminionslot (std::vector<std::shared_ptr<Card>> nminionslot);
+	void setgraveyard (std::vector<std::shared_ptr<Card>> ngraveyard);
+	void setactiveRitual (std::shared_ptr<Card> nactiveRitual);
 	void setplayerCard (std::vector<std::string> nplayerCard);
 
-	// void drawcard(); // draws a card from deck, add to hand, check if hand is full
+	void loadDeck(std::string card); // load deck
+	void drawcard(); // draws a card from deck, add to hand, check if hand is full
 	// void disgard(int i); // erase ith card in hand
 	// void attack(int i, Player * p); // use minion i to attack player
 	// void attack(int i, Player * p, int j); // use minion i to attack minion j
@@ -71,7 +64,7 @@ public:
 
 	// bool die();
 	// void gainMagic();
-	void loadDeck(std::string card);
+	
 	// void beAttacked(int damage);
 	
 	// notify?

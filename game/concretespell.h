@@ -7,84 +7,72 @@
 class Banish : public Spell {
 public:
 	Banish();
+	~Banish() = default;
 
 	std::vector<std::string> getoutput() override;
 
-	void playCard(Player * playedby, Player * target) override;
-	void playCard(Player * playedby, Card * target) override;
-
-	// inspect i, hand
-	// friend std::ostream &operator<<(std::ostream &out, const Card c);
+	// void playCard(Player * playedby, Player * target) override;
+	// void playCard(Player * playedby, Card * target) override;
 };
 
 
 class Unsummon : public Spell {
 public:
 	Unsummon(); 
+	~Unsummon() = default;
 
 	std::vector<std::string> getoutput() override;
 
-	void playCard(Player * playedby, Player * target) override;
-	void playCard(Player * playedby, Card * target) override;
-
-	// inspect i, hand
-	// friend std::ostream &operator<<(std::ostream &out, const Card c);
+	// void playCard(Player * playedby, Player * target) override;
+	// void playCard(Player * playedby, Card * target) override;
 };
 
 
 class Recharge : public Spell {
 public:
 	Recharge(); 
+	~Recharge() = default;
 
 	std::vector<std::string> getoutput() override;
 
-	void playCard(Player * playedby, Player * target) override;
-	void playCard(Player * playedby, Card * target) override;
-
-	// inspect i, hand
-	// friend std::ostream &operator<<(std::ostream &out, const Card c);
+	// void playCard(Player * playedby, Player * target) override;
+	// void playCard(Player * playedby, Card * target) override;
 };
 
 
 class Disenchant : public Spell {
 public:
 	Disenchant(); 
+	~Disenchant() = default;
 
 	std::vector<std::string> getoutput() override;
 
-	void playCard(Player * playedby, Player * target) override;
-	void playCard(Player * playedby, Card * target) override;
-
-	// inspect i, hand
-	// friend std::ostream &operator<<(std::ostream &out, const Card c);
+	// void playCard(Player * playedby, Player * target) override;
+	// void playCard(Player * playedby, Card * target) override;
 };
 
 
 class Raisedead : public Spell {
 public:
 	Raisedead(); 
+	~Raisedead() = default;
 
 	std::vector<std::string> getoutput() override;
 
-	void playCard(Player * playedby, Player * target) override;
-	void playCard(Player * playedby, Card * target) override;
-
-	// inspect i, hand
-	// friend std::ostream &operator<<(std::ostream &out, const Card c);
+	// void playCard(Player * playedby, Player * target) override;
+	// void playCard(Player * playedby, Card * target) override;
 };
 
 
 class Blizzard : public Spell {
 public:
 	Blizzard();
+	~Blizzard() = default;
 
 	std::vector<std::string> getoutput() override;
 
-	void playCard(Player * playedby, Player * target) override;
-	void playCard(Player * playedby, Card * target) override;
-
-	// inspect i, hand
-	// friend std::ostream &operator<<(std::ostream &out, const Card c);
+	// void playCard(Player * playedby, Player * target) override;
+	// void playCard(Player * playedby, Card * target) override;
 };
 
 #endif

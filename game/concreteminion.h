@@ -7,130 +7,97 @@
 class Airelemental : public Minion {
 public:
 	Airelemental();
-	~Airelemental();
+	~Airelemental() = default;
 
 	std::vector<std::string> getoutput() override;
 
 	// void useMinion(Player * playedby, Player * target) override;
 	// void useMinion(Player * playedby, Card * target) override;
-
-	// inspect i, hand
-	// friend std::ostream &operator<<(std::ostream &out, const Card c);
-
-	// friend Minion;
 };
 
 
-// class Earthelemental : public Minion {
-// public:
-// 	Earthelemental();
+class Earthelemental : public Minion {
+public:
+	Earthelemental();
+	~Earthelemental() = default;
 
-// 	std::vector<std::string> getoutput() override;
+	std::vector<std::string> getoutput() override;
 
-// 	void useMinion(Player * playedby, Player * target) override;
-// 	void useMinion(Player * playedby, Card * target) override;
-
-// 	// inspect i, hand
-// 	// friend std::ostream &operator<<(std::ostream &out, const Card c);
-
-// 	// friend Minion;
-// };
+	// void useMinion(Player * playedby, Player * target) override;
+	// void useMinion(Player * playedby, Card * target) override;
+};
 
 
-// class Bonegolem : public Minion {
-// public:
-// 	Bonegolem();
+class Bonegolem : public Minion {
+public:
+	Bonegolem();
+	~Bonegolem() = default;
 
-// 	std::vector<std::string> getoutput() override;
+	std::vector<std::string> getoutput() override;
 
-// 	void useMinion(Player * playedby, Player * target) override;
-// 	void useMinion(Player * playedby, Card * target) override;
-
-// 	// inspect i, hand
-// 	// friend std::ostream &operator<<(std::ostream &out, const Card c);
-
-// 	// friend Minion;
-// };
+	// void useMinion(Player * playedby, Player * target) override;
+	// void useMinion(Player * playedby, Card * target) override;
+};
 
 
-// class Fireelemental : public Minion {
-// public:
-// 	Fireelemental();
+class Fireelemental : public Minion {
+public:
+	Fireelemental();
+	~Fireelemental() = default;
 
-// 	std::vector<std::string> getoutput() override;
+	std::vector<std::string> getoutput() override;
 
-// 	void useMinion(Player * playedby, Player * target) override;
-// 	void useMinion(Player * playedby, Card * target) override;
-
-// 	// inspect i, hand
-// 	// friend std::ostream &operator<<(std::ostream &out, const Card c);
-
-// 	// friend Minion;
-// };
+	// void useMinion(Player * playedby, Player * target) override;
+	// void useMinion(Player * playedby, Card * target) override;
+};
 
 
-// class Potionseller : public Minion {
-// public:
-// 	Potionseller(); 
+class Potionseller : public Minion {
+public:
+	Potionseller(); 
+	~Potionseller()= default;
 
-// 	std::vector<std::string> getoutput() override;
+	std::vector<std::string> getoutput() override;
 
-// 	void useMinion(Player * playedby, Player * target) override;
-// 	void useMinion(Player * playedby, Card * target) override;
-
-// 	// inspect i, hand
-// 	// friend std::ostream &operator<<(std::ostream &out, const Card c);
-
-// 	// friend Minion;
-// };
+	// void useMinion(Player * playedby, Player * target) override;
+	// void useMinion(Player * playedby, Card * target) override;
+};
 
 
-// class Novicepyromancer : public Minion {
-// public:
-// 	Novicepyromancer(); 
+class Novicepyromancer : public Minion {
+public:
+	Novicepyromancer(); 
+	~Novicepyromancer()= default; 
 
-// 	std::vector<std::string> getoutput() override;
+	std::vector<std::string> getoutput() override;
 
-// 	void useMinion(Player * playedby, Player * target) override;
-// 	void useMinion(Player * playedby, Card * target) override;
-
-// 	// inspect i, hand
-// 	// friend std::ostream &operator<<(std::ostream &out, const Card c);
-
-// 	// friend Minion;
-// };
+	// void useMinion(Player * playedby, Player * target) override;
+	// void useMinion(Player * playedby, Card * target) override;
+};
 
 
-// class Apprenticesummoner : public Minion {
-// public:
-// 	Apprenticesummoner(); 
+class Apprenticesummoner : public Minion {
+public:
+	Apprenticesummoner(); 
+	~Apprenticesummoner()= default; 
 
-// 	std::vector<std::string> getoutput() override;
+	std::vector<std::string> getoutput() override;
 
-// 	void useMinion(Player * playedby, Player * target) override;
-// 	void useMinion(Player * playedby, Card * target) override;
-
-// 	// inspect i, hand
-// 	// friend std::ostream &operator<<(std::ostream &out, const Card c);
-
-// 	// friend Minion;
-// };
+	// void useMinion(Player * playedby, Player * target) override;
+	// void useMinion(Player * playedby, Card * target) override;
+};
 
 
-// class Mastersummoner : public Minion {
-// public:
-// 	Mastersummoner();
+class Mastersummoner : public Minion {
+public:
+	Mastersummoner();
+	~Mastersummoner()= default;
 
-// 	std::vector<std::string> getoutput() override;
+	std::vector<std::string> getoutput() override;
 
-// 	void useMinion(Player * playedby, Player * target) override;
-// 	void useMinion(Player * playedby, Card * target) override;
-
-// 	// inspect i, hand
-// 	// friend std::ostream &operator<<(std::ostream &out, const Card c);
-
-// 	// friend Minion;
-// };
+	// void useMinion(Player * playedby, Player * target) override;
+	// void useMinion(Player * playedby, Card * target) override;
+};
 
 
 #endif

@@ -12,11 +12,13 @@ class Card {
 
 public:
 	Card(std::string cardName, int cost);
-	int getcost() const;
-	std::string getcardName() const;
+	virtual ~Card() = default;
 
+	// getter and setter
+	int getcost();
 	void setcost(int ncost);
-	virtual ~Card();	
+	std::string getcardName();
+	
 	virtual std::vector<std::string> getoutput() = 0;
 
 	// virtual void minionAttack(Player * target); // return damage, override in minion only

@@ -17,7 +17,7 @@ Auraofpower::Auraofpower(): Ritual{"Aura of Power", 1, 1, 4} {
 }
 
 std::vector<std::string> Auraofpower::getoutput(){
-	rstd::vector<std::string> temp {display_ritual("Aura of Power", 1, activationCost, "Whenever a minion enters play under your control, it gains +1/+1", charge)};
+	std::vector<std::string> temp {display_ritual("Aura of Power", 1, activationCost, "Whenever a minion enters play under your control, it gains +1/+1", charge)};
 	return temp;
 }
 
@@ -28,6 +28,6 @@ Standstill::Standstill(): Ritual{"Standstill", 3, 2, 4} {
 }
 
 std::vector<std::string> Standstill::getoutput(){
-	rstd::vector<std::string> temp {display_ritual("Standstill", 3, activationCost, "Whenever a minion enters play, destroy it", charge)};
+	std::vector<std::string> temp {display_ritual("Standstill", 3, activationCost, "Whenever a minion enters play, destroy it", charge)};
 	return temp;
 }

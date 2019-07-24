@@ -13,18 +13,18 @@ protected:
 
 public:
 	Minion(std::string cardName, int cost, int attackval, int defenceval, int abilityCost);
+	~Minion() = default;
 
-	int getattackval() const;
-	int getdefenceval() const;
-	int getabilityCost() const;
-	int getaction() const;
-
+	// getter and setter
+	int getattackval();
+	int getdefenceval();
+	int getabilityCost();
+	int getaction();
 	void setattackval(int nattackval);
 	void setdefenceval(int ndefenceval);
 	void setabilityCost(int nabilityCost);
 	void setaction(int naction);
 
-	virtual std::vector<std::string> & getoutput() = 0;
 	// void minionAttack(Player * target) override; // return damage
 	// void minionAttack(Player * target, int i) override; // call mbeattack on target minion
 	// void playCard(Player * playedby, Player * target) override; // place the minion into minion slot

@@ -2,14 +2,15 @@
 #define _DECORATOR_H_
 #include "minion.h"
 
-class Decorator: public Minion {
+class Decorator: public Card {
 protected:
 	Minion * component;
 public:
-	Decorator(Minion * component);
-	Minion * getcomponent() const;
+	Decorator(std::string cardName, int cost);
+	~Decorator() = default;
+
+	Minion * getcomponent();
 	void setcomponent(Minion * ncomponent);
-	virtual ~Decorator();
 };
 
 #endif
