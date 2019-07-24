@@ -2,10 +2,10 @@
 #include "textdisplay.h"
 #include "ascii_graphics.h"
 
-TextDisplay::TextDisplay(Player * player1, Player * player2){
+TextDisplay::TextDisplay(){
 	displayPlayer1.emplace_back(CARD_TEMPLATE_BORDER);
 	displayPlayer1.emplace_back(CARD_TEMPLATE_EMPTY);
-	displayPlayer1.emplace_back(player1->getplayerCard());
+	displayPlayer1.emplace_back(PLAYER_1_TEMPLATE);
 	displayPlayer1.emplace_back(CARD_TEMPLATE_EMPTY);
 	displayPlayer1.emplace_back(CARD_TEMPLATE_BORDER);
 
@@ -23,7 +23,7 @@ TextDisplay::TextDisplay(Player * player1, Player * player2){
 
 	displayPlayer2.emplace_back(CARD_TEMPLATE_BORDER);
 	displayPlayer2.emplace_back(CARD_TEMPLATE_EMPTY);
-	displayPlayer2.emplace_back(player2->getplayerCard());
+	displayPlayer2.emplace_back(PLAYER_2_TEMPLATE);
 	displayPlayer2.emplace_back(CARD_TEMPLATE_EMPTY);
 	displayPlayer2.emplace_back(CARD_TEMPLATE_BORDER);
 
@@ -41,52 +41,52 @@ TextDisplay::TextDisplay(Player * player1, Player * player2){
 }
 
 
-// void TextDisplay::notify(Subject & whoNotified){
-// 	if(whoNotified.getplayerNum() == 1){
-// 		// update player row
-// 		if(whoNotified.getritual()) displayPlayer1[0] = (whoNotified.getritual())->getoutput();
-// 		displayPlayer1[2] = whoNotified.getplayerCard();
-// 		if(!(whoNotified.getgraveyard()).empty) displayPlayer1[4] = ((whoNotified.getgraveyard()).back())->getoutput();
+void TextDisplay::notify(Player & whoNotified){
+	if(whoNotified.getplayerNum() == 1){
+		// update player row
+		if(whoNotified.getactiveRitual()) displayPlayer1[0] = (whoNotified.getactiveRitual())->getoutput();
+		displayPlayer1[2] = whoNotified.getplayerCard();
+		if(!(whoNotified.getgraveyard()).empty()) displayPlayer1[4] = ((whoNotified.getgraveyard()).back())->getoutput();
 
-// 		// update minion slot
-// 		for(int i = 0; i < (whoNotified.getminionslot()).size(); i++){
-// 			displayMinionSlot1[i] = ((whoNotified.getminionslot())[i])->getoutput();
-// 		}
-// 		for(int i = (whoNotified.getminionslot()).size(); i < 5; i++){
-// 			displayMinionSlot1[i] = CARD_TEMPLATE_BORDER;
-// 		}
+		// update minion slot
+		for(int i = 0; i < (whoNotified.getminionslot()).size(); i++){
+			displayMinionSlot1[i] = ((whoNotified.getminionslot())[i])->getoutput();
+		}
+		for(int i = (whoNotified.getminionslot()).size(); i < 5; i++){
+			displayMinionSlot1[i] = CARD_TEMPLATE_BORDER;
+		}
 
-// 		// update hand
-// 		for(int i = 0; i < (whoNotified.gethand()).size(); i++){
-// 			displayHand1[i] = ((whoNotified.gethand())[i])->getoutput();
-// 		}
-// 		for(int i = (whoNotified.gethand()).size(); i < 5; i++){
-// 			displayHand1[i] = CARD_TEMPLATE_BORDER;
-// 		}
+		// update hand
+		for(int i = 0; i < (whoNotified.gethand()).size(); i++){
+			displayHand1[i] = ((whoNotified.gethand())[i])->getoutput();
+		}
+		for(int i = (whoNotified.gethand()).size(); i < 5; i++){
+			displayHand1[i] = CARD_TEMPLATE_BORDER;
+		}
 
-// 	} else if(whoNotified.getplayerNum() == 2){
-// 		// update player row
-// 		if(whoNotified.getritual()) displayPlayer2[0] = (whoNotified.getritual())->getoutput();
-// 		displayPlayer2[2] = whoNotified.getplayerCard();
-// 		if(!(whoNotified.getgraveyard()).empty) displayPlayer2[4] = ((whoNotified.getgraveyard()).back())->getoutput();
+	} else if(whoNotified.getplayerNum() == 2){
+		// update player row
+		if(whoNotified.getactiveRitual()) displayPlayer2[0] = (whoNotified.getactiveRitual())->getoutput();
+		displayPlayer2[2] = whoNotified.getplayerCard();
+		if(!(whoNotified.getgraveyard()).empty()) displayPlayer2[4] = ((whoNotified.getgraveyard()).back())->getoutput();
 		
-// 		// update minion slot
-// 		for(int i = 0; i < (whoNotified.getminionslot()).size(); i++){
-// 			displayMinionSlot2[i] = ((whoNotified.getminionslot())[i])->getoutput();
-// 		}
-// 		for(int i = (whoNotified.getminionslot()).size(); i < 5; i++){
-// 			displayMinionSlot2[i] = CARD_TEMPLATE_BORDER;
-// 		}
+		// update minion slot
+		for(int i = 0; i < (whoNotified.getminionslot()).size(); i++){
+			displayMinionSlot2[i] = ((whoNotified.getminionslot())[i])->getoutput();
+		}
+		for(int i = (whoNotified.getminionslot()).size(); i < 5; i++){
+			displayMinionSlot2[i] = CARD_TEMPLATE_BORDER;
+		}
 		
-// 		// update hand
-// 		for(int i = 0; i < (whoNotified.gethand()).size(); i++){
-// 			displayHand2[i] = ((whoNotified.gethand())[i])->getoutput();
-// 		}
-// 		for(int i = (whoNotified.gethand()).size(); i < 5; i++){
-// 			displayHand2[i] = CARD_TEMPLATE_BORDER;
-// 		}
-// 	}
-// }
+		// update hand
+		for(int i = 0; i < (whoNotified.gethand()).size(); i++){
+			displayHand2[i] = ((whoNotified.gethand())[i])->getoutput();
+		}
+		for(int i = (whoNotified.gethand()).size(); i < 5; i++){
+			displayHand2[i] = CARD_TEMPLATE_BORDER;
+		}
+	}
+}
 
 void TextDisplay::displayBoard(){
 	std::cout << EXTERNAL_BORDER_CHAR_TOP_LEFT;
@@ -145,6 +145,7 @@ void TextDisplay::displayHand(Player * player){
 			for(int j = 0; j < 5; j++){
 				std::cout << displayHand1[j][i];
 			}
+			std::cout << std::endl;
 		}
 	} else if(player->getplayerNum() == 2){
 		for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
@@ -156,7 +157,7 @@ void TextDisplay::displayHand(Player * player){
 }
 
 void TextDisplay::inspectCard(Player * player, int num){
-	std::vector<std::string> temp{(player->getdeck()[num])->getoutput()};
+	std::vector<std::string> temp{(player->gethand()[num])->getoutput()};
 	for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 		std::cout << temp[i] << std::endl;
 	}

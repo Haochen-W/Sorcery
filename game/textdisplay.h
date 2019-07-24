@@ -5,8 +5,6 @@
 #include "player.h"
 #include "card.h"
 
-class Subject;
-
 class TextDisplay: public Observer { // observer of the player
 	std::vector<std::vector<std::string>> displayPlayer1;
 	std::vector<std::vector<std::string>> displayMinionSlot1;
@@ -16,8 +14,8 @@ class TextDisplay: public Observer { // observer of the player
 	std::vector<std::vector<std::string>> displayHand2;
 
 public:
-	TextDisplay(Player * player1, Player * player2);
-	// void notify(Subject & whoNotified) override;
+	TextDisplay();
+	void notify(Player & whoNotified) override;
 
 	void displayBoard();
 	void displayHand(Player * player);

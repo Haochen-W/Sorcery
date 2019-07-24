@@ -6,10 +6,7 @@
 #include "concreteenchantment.h"
 
 Player::Player(std::string playerName, int playerNum): 
-  playerName{playerName}, playerNum{playerNum}, life{20}, magic{3}, activeRitual{nullptr} {
-  	// ctor textdisplay
-  	// attach observer
-}
+  playerName{playerName}, playerNum{playerNum}, life{20}, magic{3}, activeRitual{nullptr} {}
 
 
 std::vector<std::string> Player::getplayerCard(){
@@ -35,6 +32,14 @@ void Player::setminionslot (std::vector<std::shared_ptr<Card>> nminionslot){mini
 void Player::setgraveyard (std::vector<std::shared_ptr<Card>> ngraveyard){graveyard = ngraveyard;}
 void Player::setactiveRitual (std::shared_ptr<Card> nactiveRitual){activeRitual = nactiveRitual;}
 void Player::setplayerCard (std::vector<std::string> nplayerCard){playerCard = nplayerCard;}
+
+void Player::attach(Observer *o){
+  observers.emplace_back(o);
+} 
+
+void Player::notifyObservers(){
+  for(auto &ob : observers) ob->notify(*this);
+}
 
 void Player::loadDeck(std::string card){
  if (card == "Air Elemental"){
@@ -105,3 +110,17 @@ void Player::loadDeck(std::string card){
   deck.emplace_back(p);
  } 
 }
+
+void Player::drawcard(){
+  // hand is full, throw exception
+  if(hand.size()>= 5) return;
+  std::shared_ptr<Card> temp{deck.back()};
+  deck.erase(deck.begin() + deck.size() - 1);
+  hand.emplace_back(temp);
+  this->notifyObservers();
+}
+
+// void Player::play(int i){
+//   if(i >= hand.size()) return;
+//   hand[i]->playCard(this, this, i);
+// }

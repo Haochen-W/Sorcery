@@ -37,9 +37,6 @@ int main(int argc, char const *argv[]){
 			i += 1; // skip the next argument
 		}
 	}
-	if (!(deck1State || deck2State)) {
-
-	}
 
 	string playername1;
 	string playername2;
@@ -63,10 +60,14 @@ int main(int argc, char const *argv[]){
 	
 	// create players and textdisplay
 	vector<Player *> players;
+	TextDisplay td{};
 	players.emplace_back(new Player{playername1, 1});
 	players.emplace_back(new Player{playername2, 2});
+	players[0]->attach(&td);
+	players[1]->attach(&td);
+	players[0]->notifyObservers();
+	players[1]->notifyObservers();
 	int currentPlayer = 0;
-	TextDisplay td{players[0], players[1]};
 
 	// load card
 	if(!deck1State) deck1file.open("default.deck");
@@ -76,9 +77,14 @@ int main(int argc, char const *argv[]){
 	while(getline(deck1file, card)){
 		players[0]->loadDeck(card);
 	}
-	
 	while(getline(deck2file, card)){
 		players[1]->loadDeck(card);
+	}
+
+	// load hand
+	for(int i = 0; i < 5; i++){
+		players[0]->drawcard();
+		players[1]->drawcard();
 	}
 
 	// enter game loop, change cin >> cmd to getline
@@ -109,8 +115,8 @@ int main(int argc, char const *argv[]){
 		} 
 		// draw a card
 		else if (cmd == "draw" && testingState == true){
+			players[currentPlayer]->drawcard();
 			// only available in testing mode
-			
 		} 
 		// disgard i: disgard the ith card in hand
 		else if (cmd == "disgard" && testingState == true){
@@ -124,7 +130,7 @@ int main(int argc, char const *argv[]){
 			
 		} 
 		// play i: play the ith card
-		// minion, rituadl, spell with no target
+		// minion, ritual, spell with no target
 		// play i p t/r : play the ith card on player p's minion t, or on ritual
 		// enchantment and spell with targets
 		else if (cmd == "play"){

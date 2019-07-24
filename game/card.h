@@ -23,7 +23,7 @@ public:
 
 	// virtual void minionAttack(Player * target); // return damage, override in minion only
 	// virtual void minionAttack(Player * target, int i); // attack ith minion, override in minion only
-	// virtual void playCard(Player * playedby, Player * target) = 0; // return minion / ritual, and place it into minion slot
+	// virtual void playCard(Player * playedby, Player * target, int i) = 0; // return minion / ritual, and place it into minion slot
 	// virtual void playCard(Player * playedby, Card * target) = 0; 
 	// virtual void useMinion(Player * playedby, Player * target); // override in minion only
 	// virtual void useMinion(Player * playedby, Card * target); // override in minion only

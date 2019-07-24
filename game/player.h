@@ -3,19 +3,20 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include <fstream>
 #include <string>
-#include "subject.h"
+#include "observer.h"
 #include "ascii_graphics.h"
 
 // declaration
 class Card;
+class TextDisplay;
 
-class Player : public Subject {
+class Player{
 	std::string playerName;
 	int playerNum;
 	int life;
 	int magic;
+	std::vector<Observer *> observers;
 	std::vector<std::shared_ptr<Card>> deck;
 	std::vector<std::shared_ptr<Card>> hand;
 	std::vector<std::shared_ptr<Card>> minionslot;
@@ -49,6 +50,11 @@ public:
 	void setgraveyard (std::vector<std::shared_ptr<Card>> ngraveyard);
 	void setactiveRitual (std::shared_ptr<Card> nactiveRitual);
 	void setplayerCard (std::vector<std::string> nplayerCard);
+
+	// subject
+	void attach(Observer *o);
+	// void detach(Observer *o);
+	void notifyObservers();
 
 	void loadDeck(std::string card); // load deck
 	void drawcard(); // draws a card from deck, add to hand, check if hand is full
