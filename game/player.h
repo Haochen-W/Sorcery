@@ -23,8 +23,15 @@ public:
 	Player(std::string playerName, int playerNum);
 	// ~Player();
 
-	// int getplayernum();
-	// std::vector<std::string> & getplayercard();
+	int getplayerNum() const;
+	int getlife() const;
+	int getmagic() const;
+	std::vector<Card *> & getdeck() const;
+	std::vector<Card *> & gethand() const;
+	std::vector<Card *> & getminionslot() const;
+	std::vector<Card *> & getgraveyard() const;
+	Card * getactiveRitual() const;
+	std::vector<std::string> getplayerCard() const;
 
 	// void drawcard(); // draws a card from deck, add to hand, check if hand is full
 	// void disgard(int i); // erase ith card in hand

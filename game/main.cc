@@ -52,17 +52,17 @@ int main(int argc, char const *argv[]){
 	}
 	cout << "Player 2: ";
 	if(initState && initfile >> playername1){
-		cout << playername1 << endl;
+		cout << playername2 << endl;
 	} else {
-		cin >> playername1;
+		cin >> playername2;
 	}
 	
 	// create players
 	vector<Player *> players;
-	players.emplace_back(new Player{playername1});
-	players.emplace_back(new Player{playername2});
+	players.emplace_back(new Player{playername1, 1});
+	players.emplace_back(new Player{playername2, 2});
 	int currentPlayer = 0;
-	Textdisplay td;
+	TextDisplay td{players[0], players[1]};
 
 	// enter game loop, change cin >> cmd to getline
 	while (true){

@@ -1,10 +1,11 @@
+#include <iostream>
 #include "textdisplay.h"
 #include "ascii_graphics.h"
 
-TextDisplay::TextDisplay(){
+TextDisplay::TextDisplay(Player * player1, Player * player2){
 	displayPlayer1.emplace_back(CARD_TEMPLATE_BORDER);
 	displayPlayer1.emplace_back(CARD_TEMPLATE_EMPTY);
-	displayPlayer1.emplace_back(player->getplayercard());
+	displayPlayer1.emplace_back(player1->getplayerCard());
 	displayPlayer1.emplace_back(CARD_TEMPLATE_EMPTY);
 	displayPlayer1.emplace_back(CARD_TEMPLATE_BORDER);
 
@@ -22,7 +23,7 @@ TextDisplay::TextDisplay(){
 
 	displayPlayer2.emplace_back(CARD_TEMPLATE_BORDER);
 	displayPlayer2.emplace_back(CARD_TEMPLATE_EMPTY);
-	displayPlayer2.emplace_back(player->getplayercard());
+	displayPlayer2.emplace_back(player2->getplayerCard());
 	displayPlayer2.emplace_back(CARD_TEMPLATE_EMPTY);
 	displayPlayer2.emplace_back(CARD_TEMPLATE_BORDER);
 
@@ -41,10 +42,10 @@ TextDisplay::TextDisplay(){
 
 
 void TextDisplay::notify(Subject & whoNotified){
-	if(whoNotified.getplayernum() == 1){
+	if(whoNotified.getplayerNum() == 1){
 		// update player row
 		if(whoNotified.getritual()) displayPlayer1[0] = (whoNotified.getritual())->getoutput();
-		displayPlayer1[2] = whoNotified.getplayercard();
+		displayPlayer1[2] = whoNotified.getplayerCard();
 		if(!(whoNotified.getgraveyard()).empty) displayPlayer1[4] = ((whoNotified.getgraveyard()).back())->getoutput();
 
 		// update minion slot
@@ -63,10 +64,10 @@ void TextDisplay::notify(Subject & whoNotified){
 			displayHand1[i] = CARD_TEMPLATE_BORDER;
 		}
 
-	} else if(whoNotified.getplayernum() == 2){
+	} else if(whoNotified.getplayerNum() == 2){
 		// update player row
 		if(whoNotified.getritual()) displayPlayer2[0] = (whoNotified.getritual())->getoutput();
-		displayPlayer2[2] = whoNotified.getplayercard();
+		displayPlayer2[2] = whoNotified.getplayerCard();
 		if(!(whoNotified.getgraveyard()).empty) displayPlayer2[4] = ((whoNotified.getgraveyard()).back())->getoutput();
 		
 		// update minion slot
@@ -138,23 +139,23 @@ void TextDisplay::displayBoard(){
 	std::cout << EXTERNAL_BORDER_CHAR_BOTTOM_RIGHT << std::endl;
 }
 
-void displayHand(Player * player){
-	if(player->getplayernum() == 1){
+void TextDisplay::displayHand(Player * player){
+	if(player->getplayerNum() == 1){
 		for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 			for(int j = 0; j < 5; j++){
 				std::cout << displayHand1[j][i];
 			}
 		}
-	} else if(player->getplayernum() == 1){
+	} else if(player->getplayerNum() == 2){
 		for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 			for(int j = 0; j < 5; j++){
-				std::cout << displayHand1[j][i];
+				std::cout << displayHand2[j][i];
 			}
 		}
 	}
 }
 
-void inspectCard(Player * player, int num){
+void TextDisplay::inspectCard(Player * player, int num){
 	std::vector<std::string> temp{player.getminionslot()[num]};
 	for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 		std::cout << temp[i];

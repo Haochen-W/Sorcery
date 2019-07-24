@@ -3,7 +3,7 @@
 
 class Observer {
 public:
-	virtual void notify(Subject & whoNotified) = 0;
+	// virtual void notify(Subject & whoNotified) = 0;
 };
 
 #endif
