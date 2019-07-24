@@ -2,7 +2,11 @@
 #define PLAYER_H
 #include <vector>
 #include <string>
+#include <iostream>
+#include <fstream>
+#include <string>
 #include "subject.h"
+#include "ascii_graphics.h"
 
 // declaration
 class Card;
@@ -12,11 +16,11 @@ class Player : public Subject {
 	int playerNum;
 	int life;
 	int magic;
-	std::vector<Card *> deck;
-	std::vector<Card *> hand;
-	std::vector<Card *> minionslot;
-	std::vector<Card *> graveyard;
-	Card * activeRitual;
+	std::vector<std::shared_ptr<Card>> deck;
+	std::vector<std::shared_ptr<Card>> hand;
+	std::vector<std::shared_ptr<Card>> minionslot;
+	std::vector<std::shared_ptr<Card>> graveyard;
+	std::shared_ptr<Card> activeRitual;
 	std::vector<std::string> playerCard;
 
 public:
@@ -33,6 +37,16 @@ public:
 	std::vector<Card *> & getgraveyard() const;
 	Card * getactiveRitual() const;
 	std::vector<std::string> getplayerCard() const;
+
+	int getplayerNum();
+	int getlife();
+	int getmagic();
+	std::vector<std::shared_ptr<Card>> & getdeck();
+	std::vector<std::shared_ptr<Card>> & gethand();
+	std::vector<std::shared_ptr<Card>> & getminionslot();
+	std::vector<std::shared_ptr<Card>> & getgraveyard();
+	std::shared_ptr<Card> getactiveRitual();
+	std::vector<std::string> getplayerCard();
 
 	void setplayerNum(int nplayerNum);
 	void setlife (int nlife);
@@ -57,7 +71,7 @@ public:
 
 	// bool die();
 	// void gainMagic();
-	// void loadDeck();
+	void loadDeck(std::string card);
 	// void beAttacked(int damage);
 	
 	// notify?

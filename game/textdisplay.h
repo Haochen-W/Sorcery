@@ -3,6 +3,7 @@
 #include <vector>
 #include "observer.h"
 #include "player.h"
+#include "card.h"
 
 class Subject;
 
