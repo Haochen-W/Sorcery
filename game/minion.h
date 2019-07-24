@@ -14,6 +14,16 @@ protected:
 public:
 	Minion(std::string cardName, int cost, int attackval, int defenceval, int abilityCost);
 
+	int getattackval() const;
+	int getdefenceval() const;
+	int getabilityCost() const;
+	int getaction() const;
+
+	void setattackval(int nattackval);
+	void setdefenceval(int ndefenceval);
+	void setabilityCost(int nabilityCost);
+	void setaction(int naction);
+
 	virtual std::vector<std::string> & getoutput() = 0;
 
 	void minionAttack(Player * target) override; // return damage

@@ -7,6 +7,8 @@ protected:
 	Minion * component;
 public:
 	Decorator(Minion * component);
+	Minion * getcomponent() const;
+	void setcomponent(Minion * ncomponent);
 	virtual ~Decorator();
 };
 

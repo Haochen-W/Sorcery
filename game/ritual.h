@@ -11,6 +11,10 @@ protected:
 
 public:
 	Ritual(std::string cardName, int cost, int activationCost, int charge);
+	int getactivationCost () const;
+	int getcharge () const;
+	void setactivationCost (int nactivationCost);
+	void setcharge (int ncharge);
 
 	virtual std::vector<std::string> & getoutput() = 0;
 

@@ -33,8 +33,12 @@ int main(int argc, char const *argv[]){
 		} else if(string(argv[i]) == "-deck2"){
 			deck2State = true;
 			deck2file.open(argv[i + 1]);
+			slong
 			i += 1; // skip the next argument
 		}
+	}
+	if (!(deck1State || deck2State)) {
+
 	}
 
 	string playername1;

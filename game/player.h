@@ -23,6 +23,7 @@ public:
 	Player(std::string playerName, int playerNum);
 	// ~Player();
 
+	std::string getplayerName() const;
 	int getplayerNum() const;
 	int getlife() const;
 	int getmagic() const;
@@ -32,6 +33,16 @@ public:
 	std::vector<Card *> & getgraveyard() const;
 	Card * getactiveRitual() const;
 	std::vector<std::string> getplayerCard() const;
+
+	void setplayerNum(int nplayerNum);
+	void setlife (int nlife);
+	void setmagic (int nmagic);
+	void setdeck (std::vector<Card *> ndeck);
+	void sethand (std::vector<Card *> nhand);
+	void setminionslot (std::vector<Card *> nminionslot);
+	void setgraveyard (std::vector<Card *> ngraveyard);
+	void setactiveRitual (Card * nactiveRitual);
+	void setplayerCard (std::vector<std::string> nplayerCard);
 
 	// void drawcard(); // draws a card from deck, add to hand, check if hand is full
 	// void disgard(int i); // erase ith card in hand

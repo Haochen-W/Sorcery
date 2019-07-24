@@ -9,6 +9,10 @@ class Card {
 
 public:
 	Card(std::string cardName, int cost);
+	int getcost() const;
+	std::string getcardName() const;
+
+	void setcost(int ncost);
 	
 	virtual std::vector<std::string> & getoutput() = 0;
 
