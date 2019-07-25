@@ -61,7 +61,7 @@ public:
 	// void disgard(int i); // erase ith card in hand
 	// void attack(int i, Player * p); // use minion i to attack player
 	// void attack(int i, Player * p, int j); // use minion i to attack minion j
-	// void play(int i); // play the ith card, minion, ritual, spell
+	void play(int i); // play the ith card, minion, ritual, spell
 	// void play(int i, Player * p); // play the ith card on player p's ritual
 	// void play(int i, Player * p, int t); // play the ith card on on player p's minion t
 	// void use(int i); // use minion i

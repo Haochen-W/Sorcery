@@ -120,7 +120,8 @@ void Player::drawcard(){
   this->notifyObservers();
 }
 
-// void Player::play(int i){
-//   if(i >= hand.size()) return;
-//   hand[i]->playCard(this, this, i);
-// }
+void Player::play(int i){
+  if(i >= hand.size()) return;
+  hand[i]->playCard(this, this, i);
+  this->notifyObservers();
+}

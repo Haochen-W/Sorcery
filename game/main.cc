@@ -134,6 +134,9 @@ int main(int argc, char const *argv[]){
 		// play i p t/r : play the ith card on player p's minion t, or on ritual
 		// enchantment and spell with targets
 		else if (cmd == "play"){
+			int i;
+			scmd >> i;
+			players[0]->play(i);
 			// play i, play i p t
 
 		} 
