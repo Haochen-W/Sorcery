@@ -157,7 +157,13 @@ void TextDisplay::displayHand(Player * player){
 }
 
 void TextDisplay::inspectCard(Player * player, int num){
-	std::vector<std::string> temp{(player->gethand()[num])->getoutput()};
+	if(num >= 5){
+		throw InvalidPosition e{"There are only 5 minion slots."}
+	}
+	if(num >= (player->getminionslot()).size()){
+		throw InvalidPosition e{"No minion is placed in this position."};
+	}
+	std::vector<std::string> temp{(player->getminionslot()[num])->getoutput()};
 	for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 		std::cout << temp[i] << std::endl;
 	}

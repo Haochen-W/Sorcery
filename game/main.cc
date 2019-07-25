@@ -115,8 +115,12 @@ int main(int argc, char const *argv[]){
 		} 
 		// draw a card
 		else if (cmd == "draw" && testingState == true){
-			players[currentPlayer]->drawcard();
-			// only available in testing mode
+			try {
+				players[currentPlayer]->drawcard();
+			} 
+			catch(ExceedMaximum &e){
+				cerr << e.getErrorMessage() << endl;
+			}
 		} 
 		// disgard i: disgard the ith card in hand
 		else if (cmd == "disgard" && testingState == true){
@@ -126,31 +130,62 @@ int main(int argc, char const *argv[]){
 		// attack i: minion i to attack opposing player
 		// attack i j: minion i to attact opposing player's minion j
 		else if (cmd == "attack"){ 
-			// attack i, attack i, j
-			
-		} 
-		// play i: play the ith card
-		// minion, ritual, spell with no target
-		// play i p t/r : play the ith card on player p's minion t, or on ritual
-		// enchantment and spell with targets
-		else if (cmd == "play"){
-			int i;
+			int i,j;
 			scmd >> i;
-			players[0]->play(i);
-			// play i, play i p t
-
+			if(!(scmd >> j)){
+				// attack i
+			} else {
+				// attack i j
+			}
 		} 
-		// use i: use minion i
-		// use i p t/r : use minion i on player p's minion t, or on ritual
+		else if (cmd == "play"){
+			int i, p, t;
+			scmd >> i;
+			if(!(scmd >> p)){
+				// play i: play minion, ritual, spell with no target
+				try{
+					players[currentPlayer]->play(i);
+				}
+				catch(InvalidPosition &e){
+					cerr << e.getErrorMessage() << endl;
+				}
+			} 
+			// else {
+			// 	if(scmd >> t){
+			// 		// play enchantment, spell on minion
+			// 		players[currentPlayer]->play(i, players[currentPlayer], t);
+			// 	} else {
+			// 		// play enchantment, spell on ritual
+			// 		players[currentPlayer]->play(i, players[currentPlayer]);
+			// 	}
+			// }
+		} 
 		else if (cmd == "use"){
-			// use i, use i p t
-			
+			// int i, p, t;
+			// scmd >> i;
+			// if(!(scmd >> p)){
+			// 	// use i: use minion
+			// 	players[currentPlayer]->use(i);
+			// } else {
+			// 	if(scmd >> t){
+			// 		// use i p t: use minion on minion
+			// 		players[currentPlayer]->use(i, players[currentPlayer], t);
+			// 	} else {
+			// 		// use i p r: use minion on ritual
+			// 		players[currentPlayer]->use(i, players[currentPlayer]);
+			// 	}
+			// }
 		} 
 		// inspect i: display minion i
 		else if (cmd == "inspect"){
 			int i;
 			scmd >> i;
-			td.inspectCard(players[currentPlayer], i);
+			try{
+				td.inspectCard(players[currentPlayer], i);
+			}
+			catch(InvalidPosition &e){
+				cerr << e.getErrorMessage() << endl;
+			}
 		} 
 		// hand: display hand
 		else if (cmd == "hand"){
