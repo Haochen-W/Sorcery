@@ -23,6 +23,11 @@ std::vector<std::string> Bonegolem::getoutput(){
 	return temp;
 }
 
+void Bonegolem::triggereffect(Player * playedby, std::shared_ptr<Card> c){
+	c->setattackval(c->getattackval() + 1);
+	c->setdefenceval(c->getdefenceval() + 1);
+}
+
 
 Fireelemental::Fireelemental(): Minion{"Fire Elemental", 2, 2, 2, 0} {}
 
@@ -31,12 +36,20 @@ std::vector<std::string> Fireelemental::getoutput(){
 	return temp;
 }
 
+void Fireelemental::triggereffect(Player * playedby, std::shared_ptr<Card> c){
+	c->setdefenceval(c->getdefenceval() - 1);
+}
+
 
 Potionseller::Potionseller(): Minion{"Potion Seller", 2, 1, 3, 0} {}
 
 std::vector<std::string> Potionseller::getoutput(){
 	std::vector<std::string> temp {display_minion_triggered_ability("Potion Seller", 2, attackval, defenceval, "At the end of your turn, all your minions gain +0/+1")};
 	return temp;
+}
+
+void Potionseller::triggereffect(Player * playedby, std::shared_ptr<Card> c){
+	c->setdefenceval(c->getdefenceval() + 1);
 }
 
 

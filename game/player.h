@@ -13,6 +13,8 @@ class Card;
 class Minion;
 class TextDisplay;
 
+enum class GameStage{startTurn, endTurn, curNewMinion, oppNewMinion, minionLeave};
+
 class Player{
 	std::string playerName;
 	int playerNum;
@@ -59,11 +61,12 @@ public:
 	void notifyObservers();
 
 	void loadDeck(std::string card); // load deck
-	void drawcard(); // draws a card from deck, add to hand, check if hand is full
+	void drawcard(); // draws a card from deck, add to hand
 	void disgard(int i); // erase ith card in hand
 	void attack(int i, Player * p); // use minion i to attack player
 	void attack(int i, Player * p, int j); // use minion i to attack minion j
-	void play(int i, bool testing); // play the ith card, minion, ritual, spell
+	void play(int i, Player * opponent, bool testing); // play the ith card, place minion, place ritual, spell effect
+	void trigger(GameStage state, std::shared_ptr<Card> m);
 	// void play(int i, Player * p); // play the ith card on player p's ritual
 	// void play(int i, Player * p, int t); // play the ith card on on player p's minion t
 	// void use(int i); // use minion i
@@ -72,17 +75,7 @@ public:
 
 	bool die();
 	void gainMagic();
-
 	void gainaction();
-	
-	// void beAttacked(int damage);
-	
-	// notify?
-
-	// for inspect i, displayHand
-	// friend std::ostream &operator<<(std::ostream &out, const Card * c);
-
-	// void displayBoard();
 };
 
 #endif

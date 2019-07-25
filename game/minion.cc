@@ -14,10 +14,12 @@ void Minion::setdefenceval(int ndefenceval){defenceval = ndefenceval;}
 void Minion::setabilityCost(int nabilityCost){abilityCost = nabilityCost;}
 void Minion::setaction(int naction){action = naction;}
 
-void Minion::playCard(Player * playedby, Player * target, int i){
+void Minion::playCard(Player * playedby, Player * opponent, int i){
 	std::shared_ptr<Card> temp{(playedby->gethand())[i - 1]};
 	(playedby->gethand()).erase((playedby->gethand()).begin() + i - 1);
 	(playedby->getminionslot()).emplace_back(temp);
+	playedby->trigger(GameStage::curNewMinion, temp);
+	opponent->trigger(GameStage::oppNewMinion, temp);
 }
 
 // void Minion::playCard(Player * playedby, Card * target) {return;}
@@ -37,6 +39,12 @@ void Minion::minionAttack(Player * target, int i){
 
 bool Minion::miniondead() {
 	return (getdefenceval() <= 0);
+}
+
+void Minion::toGraveyard(Player * p, int i){
+	std::shared_ptr<Card> temp{p->getminionslot()[i - 1]};
+    p->getminionslot().erase(p->getminionslot().begin() + i - 1);
+    p->getgraveyard().emplace_back(temp);
 }
 
 void Minion::gainaction(){

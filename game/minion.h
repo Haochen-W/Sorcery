@@ -16,21 +16,22 @@ public:
 	~Minion() = default;
 
 	// getter and setter
-	int getattackval();
-	int getdefenceval();
+	int getattackval() override;
+	int getdefenceval() override;
 	int getabilityCost();
 	int getaction() override;
-	void setattackval(int nattackval);
-	void setdefenceval(int ndefenceval);
+	void setattackval(int nattackval) override;
+	void setdefenceval(int ndefenceval) override;
 	void setabilityCost(int nabilityCost);
 	void setaction(int naction) override;
 
 	void minionAttack(Player * target) override;
 	void minionAttack(Player * target, int i) override; // call mbeattack on target minion
-	void playCard(Player * playedby, Player * target, int i) override; // place the minion into minion slot
+	void playCard(Player * playedby, Player * opponent, int i) override; // place the minion into minion slot
 	// void playCard(Player * playedby, Card * target) override; // do nothing
 
 	void takeDamage(int damage) override;// cause damage on minion
+	void toGraveyard(Player * p, int i) override;
 	bool miniondead() override;
 
 	void gainaction() override;

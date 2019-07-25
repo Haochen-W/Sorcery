@@ -10,9 +10,7 @@ public:
 	~Darkritual() = default;
 
 	std::vector<std::string> getoutput() override;
-
-	// void playCard(Player * playedby, Player * target) override;
-	// void playCard(Player * playedby, Card * target) override;
+	void triggereffect(Player * playedby, std::shared_ptr<Card> c) override;
 };
 
 
@@ -22,9 +20,7 @@ public:
 	~Auraofpower() = default;
 
 	std::vector<std::string> getoutput() override;
-
-	// void playCard(Player * playedby, Player * target) override;
-	// void playCard(Player * playedby, Card * target) override;
+	void triggereffect(Player * playedby, std::shared_ptr<Card> c) override;
 };
 
 
@@ -34,9 +30,7 @@ public:
 	~Standstill() = default;
 
 	std::vector<std::string> getoutput() override;
-
-	// void playCard(Player * playedby, Player * target) override;
-	// void playCard(Player * playedby, Card * target) override;
+	void triggereffect(Player * playedby, std::shared_ptr<Card> c) override;
 };
 
 #endif

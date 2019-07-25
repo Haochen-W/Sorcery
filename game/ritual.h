@@ -17,6 +17,9 @@ public:
 	int getcharge ();
 	void setactivationCost (int nactivationCost);
 	void setcharge (int ncharge);
+
+	void playCard(Player * playedby, Player * opponent, int i) override; // place ritual on ritual slot
+	// play i p t {return;}
 };
 
 #endif
