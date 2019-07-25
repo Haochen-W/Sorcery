@@ -9,6 +9,7 @@
 
 // declaration
 class Card;
+class Minion;
 class TextDisplay;
 
 class Player{
@@ -58,9 +59,9 @@ public:
 
 	void loadDeck(std::string card); // load deck
 	void drawcard(); // draws a card from deck, add to hand, check if hand is full
-	// void disgard(int i); // erase ith card in hand
-	// void attack(int i, Player * p); // use minion i to attack player
-	// void attack(int i, Player * p, int j); // use minion i to attack minion j
+	void disgard(int i); // erase ith card in hand
+	void attack(int i, Player * p); // use minion i to attack player
+	void attack(int i, Player * p, int j); // use minion i to attack minion j
 	void play(int i); // play the ith card, minion, ritual, spell
 	// void play(int i, Player * p); // play the ith card on player p's ritual
 	// void play(int i, Player * p, int t); // play the ith card on on player p's minion t
@@ -68,8 +69,8 @@ public:
 	// void use(int i, Player * p); // use minion i on player p's ritual
 	// void use(int i, Player * p, int t); // use minion i on player p's minion t
 
-	// bool die();
-	// void gainMagic();
+	bool die();
+	void gainMagic();
 	
 	// void beAttacked(int damage);
 	

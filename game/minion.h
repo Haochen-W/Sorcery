@@ -25,12 +25,12 @@ public:
 	void setabilityCost(int nabilityCost);
 	void setaction(int naction);
 
-	// void minionAttack(Player * target) override; // return damage
-	// void minionAttack(Player * target, int i) override; // call mbeattack on target minion
+	void minionAttack(Player * target) override;
+	void minionAttack(Player * target, int i) override; // call mbeattack on target minion
 	void playCard(Player * playedby, Player * target, int i) override; // place the minion into minion slot
 	// void playCard(Player * playedby, Card * target) override; // do nothing
 
-	// void takeDamage(int damage); // cause damage on minion
+	void takeDamage(int damage) override;// cause damage on minion
 
 	// inspect i, hand
 	// friend std::ostream &operator<<(std::ostream &out, const Card c);

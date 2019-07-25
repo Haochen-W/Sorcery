@@ -21,3 +21,16 @@ void Minion::playCard(Player * playedby, Player * target, int i){
 }
 
 // void Minion::playCard(Player * playedby, Card * target) {return;}
+void Minion::minionAttack(Player * target){
+	const int att = getattackval();
+	target->setlife(target->getlife() - att);
+}
+
+void Minion::takeDamage(int damage){
+	defenceval -= damage;
+}
+
+void Minion::minionAttack(Player * target, int i){
+	const int att = getattackval();
+	target->getminionslot()[i]->takeDamage(att);
+}
