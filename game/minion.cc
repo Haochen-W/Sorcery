@@ -18,8 +18,8 @@ void Minion::playCard(Player * playedby, Player * opponent, int i){
 	std::shared_ptr<Card> temp{(playedby->gethand())[i - 1]};
 	(playedby->gethand()).erase((playedby->gethand()).begin() + i - 1);
 	(playedby->getminionslot()).emplace_back(temp);
-	playedby->trigger(GameStage::curNewMinion, temp);
-	opponent->trigger(GameStage::oppNewMinion, temp);
+	playedby->trigger(GameStage::curNewMinion, temp, opponent);
+	opponent->trigger(GameStage::oppNewMinion, temp, opponent);
 }
 
 // void Minion::playCard(Player * playedby, Card * target) {return;}

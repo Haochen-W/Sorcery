@@ -66,7 +66,7 @@ public:
 	void attack(int i, Player * p); // use minion i to attack player
 	void attack(int i, Player * p, int j); // use minion i to attack minion j
 	void play(int i, Player * opponent, bool testing); // play the ith card, place minion, place ritual, spell effect
-	void trigger(GameStage state, std::shared_ptr<Card> m);
+	void trigger(GameStage state, std::shared_ptr<Card> m, Player * opponent);
 	// void play(int i, Player * p); // play the ith card on player p's ritual
 	// void play(int i, Player * p, int t); // play the ith card on on player p's minion t
 	// void use(int i); // use minion i

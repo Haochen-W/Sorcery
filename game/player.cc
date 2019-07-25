@@ -173,10 +173,12 @@ void Player::attack(int i, Player * p, int j) {
     }
 
     if ((p->getminionslot())[j - 1]->miniondead()) {
-        (this->getminionslot())[j - 1]->toGraveyard(this, j);
+        (p->getminionslot())[j - 1]->toGraveyard(p, j);
     }
     this->notifyObservers();
     p->notifyObservers();
+    this->trigger(GameStage::minionLeave, nullptr, p);
+    p->trigger(GameStage::minionLeave, nullptr, p);
 }
 
 void Player::play(int i, Player * opponent, bool testing){
@@ -189,42 +191,38 @@ void Player::play(int i, Player * opponent, bool testing){
     this->notifyObservers();
 }
 
-void Player::trigger(GameStage state, std::shared_ptr<Card> c){
+void Player::trigger(GameStage state, std::shared_ptr<Card> c, Player * opponent){
     if(state == GameStage::startTurn){
         if(activeRitual != nullptr && activeRitual->getcardName() == "Dark Ritual"){
-            activeRitual->triggereffect(this, nullptr);
+            activeRitual->triggereffect(this, opponent, nullptr);
         }
     } else if(state == GameStage::endTurn){
         for(int i = 0; i < minionslot.size(); i++){
-            std::cout << minionslot.size() << std::endl;
-            std::cout << minionslot[i]->getcardName() << std::endl;
             if(minionslot[i]->getcardName() == "Potion Seller"){
                 for(int j = 0; j < minionslot.size(); j++){
-                    minionslot[i]->triggereffect(this, minionslot[j]);
+                    minionslot[i]->triggereffect(this, opponent, minionslot[j]);
                 }
             }
         }
     } else if(state == GameStage::curNewMinion){
         if(activeRitual != nullptr && activeRitual->getcardName() == "Aura of Power"){
-            activeRitual->triggereffect(this, c);
+            activeRitual->triggereffect(this, opponent, c);
         } else if(activeRitual != nullptr && activeRitual->getcardName() == "Standstill"){
-            activeRitual->triggereffect(this, c);
+            activeRitual->triggereffect(this, opponent, c);
         }
     } else if(state == GameStage::oppNewMinion){
         if(activeRitual != nullptr && activeRitual->getcardName() == "Standstill"){
-            activeRitual->triggereffect(this, c);
+            activeRitual->triggereffect(this, opponent, c);
         }
         for(int i = 0; i < minionslot.size(); i++){
             if(minionslot[i]->getcardName() == "Fire Elemental"){
-                minionslot[i]->triggereffect(this, c);
+                minionslot[i]->triggereffect(this, opponent, c);
             }
         }
     } else if(state == GameStage::minionLeave){
         for(int i = 0; i < minionslot.size(); i++){
             if(minionslot[i]->getcardName() == "Bone Golem"){
-                for(int j = 0; j < minionslot.size(); j++){
-                    minionslot[i]->triggereffect(this, minionslot[i]);
-                }
+                minionslot[i]->triggereffect(this, opponent, minionslot[i]);
             }
         }
     }

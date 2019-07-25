@@ -11,7 +11,7 @@ std::vector<std::string> Darkritual::getoutput(){
 	return temp;
 }
 
-void Darkritual::triggereffect(Player * playedby, std::shared_ptr<Card> c){
+void Darkritual::triggereffect(Player * playedby, Player * opponent, std::shared_ptr<Card> c){
 	playedby->gainMagic();
 }
 
@@ -26,7 +26,7 @@ std::vector<std::string> Auraofpower::getoutput(){
 	return temp;
 }
 
-void Auraofpower::triggereffect(Player * playedby, std::shared_ptr<Card> c){
+void Auraofpower::triggereffect(Player * playedby, Player * opponent, std::shared_ptr<Card> c){
 	c->setattackval(c->getattackval() + 1);
 	c->setdefenceval(c->getdefenceval() + 1);
 }
@@ -42,7 +42,9 @@ std::vector<std::string> Standstill::getoutput(){
 	return temp;
 };
 
-void Standstill::triggereffect(Player * playedby, std::shared_ptr<Card> c){
+void Standstill::triggereffect(Player * playedby, Player * opponent, std::shared_ptr<Card> c){
 	c->toGraveyard(playedby, (playedby->getminionslot()).size());
+	playedby->trigger(GameStage::minionLeave, nullptr, opponent);
+	opponent->trigger(GameStage::minionLeave, nullptr, opponent);
 }
 

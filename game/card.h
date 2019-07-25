@@ -38,7 +38,7 @@ public:
 	virtual void gainaction(); // set minion's action to 1
 	virtual void toGraveyard(Player * p, int i);
 
-	virtual void triggereffect(Player * playedby, std::shared_ptr<Card> c); // call ritual's or minion trigger effect
+	virtual void triggereffect(Player * playedby, Player * opponent, std::shared_ptr<Card> c); // call ritual's or minion trigger effect
 
 	
 	// virtual void playCard(Player * playedby, Card * target) = 0; 

@@ -23,7 +23,8 @@ std::vector<std::string> Bonegolem::getoutput(){
 	return temp;
 }
 
-void Bonegolem::triggereffect(Player * playedby, std::shared_ptr<Card> c){
+void Bonegolem::triggereffect(Player * playedby, Player * opponent, std::shared_ptr<Card> c){
+	std::cout << "HI" << std::endl;
 	c->setattackval(c->getattackval() + 1);
 	c->setdefenceval(c->getdefenceval() + 1);
 }
@@ -36,7 +37,7 @@ std::vector<std::string> Fireelemental::getoutput(){
 	return temp;
 }
 
-void Fireelemental::triggereffect(Player * playedby, std::shared_ptr<Card> c){
+void Fireelemental::triggereffect(Player * playedby, Player * opponent, std::shared_ptr<Card> c){
 	c->setdefenceval(c->getdefenceval() - 1);
 }
 
@@ -48,7 +49,7 @@ std::vector<std::string> Potionseller::getoutput(){
 	return temp;
 }
 
-void Potionseller::triggereffect(Player * playedby, std::shared_ptr<Card> c){
+void Potionseller::triggereffect(Player * playedby, Player * opponent, std::shared_ptr<Card> c){
 	c->setdefenceval(c->getdefenceval() + 1);
 }
 

@@ -113,7 +113,7 @@ int main(int argc, char const *argv[]){
 		} 
 		// end current player's turn
 		else if (cmd == "end"){
-			players[currentPlayer]->trigger(GameStage::endTurn, nullptr);
+			players[currentPlayer]->trigger(GameStage::endTurn, nullptr, players[nextPlayer]);
 			currentPlayer = (currentPlayer == 0) ? 1 : 0;
 			nextPlayer = (nextPlayer == 0) ? 1 : 0;
 			td.displayBoard();
@@ -126,7 +126,7 @@ int main(int argc, char const *argv[]){
 				players[currentPlayer]->drawcard();
 			} 
 			catch(ExceedMaximum &e){}
-			players[currentPlayer]->trigger(GameStage::startTurn, nullptr);
+			players[currentPlayer]->trigger(GameStage::startTurn, nullptr, players[nextPlayer]);
 			td.displayMagic(players[currentPlayer]);
 			td.displayHand(players[currentPlayer]);
 		} 
