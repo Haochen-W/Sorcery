@@ -19,11 +19,11 @@ public:
 	int getattackval();
 	int getdefenceval();
 	int getabilityCost();
-	int getaction();
+	int getaction() override;
 	void setattackval(int nattackval);
 	void setdefenceval(int ndefenceval);
 	void setabilityCost(int nabilityCost);
-	void setaction(int naction);
+	void setaction(int naction) override;
 
 	void minionAttack(Player * target) override;
 	void minionAttack(Player * target, int i) override; // call mbeattack on target minion
@@ -31,7 +31,9 @@ public:
 	// void playCard(Player * playedby, Card * target) override; // do nothing
 
 	void takeDamage(int damage) override;// cause damage on minion
+	bool miniondead() override;
 
+	void gainaction() override;
 	// inspect i, hand
 	// friend std::ostream &operator<<(std::ostream &out, const Card c);
 };

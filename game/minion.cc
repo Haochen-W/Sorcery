@@ -34,3 +34,11 @@ void Minion::minionAttack(Player * target, int i){
 	const int att = getattackval();
 	target->getminionslot()[i - 1]->takeDamage(att);
 }
+
+bool Minion::miniondead() {
+	return (getdefenceval() <= 0);
+}
+
+void Minion::gainaction(){
+	setaction(1);
+}

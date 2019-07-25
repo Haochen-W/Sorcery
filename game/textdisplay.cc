@@ -21,7 +21,7 @@ TextDisplay::TextDisplay(){
 	displayHand1.emplace_back(CARD_TEMPLATE_BORDER);
 	displayHand1.emplace_back(CARD_TEMPLATE_BORDER);
 
-	displayMagic1 = "o o o ";
+	displayMagic1 = "o o ";
 
 	displayPlayer2.emplace_back(CARD_TEMPLATE_BORDER);
 	displayPlayer2.emplace_back(CARD_TEMPLATE_EMPTY);
@@ -41,7 +41,7 @@ TextDisplay::TextDisplay(){
 	displayHand2.emplace_back(CARD_TEMPLATE_BORDER);
 	displayHand2.emplace_back(CARD_TEMPLATE_BORDER);
 
-	displayMagic2 = "o o o ";
+	displayMagic2 = "o o ";
 
 }
 

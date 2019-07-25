@@ -16,4 +16,10 @@ public:
 	std::string getErrorMessage();
 };
 
+class InvalidMove{
+	std::string s;
+public:
+	InvalidMove(std::string s);
+	std::string getErrorMessage();
+};
 #endif

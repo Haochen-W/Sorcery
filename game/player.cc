@@ -6,7 +6,7 @@
 #include "concreteenchantment.h"
 
 Player::Player(std::string playerName, int playerNum): 
-    playerName{playerName}, playerNum{playerNum}, life{20}, magic{3}, activeRitual{nullptr} {}
+    playerName{playerName}, playerNum{playerNum}, life{20}, magic{2}, activeRitual{nullptr} {}
 
 std::vector<std::string> Player::getplayerCard(){
 	std::vector<std::string> temp{display_player_card(playerNum, playerName, life, magic)};
@@ -136,7 +136,14 @@ void Player::attack(int i, Player * p) {
         InvalidPosition e{"No minion is placed at this position."};
         throw e;
     }
+    if ((this->getminionslot())[i - 1]->getaction() == 0) {
+        InvalidMove e {"Not enough action points."};
+        throw e;
+    }
+    // real attack
     (this->getminionslot())[i - 1]->minionAttack(p);
+    (this->getminionslot())[i - 1]->setaction(0);
+
     this->notifyObservers();
     p->notifyObservers();
 }
@@ -151,13 +158,33 @@ void Player::attack(int i, Player * p, int j) {
         InvalidPosition e {"No minion is placed at this position in your opponent's minion slot."};
         throw e;
     }
+    // check action
+    if ((this->getminionslot())[i - 1]->getaction() == 0) {
+        InvalidMove e {"Not enough action points."};
+        throw e;
+    }
+    // real attack
     (this->getminionslot())[i - 1]->minionAttack(p, j);
     (p->getminionslot())[j - 1]->minionAttack(this, i);
+    (this->getminionslot())[i - 1]->setaction(0);
+
+    if ((this->getminionslot())[i - 1]->miniondead()) {
+        std::shared_ptr<Card> temp{getminionslot()[i - 1]};
+        getminionslot().erase(getminionslot().begin() + i - 1);
+        getgraveyard().emplace_back(temp);
+    }
+
+    if ((p->getminionslot())[j - 1]->miniondead()) {
+        std::shared_ptr<Card> temp2{p->getminionslot()[j - 1]};
+        p->getminionslot().erase(p->getminionslot().begin() + j - 1);
+        p->getgraveyard().emplace_back(temp2);
+    }
     this->notifyObservers();
     p->notifyObservers();
 }
 
-void Player::play(int i){
+void Player::play(int i, bool testing){
+    // testing
     if(i > hand.size() || i <= 0) {
         InvalidPosition e {"No card at this position."};
         throw e;
@@ -166,6 +193,19 @@ void Player::play(int i){
     this->notifyObservers();
 }
 
-bool Player::die() {return (life > 0)? true: false;}
+void Player::gainaction(){
+    for (auto i: getminionslot()){
+        i->gainaction();
+    }
+}
+
+bool Player::die() {return (getlife() <= 0);}
 
 void Player::gainMagic(){magic += 1;}
+
+
+
+
+
+
+

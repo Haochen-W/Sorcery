@@ -115,10 +115,12 @@ int main(int argc, char const *argv[]){
 		else if (cmd == "end"){
 			currentPlayer = (currentPlayer == 0) ? 1 : 0;
 			nextPlayer = (nextPlayer == 0) ? 1 : 0;
+			td.displayBoard();
 
 			// start next player's turn
 			cout << "Player" << players[currentPlayer]->getplayerNum() << "'s turn!"<< endl;
 			players[currentPlayer]->gainMagic();
+			players[currentPlayer]->gainaction();
 			try {
 				players[currentPlayer]->drawcard();
 			} 
@@ -152,11 +154,14 @@ int main(int argc, char const *argv[]){
 		else if (cmd == "attack"){ 
 			int i,j;
 			scmd >> i;
-			if(!(scmd >> j)){
+			if(!(scmd >> j)){ 
 				try{
 					players[currentPlayer]->attack(i, players[nextPlayer]);
 				}
 				catch(InvalidPosition &e){
+					cerr << e.getErrorMessage() << endl;
+				}
+				catch(InvalidMove &e){
 					cerr << e.getErrorMessage() << endl;
 				}
 			} else {
@@ -164,6 +169,9 @@ int main(int argc, char const *argv[]){
 					players[currentPlayer]->attack(i, players[nextPlayer], j);
 				}
 				catch(InvalidPosition &e){
+					cerr << e.getErrorMessage() << endl;
+				}
+				catch(InvalidMove &e){
 					cerr << e.getErrorMessage() << endl;
 				}
 			}
@@ -174,7 +182,7 @@ int main(int argc, char const *argv[]){
 			if(!(scmd >> p)){
 				// play i: play minion, ritual, spell with no target
 				try{
-					players[currentPlayer]->play(i);
+					players[currentPlayer]->play(i, testingState);
 					td.displayMagic(players[currentPlayer]);
 					td.displayHand(players[currentPlayer]);
 				}
