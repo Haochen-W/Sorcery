@@ -21,6 +21,8 @@ TextDisplay::TextDisplay(){
 	displayHand1.emplace_back(CARD_TEMPLATE_BORDER);
 	displayHand1.emplace_back(CARD_TEMPLATE_BORDER);
 
+	displayMagic1 = "o o o ";
+
 	displayPlayer2.emplace_back(CARD_TEMPLATE_BORDER);
 	displayPlayer2.emplace_back(CARD_TEMPLATE_EMPTY);
 	displayPlayer2.emplace_back(PLAYER_2_TEMPLATE);
@@ -38,6 +40,9 @@ TextDisplay::TextDisplay(){
 	displayHand2.emplace_back(CARD_TEMPLATE_BORDER);
 	displayHand2.emplace_back(CARD_TEMPLATE_BORDER);
 	displayHand2.emplace_back(CARD_TEMPLATE_BORDER);
+
+	displayMagic2 = "o o o ";
+
 }
 
 
@@ -152,16 +157,31 @@ void TextDisplay::displayHand(Player * player){
 			for(int j = 0; j < 5; j++){
 				std::cout << displayHand2[j][i];
 			}
+			std::cout << std::endl;
 		}
 	}
 }
 
-void TextDisplay::inspectCard(Player * player, int num){
-	if(num >= 5){
-		throw InvalidPosition e{"There are only 5 minion slots."}
+void TextDisplay::displayMagic(Player * player){
+	if(player->getplayerNum() == 1){
+		displayMagic1 = "";
+		for(int i = 0; i < player->getmagic(); i++){
+			displayMagic1 += "o ";
+		}
+		std::cout << "Magic: " << displayMagic1 << std::endl;
+	} else if(player->getplayerNum() == 2){
+		displayMagic2 = "";
+		for(int i = 0; i < player->getmagic(); i++){
+			displayMagic2 += "o ";
+		}
+		std::cout << "Magic: " << displayMagic2 << std::endl;
 	}
-	if(num >= (player->getminionslot()).size()){
-		throw InvalidPosition e{"No minion is placed in this position."};
+}
+
+void TextDisplay::inspectCard(Player * player, int num){
+	if(num > (player->getminionslot()).size() || num <= 0){
+		InvalidPosition e{"No minion is placed in this position."};
+		throw e;
 	}
 	std::vector<std::string> temp{(player->getminionslot()[num])->getoutput()};
 	for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){

@@ -4,6 +4,7 @@
 #include <string>
 #include "player.h"
 #include "textdisplay.h"
+#include "exception.h"
 using namespace std;
 
 int main(int argc, char const *argv[]){
@@ -68,6 +69,7 @@ int main(int argc, char const *argv[]){
 	players[0]->notifyObservers();
 	players[1]->notifyObservers();
 	int currentPlayer = 0;
+	int nextPlayer = 1;
 
 	// load card
 	if(!deck1State) deck1file.open("default.deck");
@@ -86,6 +88,12 @@ int main(int argc, char const *argv[]){
 		players[0]->drawcard();
 		players[1]->drawcard();
 	}
+
+	// start player1's turn
+	cout << "Player " << players[currentPlayer]->getplayerNum() << "'s turn!"<< endl;
+	players[currentPlayer]->gainMagic();
+	td.displayMagic(players[currentPlayer]);
+	td.displayHand(players[currentPlayer]);
 
 	// enter game loop, change cin >> cmd to getline
 	while (true){
@@ -106,6 +114,17 @@ int main(int argc, char const *argv[]){
 		// end current player's turn
 		else if (cmd == "end"){
 			currentPlayer = (currentPlayer == 0) ? 1 : 0;
+			nextPlayer = (nextPlayer == 0) ? 1 : 0;
+
+			// start next player's turn
+			cout << "Player" << players[currentPlayer]->getplayerNum() << "'s turn!"<< endl;
+			players[currentPlayer]->gainMagic();
+			try {
+				players[currentPlayer]->drawcard();
+			} 
+			catch(ExceedMaximum &e){}
+			td.displayMagic(players[currentPlayer]);
+			td.displayHand(players[currentPlayer]);
 		} 
 		// end game
 		else if (cmd == "quit"){
@@ -117,6 +136,7 @@ int main(int argc, char const *argv[]){
 		else if (cmd == "draw" && testingState == true){
 			try {
 				players[currentPlayer]->drawcard();
+				td.displayHand(players[currentPlayer]);
 			} 
 			catch(ExceedMaximum &e){
 				cerr << e.getErrorMessage() << endl;
@@ -133,9 +153,19 @@ int main(int argc, char const *argv[]){
 			int i,j;
 			scmd >> i;
 			if(!(scmd >> j)){
-				// attack i
+				try{
+					players[currentPlayer]->attack(i, players[nextPlayer]);
+				}
+				catch(InvalidPosition &e){
+					cerr << e.getErrorMessage() << endl;
+				}
 			} else {
-				// attack i j
+				try{
+					players[currentPlayer]->attack(i, players[nextPlayer], j);
+				}
+				catch(InvalidPosition &e){
+					cerr << e.getErrorMessage() << endl;
+				}
 			}
 		} 
 		else if (cmd == "play"){
@@ -145,6 +175,8 @@ int main(int argc, char const *argv[]){
 				// play i: play minion, ritual, spell with no target
 				try{
 					players[currentPlayer]->play(i);
+					td.displayMagic(players[currentPlayer]);
+					td.displayHand(players[currentPlayer]);
 				}
 				catch(InvalidPosition &e){
 					cerr << e.getErrorMessage() << endl;

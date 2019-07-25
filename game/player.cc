@@ -111,10 +111,17 @@ void Player::loadDeck(std::string card){
 }
 
 void Player::drawcard(){
+    if(deck.size() <= 0){
+        ExceedMaximum e{"No more card in your deck."};
+        throw e;
+    }
     // hand is full, throw exception
-    if(hand.size()>= 5) return;
-    std::shared_ptr<Card> temp{deck.back()};
-    deck.erase(deck.begin() + deck.size() - 1);
+    if(hand.size()>= 5){
+        ExceedMaximum e{"Your hand is full."};
+        throw e;
+    }
+    std::shared_ptr<Card> temp{deck[0]};
+    deck.erase(deck.begin());
     hand.emplace_back(temp);
     this->notifyObservers();
 }
@@ -125,42 +132,37 @@ void Player::disgard(int i){
 }
 
 void Player::attack(int i, Player * p) {
-    if ((this->getminionslot()).size() <= i) {
-        // throw
+    if (i > (this->getminionslot()).size() || i <= 0) {
+        InvalidPosition e{"No minion is placed at this position."};
+        throw e;
     }
-    (this->getminionslot())[i]->minionAttack(p);
+    (this->getminionslot())[i - 1]->minionAttack(p);
     this->notifyObservers();
+    p->notifyObservers();
 }
+
 void Player::attack(int i, Player * p, int j) {
     // check valid input
-    if ((this->getminionslot()).size() < i) {
-        std::string s = "You can't attack with your ";
-        s += std::to_string(i);
-        s += "th minion (out of range).";
-        InvalidPosition exc {s};
-        throw exc;
+    if (i > (this->getminionslot()).size() || i <= 0) {
+        InvalidPosition e {"No minion is placed at this position in your minion slot."};
+        throw e;
     }
-    if ((p->getminionslot()).size() < j) {
-        std::string s = "You can't attack the ";
-        s += std::to_string(j);
-        s += "th minion of your opponent (out of range).";
-        InvalidPosition exc {s};
-        throw exc;
+    if (j > (p->getminionslot()).size() || j <= 0) {
+        InvalidPosition e {"No minion is placed at this position in your opponent's minion slot."};
+        throw e;
     }
-    (this->getminionslot())[i]->minionAttack(p, j);
-    (p->getminionslot())[j]->minionAttack(p, i);
+    (this->getminionslot())[i - 1]->minionAttack(p, j);
+    (p->getminionslot())[j - 1]->minionAttack(this, i);
     this->notifyObservers();
+    p->notifyObservers();
 }
 
 void Player::play(int i){
-    if(i >= hand.size()) {
-        std::string s = "You don't have the ";
-        s += std::to_string(i);
-        s += "th card in hand.";
-        InvalidPosition exc {s};
-        throw exc;
+    if(i > hand.size() || i <= 0) {
+        InvalidPosition e {"No card at this position."};
+        throw e;
     }
-    hand[i]->playCard(this, this, i);
+    hand[i - 1]->playCard(this, this, i);
     this->notifyObservers();
 }
 

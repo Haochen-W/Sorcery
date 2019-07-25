@@ -15,8 +15,8 @@ void Minion::setabilityCost(int nabilityCost){abilityCost = nabilityCost;}
 void Minion::setaction(int naction){action = naction;}
 
 void Minion::playCard(Player * playedby, Player * target, int i){
-	std::shared_ptr<Card> temp{(playedby->gethand())[i]};
-	(playedby->gethand()).erase((playedby->gethand()).begin() + i);
+	std::shared_ptr<Card> temp{(playedby->gethand())[i - 1]};
+	(playedby->gethand()).erase((playedby->gethand()).begin() + i - 1);
 	(playedby->getminionslot()).emplace_back(temp);
 }
 
@@ -32,5 +32,5 @@ void Minion::takeDamage(int damage){
 
 void Minion::minionAttack(Player * target, int i){
 	const int att = getattackval();
-	target->getminionslot()[i]->takeDamage(att);
+	target->getminionslot()[i - 1]->takeDamage(att);
 }
