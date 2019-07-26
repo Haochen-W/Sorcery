@@ -2,10 +2,15 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <algorithm>
 #include "player.h"
 #include "textdisplay.h"
 #include "exception.h"
 using namespace std;
+
+int myrandom (int i) {
+	return std::rand()%i;
+}
 
 int main(int argc, char const *argv[]){
 	// command line arguments
@@ -83,12 +88,15 @@ int main(int argc, char const *argv[]){
 		players[1]->loadDeck(card);
 	}
 
+	std::random_shuffle(players[0]->getdeck().begin(), players[0]->getdeck().end());
+	std::random_shuffle(players[1]->getdeck().begin(), players[1]->getdeck().end());
+
 	// load hand
 	for(int i = 0; i < 5; i++){
 		players[0]->drawcard();
 		players[1]->drawcard();
 	}
-
+	
 	// start player1's turn
 	cout << "Player " << players[currentPlayer]->getplayerNum() << "'s turn!"<< endl;
 	players[currentPlayer]->gainMagic();
@@ -195,31 +203,113 @@ int main(int argc, char const *argv[]){
 					cerr << e.getErrorMessage() << endl;
 				}
 			} 
-			// else {
-			// 	if(scmd >> t){
-			// 		// play enchantment, spell on minion
-			// 		players[currentPlayer]->play(i, players[currentPlayer], t);
-			// 	} else {
-			// 		// play enchantment, spell on ritual
-			// 		players[currentPlayer]->play(i, players[currentPlayer]);
-			// 	}
-			// }
+			else {
+				if(scmd >> t){
+					// play i p t: play enchantment, spell on minion
+					if(p == players[currentPlayer]->getplayerNum()){
+						try {
+							players[currentPlayer]->play(i, players[nextPlayer], t, true, testingState);
+						}
+						catch(InvalidPosition &e){
+							cerr << e.getErrorMessage() << endl;
+						}
+						catch(InvalidMove &e){
+							cerr << e.getErrorMessage() << endl;
+						}
+					} else {
+						try {
+							players[currentPlayer]->play(i, players[nextPlayer], t, false, testingState);
+						}
+						catch(InvalidPosition &e){
+							cerr << e.getErrorMessage() << endl;
+						}
+						catch(InvalidMove &e){
+							cerr << e.getErrorMessage() << endl;
+						}
+					}
+				} else {
+					// play i p r: play enchantment, spell on ritual
+					if(p == players[currentPlayer]->getplayerNum()){
+						try {
+							players[currentPlayer]->play(i, players[nextPlayer], true, true, testingState);
+						}
+						catch(InvalidPosition &e){
+							cerr << e.getErrorMessage() << endl;
+						}
+						catch(InvalidMove &e){
+							cerr << e.getErrorMessage() << endl;
+						}
+					} else {
+						try {
+							players[currentPlayer]->play(i, players[nextPlayer], false, true, testingState);
+						}
+						catch(InvalidPosition &e){
+							cerr << e.getErrorMessage() << endl;
+						}
+						catch(InvalidMove &e){
+							cerr << e.getErrorMessage() << endl;
+						}
+					}
+				}
+			}
 		} 
 		else if (cmd == "use"){
-			// int i, p, t;
-			// scmd >> i;
-			// if(!(scmd >> p)){
-			// 	// use i: use minion
-			// 	players[currentPlayer]->use(i);
-			// } else {
-			// 	if(scmd >> t){
-			// 		// use i p t: use minion on minion
-			// 		players[currentPlayer]->use(i, players[currentPlayer], t);
-			// 	} else {
-			// 		// use i p r: use minion on ritual
-			// 		players[currentPlayer]->use(i, players[currentPlayer]);
-			// 	}
-			// }
+			int i, p, t;
+			scmd >> i;
+			if(!(scmd >> p)){
+				// use i: use minion
+				if(p == players[currentPlayer]->getplayerNum()){
+						try {
+							players[currentPlayer]->use(i, players[nextPlayer], testingState);
+						}
+						catch(InvalidPosition &e){
+							cerr << e.getErrorMessage() << endl;
+						}
+						catch(InvalidMove &e){
+							cerr << e.getErrorMessage() << endl;
+						}
+						catch(ExceedMaximum &e){
+							cerr << e.getErrorMessage() << endl;
+						}
+					} else {
+						try {
+							players[currentPlayer]->use(i, players[nextPlayer], testingState);
+						}
+						catch(InvalidPosition &e){
+							cerr << e.getErrorMessage() << endl;
+						}
+						catch(InvalidMove &e){
+							cerr << e.getErrorMessage() << endl;
+						}
+						catch(ExceedMaximum &e){
+							cerr << e.getErrorMessage() << endl;
+						}
+					}
+			} else {
+				scmd >> t;
+				// use i p t: use minion on minion
+				if(p == players[currentPlayer]->getplayerNum()){
+						try {
+							players[currentPlayer]->use(i, players[nextPlayer], t, true, testingState);
+						}
+						catch(InvalidPosition &e){
+							cerr << e.getErrorMessage() << endl;
+						}
+						catch(InvalidMove &e){
+							cerr << e.getErrorMessage() << endl;
+						}
+					} else {
+						try {
+							players[currentPlayer]->use(i, players[nextPlayer], t, false, testingState);
+						}
+						catch(InvalidPosition &e){
+							cerr << e.getErrorMessage() << endl;
+						}
+						catch(InvalidMove &e){
+							cerr << e.getErrorMessage() << endl;
+						}
+					}
+			}
 		} 
 		// inspect i: display minion i
 		else if (cmd == "inspect"){

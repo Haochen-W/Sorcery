@@ -25,7 +25,7 @@ class Player{
 	std::vector<std::shared_ptr<Card>> hand;
 	std::vector<std::shared_ptr<Card>> minionslot;
 	std::vector<std::shared_ptr<Card>> graveyard;
-	std::shared_ptr<Card> activeRitual;
+	std::vector<std::shared_ptr<Card>> activeRitual;
 	std::vector<std::string> playerCard;
 
 public:
@@ -41,7 +41,7 @@ public:
 	std::vector<std::shared_ptr<Card>> & gethand();
 	std::vector<std::shared_ptr<Card>> & getminionslot();
 	std::vector<std::shared_ptr<Card>> & getgraveyard();
-	std::shared_ptr<Card> getactiveRitual();
+	std::vector<std::shared_ptr<Card>> & getactiveRitual();
 	std::vector<std::string> getplayerCard();
 
 	// do we need setter?
@@ -52,7 +52,7 @@ public:
 	void sethand (std::vector<std::shared_ptr<Card>> nhand);
 	void setminionslot (std::vector<std::shared_ptr<Card>> nminionslot);
 	void setgraveyard (std::vector<std::shared_ptr<Card>> ngraveyard);
-	void setactiveRitual (std::shared_ptr<Card> nactiveRitual);
+	void setactiveRitual (std::vector<std::shared_ptr<Card>> nactiveRitual);
 	void setplayerCard (std::vector<std::string> nplayerCard);
 
 	// subject
@@ -66,12 +66,11 @@ public:
 	void attack(int i, Player * p); // use minion i to attack player
 	void attack(int i, Player * p, int j); // use minion i to attack minion j
 	void play(int i, Player * opponent, bool testing); // play the ith card, place minion, place ritual, spell effect
+	void play(int i, Player * opponent, int t, bool onme, bool testing); // play the ith card on on player p's minion t
+	void play(int i, Player * opponent, bool onme, bool ritual, bool testing);
 	void trigger(GameStage state, std::shared_ptr<Card> m, Player * opponent);
-	void play(int i, Player * p); // play the ith card on player p's ritual
-	void play(int i, Player * p, int t); // play the ith card on on player p's minion t
-	// void use(int i); // use minion i
-	// void use(int i, Player * p); // use minion i on player p's ritual
-	// void use(int i, Player * p, int t); // use minion i on player p's minion t
+	void use(int i, Player * opponent, bool testing); // use minion i
+	void use(int i, Player * opponent, int t, bool onme, bool testing); // use minion i on player p's minion t
 
 	bool die();
 	void gainMagic();

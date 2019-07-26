@@ -19,8 +19,12 @@ void Minion::playCard(Player * playedby, Player * opponent, int i){
 	(playedby->gethand()).erase((playedby->gethand()).begin() + i - 1);
 	(playedby->getminionslot()).emplace_back(temp);
 	playedby->trigger(GameStage::curNewMinion, temp, opponent);
-	opponent->trigger(GameStage::oppNewMinion, temp, opponent);
+	opponent->trigger(GameStage::oppNewMinion, temp, playedby);
 }
+
+void Minion::useMinion(Player * playedby, Player * opponent){return;}
+
+void Minion::useMinion(Player * playedby, Player * opponent, std::shared_ptr<Card> c){return;}
 
 // void Minion::playCard(Player * playedby, Card * target) {return;}
 void Minion::minionAttack(Player * target){
@@ -43,10 +47,12 @@ bool Minion::miniondead() {
 
 void Minion::toGraveyard(Player * p, int i){
 	std::shared_ptr<Card> temp{p->getminionslot()[i - 1]};
-    p->getminionslot().erase(p->getminionslot().begin() + i - 1);
-    p->getgraveyard().emplace_back(temp);
+	p->getminionslot().erase(p->getminionslot().begin() + i - 1);
+	p->getgraveyard().emplace_back(temp);
 }
 
 void Minion::gainaction(){
 	setaction(1);
 }
+
+

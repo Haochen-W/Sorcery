@@ -10,9 +10,9 @@ public:
 	~Banish() = default;
 
 	std::vector<std::string> getoutput() override;
-	void playCard(Player * playedby, Card * target) override;
+	void playCard(Player * playedby, Player * opponent, int i, bool onme, bool ritual) override;
+	void playCard(Player * playedby, Player * opponent, int i, bool onme, int t) override;
 };
-
 
 class Unsummon : public Spell {
 public:
@@ -20,9 +20,7 @@ public:
 	~Unsummon() = default;
 
 	std::vector<std::string> getoutput() override;
-
-	// void playCard(Player * playedby, Player * target) override;
-	// void playCard(Player * playedby, Card * target) override;
+	void playCard(Player * playedby, Player * opponent, int i, bool onme, int t) override;
 };
 
 
@@ -32,6 +30,7 @@ public:
 	~Recharge() = default;
 
 	std::vector<std::string> getoutput() override;
+	void playCard(Player * playedby, Player * opponent, int i, bool onme, bool ritual) override;
 
 	// void playCard(Player * playedby, Player * target) override;
 	// void playCard(Player * playedby, Card * target) override;
@@ -44,6 +43,7 @@ public:
 	~Disenchant() = default;
 
 	std::vector<std::string> getoutput() override;
+	void playCard(Player * playedby, Player * opponent, int i, bool onme, int t) override;
 
 	// void playCard(Player * playedby, Player * target) override;
 	// void playCard(Player * playedby, Card * target) override;
@@ -56,6 +56,7 @@ public:
 	~Raisedead() = default;
 
 	std::vector<std::string> getoutput() override;
+	void playCard(Player * playedby, Player * opponent, int i, bool onme, bool ritual) override;
 
 	// void playCard(Player * playedby, Player * target) override;
 	// void playCard(Player * playedby, Card * target) override;
@@ -68,7 +69,7 @@ public:
 	~Blizzard() = default;
 
 	std::vector<std::string> getoutput() override;
-
+	void playCard(Player * playedby, Player * opponent, int i, bool onme, int t) override;
 	// void playCard(Player * playedby, Player * target) override;
 	// void playCard(Player * playedby, Card * target) override;
 };

@@ -49,7 +49,7 @@ TextDisplay::TextDisplay(){
 void TextDisplay::notify(Player & whoNotified){
 	if(whoNotified.getplayerNum() == 1){
 		// update player row
-		if(whoNotified.getactiveRitual()) displayPlayer1[0] = (whoNotified.getactiveRitual())->getoutput();
+		if(whoNotified.getactiveRitual().size() != 0) displayPlayer1[0] = (whoNotified.getactiveRitual()[0])->getoutput();
 		displayPlayer1[2] = whoNotified.getplayerCard();
 		if(!(whoNotified.getgraveyard()).empty()) displayPlayer1[4] = ((whoNotified.getgraveyard()).back())->getoutput();
 
@@ -71,7 +71,7 @@ void TextDisplay::notify(Player & whoNotified){
 
 	} else if(whoNotified.getplayerNum() == 2){
 		// update player row
-		if(whoNotified.getactiveRitual()) displayPlayer2[0] = (whoNotified.getactiveRitual())->getoutput();
+		if(whoNotified.getactiveRitual().size() != 0) displayPlayer2[0] = (whoNotified.getactiveRitual()[0])->getoutput();
 		displayPlayer2[2] = whoNotified.getplayerCard();
 		if(!(whoNotified.getgraveyard()).empty()) displayPlayer2[4] = ((whoNotified.getgraveyard()).back())->getoutput();
 		

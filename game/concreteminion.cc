@@ -39,6 +39,11 @@ std::vector<std::string> Fireelemental::getoutput(){
 
 void Fireelemental::triggereffect(Player * playedby, Player * opponent, std::shared_ptr<Card> c){
 	c->setdefenceval(c->getdefenceval() - 1);
+	if(c->miniondead()){
+		c->toGraveyard(playedby, (opponent->getminionslot()).size());
+	}
+	playedby->trigger(GameStage::minionLeave, nullptr, opponent);
+    opponent->trigger(GameStage::minionLeave, nullptr, playedby);
 }
 
 
@@ -61,12 +66,33 @@ std::vector<std::string> Novicepyromancer::getoutput(){
 	return temp;
 }
 
+void Novicepyromancer::useMinion(Player * playedby, Player * opponent, std::shared_ptr<Card> c){
+	c->setdefenceval(c->getdefenceval() - 1);
+	// check death
+	if(c->miniondead()){
+		c->toGraveyard(playedby, (opponent->getminionslot()).size());
+	}
+	playedby->trigger(GameStage::minionLeave, nullptr, opponent);
+    opponent->trigger(GameStage::minionLeave, nullptr, playedby);
+}
+
 
 Apprenticesummoner::Apprenticesummoner(): Minion{"Apprentice Summoner", 1, 1, 1, 1} {}
 
 std::vector<std::string> Apprenticesummoner::getoutput(){
 	std::vector<std::string> temp {display_minion_activated_ability("Apprentice Summoner", 1, attackval, defenceval, abilityCost, "Summon a 1/1 air elemental")};
 	return temp;
+}
+
+void Apprenticesummoner::useMinion(Player * playedby, Player * opponent){
+	if((playedby->getminionslot()).size() >= 5){
+		ExceedMaximum e{"Your minionslot is full."};
+        throw e;
+	}
+	std::shared_ptr<Airelemental> p = std::make_shared<Airelemental>();
+	(playedby->getminionslot()).emplace_back(p);
+	playedby->trigger(GameStage::curNewMinion, p, opponent);
+	opponent->trigger(GameStage::oppNewMinion, p, playedby);
 }
 
 
@@ -77,3 +103,15 @@ std::vector<std::string> Mastersummoner::getoutput(){
 	return temp;
 }
 
+void Mastersummoner::useMinion(Player * playedby, Player * opponent){
+	for(int i = 0; i < 3; i ++){
+ 		if((playedby->getminionslot()).size() >= 5){
+ 			ExceedMaximum e{"Your minionslot is full."};
+ 			throw e;
+ 		}
+	 	std::shared_ptr<Airelemental> p = std::make_shared<Airelemental>();
+	 	(playedby->getminionslot()).emplace_back(p);
+	 	playedby->trigger(GameStage::curNewMinion, p, opponent);
+	 	opponent->trigger(GameStage::oppNewMinion, p, playedby);
+ 	}
+}

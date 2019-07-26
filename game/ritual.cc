@@ -12,5 +12,5 @@ void Ritual::setcharge (int ncharge){charge = ncharge;}
 void Ritual::playCard(Player * playedby, Player * opponent, int i){
 	std::shared_ptr<Card> temp{(playedby->gethand())[i - 1]};
 	(playedby->gethand()).erase((playedby->gethand()).begin() + i - 1);
-	playedby->setactiveRitual(temp);
+	playedby->getactiveRitual().emplace_back(temp);
 }

@@ -14,9 +14,9 @@ public:
 	~Ritual() = default;
 
 	int getactivationCost ();
-	int getcharge ();
+	int getcharge () override;
 	void setactivationCost (int nactivationCost);
-	void setcharge (int ncharge);
+	void setcharge (int ncharge) override;
 
 	void playCard(Player * playedby, Player * opponent, int i) override; // place ritual on ritual slot
 	// play i p t {return;}

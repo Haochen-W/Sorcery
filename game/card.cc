@@ -8,6 +8,8 @@ std::string Card::getcardName() {return cardName;}
 void Card::setcost(int ncost){cost = ncost;}
 
 void Card::playCard(Player * playedby, Player * opponent, int i){return;}
+void Card::playCard(Player * playedby, Player * opponent, int i, bool onme, int t){return;}
+void Card::playCard(Player * playedby, Player * opponent, int i, bool onme, bool ritual){return;}
 
 void Card::minionAttack(Player * target){return;}
 
@@ -20,11 +22,12 @@ bool Card::miniondead(){return false;}
 void Card::setaction(int naction){return;}
 
 int Card::getaction(){return 0;}
+int Card::getabilityCost(){return 0;}
 
 void Card::gainaction(){return;}
 
 void Card::triggereffect(Player * playedby, Player * opponent, std::shared_ptr<Card> c){return;}
-void playCard(Player * playedby, Card * target){return;}
+void Card::playCard(Player * playedby, Card * target){return;}
 
 void Card::toGraveyard(Player * p, int i){return;}
 
@@ -32,3 +35,7 @@ int Card::getattackval(){return 0;}
 int Card::getdefenceval(){return 0;}
 void Card::setattackval(int nattackval){return;}
 void Card::setdefenceval(int ndefenceval){return;}
+void Card::useMinion(Player * playedby, Player * opponent){return;}
+void Card::useMinion(Player * playedby, Player * opponent, std::shared_ptr<Card> c) {return;}
+int Card::getcharge (){return 0;}
+void Card::setcharge (int ncharge){return;}

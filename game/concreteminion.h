@@ -10,9 +10,6 @@ public:
 	~Airelemental() = default;
 
 	std::vector<std::string> getoutput() override;
-
-	// void useMinion(Player * playedby, Player * target) override;
-	// void useMinion(Player * playedby, Card * target) override;
 };
 
 
@@ -22,9 +19,6 @@ public:
 	~Earthelemental() = default;
 
 	std::vector<std::string> getoutput() override;
-
-	// void useMinion(Player * playedby, Player * target) override;
-	// void useMinion(Player * playedby, Card * target) override;
 };
 
 
@@ -35,9 +29,6 @@ public:
 
 	std::vector<std::string> getoutput() override;
 	void triggereffect(Player * playedby, Player * opponent, std::shared_ptr<Card> c) override;
-
-	// void useMinion(Player * playedby, Player * target) override;
-	// void useMinion(Player * playedby, Card * target) override;
 };
 
 
@@ -48,9 +39,6 @@ public:
 
 	std::vector<std::string> getoutput() override;
 	void triggereffect(Player * playedby, Player * opponent, std::shared_ptr<Card> c) override;
-
-	// void useMinion(Player * playedby, Player * target) override;
-	// void useMinion(Player * playedby, Card * target) override;
 };
 
 
@@ -61,9 +49,6 @@ public:
 
 	std::vector<std::string> getoutput() override;
 	void triggereffect(Player * playedby, Player * opponent, std::shared_ptr<Card> c) override;
-
-	// void useMinion(Player * playedby, Player * target) override;
-	// void useMinion(Player * playedby, Card * target) override;
 };
 
 
@@ -73,9 +58,7 @@ public:
 	~Novicepyromancer()= default; 
 
 	std::vector<std::string> getoutput() override;
-
-	// void useMinion(Player * playedby, Player * target) override;
-	// void useMinion(Player * playedby, Card * target) override;
+	void useMinion(Player * playedby, Player * opponent, std::shared_ptr<Card> c) override;
 };
 
 
@@ -85,9 +68,7 @@ public:
 	~Apprenticesummoner()= default; 
 
 	std::vector<std::string> getoutput() override;
-
-	// void useMinion(Player * playedby, Player * target) override;
-	// void useMinion(Player * playedby, Card * target) override;
+	void useMinion(Player * playedby, Player * opponent) override;
 };
 
 
@@ -97,9 +78,7 @@ public:
 	~Mastersummoner()= default;
 
 	std::vector<std::string> getoutput() override;
-
-	// void useMinion(Player * playedby, Player * target) override;
-	// void useMinion(Player * playedby, Card * target) override;
+	void useMinion(Player * playedby, Player * opponent) override;
 };
 
 
