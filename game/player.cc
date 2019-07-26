@@ -182,13 +182,32 @@ void Player::attack(int i, Player * p, int j) {
 }
 
 void Player::play(int i, Player * opponent, bool testing){
-    // testing
+    // testing mode
+    // not enough magic
+    if (testing) setmagic(0);
+    if (!testing && getmagic() < gethand()[i - 1]->getcost()){
+        InvalidMove e {"Not enough magic."};
+        throw e;
+    }
+
     if(i > hand.size() || i <= 0) {
         InvalidPosition e {"No card at this position."};
         throw e;
     }
+    const int m = getmagic() - gethand()[i - 1]->getcost();
     hand[i - 1]->playCard(this, opponent, i);
+    setmagic(m);
     this->notifyObservers();
+}
+
+void play(int i, Player * p){
+    // testing mode
+    // not enough magic
+    if (testing) setmagic(0);
+    if (!testing && getmagic() < gethand()[i - 1]->getcost()){
+        InvalidMove e {"Not enough magic."};
+        throw e;
+    }
 }
 
 void Player::trigger(GameStage state, std::shared_ptr<Card> c, Player * opponent){

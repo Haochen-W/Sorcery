@@ -10,9 +10,7 @@ public:
 	~Banish() = default;
 
 	std::vector<std::string> getoutput() override;
-
-	// void playCard(Player * playedby, Player * target) override;
-	// void playCard(Player * playedby, Card * target) override;
+	void playCard(Player * playedby, Card * target) override;
 };
 
 

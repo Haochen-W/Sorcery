@@ -24,6 +24,8 @@ int Card::getaction(){return 0;}
 void Card::gainaction(){return;}
 
 void Card::triggereffect(Player * playedby, Player * opponent, std::shared_ptr<Card> c){return;}
+void playCard(Player * playedby, Card * target){return;}
+
 void Card::toGraveyard(Player * p, int i){return;}
 
 int Card::getattackval(){return 0;}

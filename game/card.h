@@ -41,7 +41,7 @@ public:
 	virtual void triggereffect(Player * playedby, Player * opponent, std::shared_ptr<Card> c); // call ritual's or minion trigger effect
 
 	
-	// virtual void playCard(Player * playedby, Card * target) = 0; 
+	virtual void playCard(Player * playedby, Card * target); 
 	// virtual void useMinion(Player * playedby, Player * target); // override in minion only
 	// virtual void useMinion(Player * playedby, Card * target); // override in minion only
 

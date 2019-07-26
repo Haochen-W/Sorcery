@@ -125,10 +125,10 @@ int main(int argc, char const *argv[]){
 				players[currentPlayer]->drawcard();
 			} 
 			catch(ExceedMaximum &e){}
-			td.displayMagic(players[currentPlayer]);
-			td.displayHand(players[currentPlayer]);
 			players[currentPlayer]->trigger(GameStage::startTurn, nullptr, players[nextPlayer]);
 			td.displayBoard();
+			td.displayMagic(players[currentPlayer]);
+			td.displayHand(players[currentPlayer]);
 		} 
 		// end game
 		else if (cmd == "quit"){
@@ -189,6 +189,9 @@ int main(int argc, char const *argv[]){
 					td.displayHand(players[currentPlayer]);
 				}
 				catch(InvalidPosition &e){
+					cerr << e.getErrorMessage() << endl;
+				}
+				catch(InvalidMove &e){
 					cerr << e.getErrorMessage() << endl;
 				}
 			} 
