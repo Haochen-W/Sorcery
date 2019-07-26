@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <algorithm>
+#include <ctime>
 #include "player.h"
 #include "textdisplay.h"
 #include "exception.h"
@@ -88,8 +89,10 @@ int main(int argc, char const *argv[]){
 		players[1]->loadDeck(card);
 	}
 
-	std::random_shuffle(players[0]->getdeck().begin(), players[0]->getdeck().end());
-	std::random_shuffle(players[1]->getdeck().begin(), players[1]->getdeck().end());
+	std::srand(unsigned (std::time(0)));
+
+	std::random_shuffle(players[0]->getdeck().begin(), players[0]->getdeck().end(), myrandom);
+	std::random_shuffle(players[1]->getdeck().begin(), players[1]->getdeck().end(), myrandom);
 
 	// load hand
 	for(int i = 0; i < 5; i++){
