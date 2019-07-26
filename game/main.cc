@@ -116,7 +116,6 @@ int main(int argc, char const *argv[]){
 			players[currentPlayer]->trigger(GameStage::endTurn, nullptr, players[nextPlayer]);
 			currentPlayer = (currentPlayer == 0) ? 1 : 0;
 			nextPlayer = (nextPlayer == 0) ? 1 : 0;
-			td.displayBoard();
 
 			// start next player's turn
 			cout << "Player" << players[currentPlayer]->getplayerNum() << "'s turn!"<< endl;
@@ -126,9 +125,10 @@ int main(int argc, char const *argv[]){
 				players[currentPlayer]->drawcard();
 			} 
 			catch(ExceedMaximum &e){}
-			players[currentPlayer]->trigger(GameStage::startTurn, nullptr, players[nextPlayer]);
 			td.displayMagic(players[currentPlayer]);
 			td.displayHand(players[currentPlayer]);
+			players[currentPlayer]->trigger(GameStage::startTurn, nullptr, players[nextPlayer]);
+			td.displayBoard();
 		} 
 		// end game
 		else if (cmd == "quit"){

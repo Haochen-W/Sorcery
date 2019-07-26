@@ -211,13 +211,13 @@ void Player::trigger(GameStage state, std::shared_ptr<Card> c, Player * opponent
             activeRitual->triggereffect(this, opponent, c);
         }
     } else if(state == GameStage::oppNewMinion){
-        if(activeRitual != nullptr && activeRitual->getcardName() == "Standstill"){
-            activeRitual->triggereffect(this, opponent, c);
-        }
         for(int i = 0; i < minionslot.size(); i++){
             if(minionslot[i]->getcardName() == "Fire Elemental"){
                 minionslot[i]->triggereffect(this, opponent, c);
             }
+        }
+        if(activeRitual != nullptr && activeRitual->getcardName() == "Standstill"){
+            activeRitual->triggereffect(this, opponent, c);
         }
     } else if(state == GameStage::minionLeave){
         for(int i = 0; i < minionslot.size(); i++){
