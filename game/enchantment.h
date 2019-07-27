@@ -6,7 +6,7 @@
 
 class Enchantment : public Decorator { // decorator of minion
 public:
-	Enchantment(std::string cardName, int cost);
+	Enchantment(std::string cardName, int cost, Minion * component);
 	~Enchantment() = default;
 };
 

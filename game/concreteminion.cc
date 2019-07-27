@@ -23,7 +23,7 @@ std::vector<std::string> Bonegolem::getoutput(){
 	return temp;
 }
 
-void Bonegolem::triggereffect(Player * playedby, Player * opponent, std::shared_ptr<Card> c){
+void Bonegolem::triggereffect(Player * playedby, Player * opponent, Card * c){
 	std::cout << "HI" << std::endl;
 	c->setattackval(c->getattackval() + 1);
 	c->setdefenceval(c->getdefenceval() + 1);
@@ -37,10 +37,10 @@ std::vector<std::string> Fireelemental::getoutput(){
 	return temp;
 }
 
-void Fireelemental::triggereffect(Player * playedby, Player * opponent, std::shared_ptr<Card> c){
+void Fireelemental::triggereffect(Player * playedby, Player * opponent, Card * c){
 	c->setdefenceval(c->getdefenceval() - 1);
 	if(c->miniondead()){
-		c->toGraveyard(playedby, (opponent->getminionslot()).size());
+		c->toGraveyard(opponent, (opponent->getminionslot()).size());
 	}
 	playedby->trigger(GameStage::minionLeave, nullptr, opponent);
     opponent->trigger(GameStage::minionLeave, nullptr, playedby);
@@ -54,7 +54,7 @@ std::vector<std::string> Potionseller::getoutput(){
 	return temp;
 }
 
-void Potionseller::triggereffect(Player * playedby, Player * opponent, std::shared_ptr<Card> c){
+void Potionseller::triggereffect(Player * playedby, Player * opponent, Card * c){
 	c->setdefenceval(c->getdefenceval() + 1);
 }
 
@@ -66,11 +66,11 @@ std::vector<std::string> Novicepyromancer::getoutput(){
 	return temp;
 }
 
-void Novicepyromancer::useMinion(Player * playedby, Player * opponent, std::shared_ptr<Card> c){
+void Novicepyromancer::useMinion(Player * playedby, Player * opponent, Card * c){
 	c->setdefenceval(c->getdefenceval() - 1);
 	// check death
 	if(c->miniondead()){
-		c->toGraveyard(playedby, (opponent->getminionslot()).size());
+		c->toGraveyard(opponent, (opponent->getminionslot()).size());
 	}
 	playedby->trigger(GameStage::minionLeave, nullptr, opponent);
     opponent->trigger(GameStage::minionLeave, nullptr, playedby);

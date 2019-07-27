@@ -6,7 +6,7 @@
 
 class Giantstrength : public Enchantment {
 public:
-	Giantstrength();
+	Giantstrength(Minion * component);
 	~Giantstrength() = default;
 
 	std::vector<std::string> getoutput() override;
@@ -18,7 +18,7 @@ public:
 
 class Enrage : public Enchantment {
 public:
-	Enrage();
+	Enrage(Minion * component);
 	~Enrage() = default;
 
 	std::vector<std::string> getoutput() override;
@@ -30,7 +30,7 @@ public:
 
 class Haste : public Enchantment {
 public:
-	Haste();
+	Haste(Minion * component);
 	~Haste() = default;
 
 	std::vector<std::string> getoutput() override;
@@ -42,7 +42,7 @@ public:
 
 class Magicfatigue : public Enchantment {
 public:
-	Magicfatigue();
+	Magicfatigue(Minion * component);
 	~Magicfatigue() = default;
 
 	std::vector<std::string> getoutput() override;
@@ -54,7 +54,7 @@ public:
 
 class Silence : public Enchantment {
 public:
-	Silence();
+	Silence(Minion * component);
 	~Silence() = default;
 
 	std::vector<std::string> getoutput() override;

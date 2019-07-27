@@ -31,9 +31,6 @@ public:
 
 	std::vector<std::string> getoutput() override;
 	void playCard(Player * playedby, Player * opponent, int i, bool onme, bool ritual) override;
-
-	// void playCard(Player * playedby, Player * target) override;
-	// void playCard(Player * playedby, Card * target) override;
 };
 
 
@@ -44,9 +41,6 @@ public:
 
 	std::vector<std::string> getoutput() override;
 	void playCard(Player * playedby, Player * opponent, int i, bool onme, int t) override;
-
-	// void playCard(Player * playedby, Player * target) override;
-	// void playCard(Player * playedby, Card * target) override;
 };
 
 
@@ -57,9 +51,6 @@ public:
 
 	std::vector<std::string> getoutput() override;
 	void playCard(Player * playedby, Player * opponent, int i, bool onme, bool ritual) override;
-
-	// void playCard(Player * playedby, Player * target) override;
-	// void playCard(Player * playedby, Card * target) override;
 };
 
 
@@ -70,8 +61,6 @@ public:
 
 	std::vector<std::string> getoutput() override;
 	void playCard(Player * playedby, Player * opponent, int i, bool onme, int t) override;
-	// void playCard(Player * playedby, Player * target) override;
-	// void playCard(Player * playedby, Card * target) override;
 };
 
 #endif

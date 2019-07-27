@@ -26,7 +26,7 @@ int Card::getabilityCost(){return 0;}
 
 void Card::gainaction(){return;}
 
-void Card::triggereffect(Player * playedby, Player * opponent, std::shared_ptr<Card> c){return;}
+void Card::triggereffect(Player * playedby, Player * opponent, Card * c){return;}
 void Card::playCard(Player * playedby, Card * target){return;}
 
 void Card::toGraveyard(Player * p, int i){return;}
@@ -36,6 +36,6 @@ int Card::getdefenceval(){return 0;}
 void Card::setattackval(int nattackval){return;}
 void Card::setdefenceval(int ndefenceval){return;}
 void Card::useMinion(Player * playedby, Player * opponent){return;}
-void Card::useMinion(Player * playedby, Player * opponent, std::shared_ptr<Card> c) {return;}
+void Card::useMinion(Player * playedby, Player * opponent, Card * c) {return;}
 int Card::getcharge (){return 0;}
 void Card::setcharge (int ncharge){return;}

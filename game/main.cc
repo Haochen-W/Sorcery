@@ -9,9 +9,9 @@
 #include "exception.h"
 using namespace std;
 
-int myrandom (int i) {
-	return std::rand()%i;
-}
+// int myrandom (int i) {
+// 	return std::rand()%i;
+// }
 
 int main(int argc, char const *argv[]){
 	// command line arguments
@@ -66,10 +66,12 @@ int main(int argc, char const *argv[]){
 	}
 	
 	// create players and textdisplay
-	vector<Player *> players;
+	vector<shared_ptr<Player>> players;
 	TextDisplay td{};
-	players.emplace_back(new Player{playername1, 1});
-	players.emplace_back(new Player{playername2, 2});
+	shared_ptr<Player> p1 = make_shared<Player>(playername1, 1);
+	shared_ptr<Player> p2 = make_shared<Player>(playername2, 2);
+	players.emplace_back(p1);
+	players.emplace_back(p2);
 	players[0]->attach(&td);
 	players[1]->attach(&td);
 	players[0]->notifyObservers();
@@ -89,10 +91,10 @@ int main(int argc, char const *argv[]){
 		players[1]->loadDeck(card);
 	}
 
-	std::srand(unsigned (std::time(0)));
+	// std::srand(unsigned (std::time(0)));
 
-	std::random_shuffle(players[0]->getdeck().begin(), players[0]->getdeck().end(), myrandom);
-	std::random_shuffle(players[1]->getdeck().begin(), players[1]->getdeck().end(), myrandom);
+	// std::random_shuffle(players[0]->getdeck().begin(), players[0]->getdeck().end(), myrandom);
+	// std::random_shuffle(players[1]->getdeck().begin(), players[1]->getdeck().end(), myrandom);
 
 	// load hand
 	for(int i = 0; i < 5; i++){
@@ -103,8 +105,8 @@ int main(int argc, char const *argv[]){
 	// start player1's turn
 	cout << "Player " << players[currentPlayer]->getplayerNum() << "'s turn!"<< endl;
 	players[currentPlayer]->gainMagic();
-	td.displayMagic(players[currentPlayer]);
-	td.displayHand(players[currentPlayer]);
+	td.displayMagic(players[currentPlayer].get());
+	td.displayHand(players[currentPlayer].get());
 
 	// enter game loop, change cin >> cmd to getline
 	while (true){
@@ -124,7 +126,7 @@ int main(int argc, char const *argv[]){
 		} 
 		// end current player's turn
 		else if (cmd == "end"){
-			players[currentPlayer]->trigger(GameStage::endTurn, nullptr, players[nextPlayer]);
+			players[currentPlayer]->trigger(GameStage::endTurn, nullptr, players[nextPlayer].get());
 			currentPlayer = (currentPlayer == 0) ? 1 : 0;
 			nextPlayer = (nextPlayer == 0) ? 1 : 0;
 
@@ -136,10 +138,10 @@ int main(int argc, char const *argv[]){
 				players[currentPlayer]->drawcard();
 			} 
 			catch(ExceedMaximum &e){}
-			players[currentPlayer]->trigger(GameStage::startTurn, nullptr, players[nextPlayer]);
+			players[currentPlayer]->trigger(GameStage::startTurn, nullptr, players[nextPlayer].get());
 			td.displayBoard();
-			td.displayMagic(players[currentPlayer]);
-			td.displayHand(players[currentPlayer]);
+			td.displayMagic(players[currentPlayer].get());
+			td.displayHand(players[currentPlayer].get());
 		} 
 		// end game
 		else if (cmd == "quit"){
@@ -151,7 +153,7 @@ int main(int argc, char const *argv[]){
 		else if (cmd == "draw" && testingState == true){
 			try {
 				players[currentPlayer]->drawcard();
-				td.displayHand(players[currentPlayer]);
+				td.displayHand(players[currentPlayer].get());
 			} 
 			catch(ExceedMaximum &e){
 				cerr << e.getErrorMessage() << endl;
@@ -169,7 +171,7 @@ int main(int argc, char const *argv[]){
 			scmd >> i;
 			if(!(scmd >> j)){ 
 				try{
-					players[currentPlayer]->attack(i, players[nextPlayer]);
+					players[currentPlayer]->attack(i, players[nextPlayer].get());
 				}
 				catch(InvalidPosition &e){
 					cerr << e.getErrorMessage() << endl;
@@ -179,7 +181,7 @@ int main(int argc, char const *argv[]){
 				}
 			} else {
 				try{
-					players[currentPlayer]->attack(i, players[nextPlayer], j);
+					players[currentPlayer]->attack(i, players[nextPlayer].get(), j);
 				}
 				catch(InvalidPosition &e){
 					cerr << e.getErrorMessage() << endl;
@@ -195,9 +197,9 @@ int main(int argc, char const *argv[]){
 			if(!(scmd >> p)){
 				// play i: play minion, ritual, spell with no target
 				try{
-					players[currentPlayer]->play(i, players[nextPlayer], testingState);
-					td.displayMagic(players[currentPlayer]);
-					td.displayHand(players[currentPlayer]);
+					players[currentPlayer]->play(i, players[nextPlayer].get(), testingState);
+					td.displayMagic(players[currentPlayer].get());
+					td.displayHand(players[currentPlayer].get());
 				}
 				catch(InvalidPosition &e){
 					cerr << e.getErrorMessage() << endl;
@@ -211,7 +213,7 @@ int main(int argc, char const *argv[]){
 					// play i p t: play enchantment, spell on minion
 					if(p == players[currentPlayer]->getplayerNum()){
 						try {
-							players[currentPlayer]->play(i, players[nextPlayer], t, true, testingState);
+							players[currentPlayer]->play(i, players[nextPlayer].get(), t, true, testingState);
 						}
 						catch(InvalidPosition &e){
 							cerr << e.getErrorMessage() << endl;
@@ -221,7 +223,7 @@ int main(int argc, char const *argv[]){
 						}
 					} else {
 						try {
-							players[currentPlayer]->play(i, players[nextPlayer], t, false, testingState);
+							players[currentPlayer]->play(i, players[nextPlayer].get(), t, false, testingState);
 						}
 						catch(InvalidPosition &e){
 							cerr << e.getErrorMessage() << endl;
@@ -234,7 +236,7 @@ int main(int argc, char const *argv[]){
 					// play i p r: play enchantment, spell on ritual
 					if(p == players[currentPlayer]->getplayerNum()){
 						try {
-							players[currentPlayer]->play(i, players[nextPlayer], true, true, testingState);
+							players[currentPlayer]->play(i, players[nextPlayer].get(), true, true, testingState);
 						}
 						catch(InvalidPosition &e){
 							cerr << e.getErrorMessage() << endl;
@@ -244,7 +246,7 @@ int main(int argc, char const *argv[]){
 						}
 					} else {
 						try {
-							players[currentPlayer]->play(i, players[nextPlayer], false, true, testingState);
+							players[currentPlayer]->play(i, players[nextPlayer].get(), false, true, testingState);
 						}
 						catch(InvalidPosition &e){
 							cerr << e.getErrorMessage() << endl;
@@ -263,7 +265,7 @@ int main(int argc, char const *argv[]){
 				// use i: use minion
 				if(p == players[currentPlayer]->getplayerNum()){
 						try {
-							players[currentPlayer]->use(i, players[nextPlayer], testingState);
+							players[currentPlayer]->use(i, players[nextPlayer].get(), testingState);
 						}
 						catch(InvalidPosition &e){
 							cerr << e.getErrorMessage() << endl;
@@ -276,7 +278,7 @@ int main(int argc, char const *argv[]){
 						}
 					} else {
 						try {
-							players[currentPlayer]->use(i, players[nextPlayer], testingState);
+							players[currentPlayer]->use(i, players[nextPlayer].get(), testingState);
 						}
 						catch(InvalidPosition &e){
 							cerr << e.getErrorMessage() << endl;
@@ -293,7 +295,7 @@ int main(int argc, char const *argv[]){
 				// use i p t: use minion on minion
 				if(p == players[currentPlayer]->getplayerNum()){
 						try {
-							players[currentPlayer]->use(i, players[nextPlayer], t, true, testingState);
+							players[currentPlayer]->use(i, players[nextPlayer].get(), t, true, testingState);
 						}
 						catch(InvalidPosition &e){
 							cerr << e.getErrorMessage() << endl;
@@ -303,7 +305,7 @@ int main(int argc, char const *argv[]){
 						}
 					} else {
 						try {
-							players[currentPlayer]->use(i, players[nextPlayer], t, false, testingState);
+							players[currentPlayer]->use(i, players[nextPlayer].get(), t, false, testingState);
 						}
 						catch(InvalidPosition &e){
 							cerr << e.getErrorMessage() << endl;
@@ -319,7 +321,7 @@ int main(int argc, char const *argv[]){
 			int i;
 			scmd >> i;
 			try{
-				td.inspectCard(players[currentPlayer], i);
+				td.inspectCard(players[currentPlayer].get(), i);
 			}
 			catch(InvalidPosition &e){
 				cerr << e.getErrorMessage() << endl;
@@ -327,7 +329,7 @@ int main(int argc, char const *argv[]){
 		} 
 		// hand: display hand
 		else if (cmd == "hand"){
-			td.displayHand(players[currentPlayer]);
+			td.displayHand(players[currentPlayer].get());
 		} 
 		// board: display board
 		else if (cmd == "board"){

@@ -24,7 +24,7 @@ void Minion::playCard(Player * playedby, Player * opponent, int i){
 
 void Minion::useMinion(Player * playedby, Player * opponent){return;}
 
-void Minion::useMinion(Player * playedby, Player * opponent, std::shared_ptr<Card> c){return;}
+void Minion::useMinion(Player * playedby, Player * opponent, Card * c){return;}
 
 // void Minion::playCard(Player * playedby, Card * target) {return;}
 void Minion::minionAttack(Player * target){

@@ -29,7 +29,7 @@ public:
 	void minionAttack(Player * target, int i) override; // call mbeattack on target minion
 	void playCard(Player * playedby, Player * opponent, int i) override; // place the minion into minion slot
 	// void playCard(Player * playedby, Card * target) override; // do nothing
-	void useMinion(Player * playedby, Player * opponent, std::shared_ptr<Card> c) override;
+	void useMinion(Player * playedby, Player * opponent, Card * c) override;
 	void useMinion(Player * playedby, Player * opponent) override;
 
 	void takeDamage(int damage) override;// cause damage on minion

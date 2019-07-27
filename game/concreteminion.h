@@ -28,7 +28,7 @@ public:
 	~Bonegolem() = default;
 
 	std::vector<std::string> getoutput() override;
-	void triggereffect(Player * playedby, Player * opponent, std::shared_ptr<Card> c) override;
+	void triggereffect(Player * playedby, Player * opponent, Card * c) override;
 };
 
 
@@ -38,7 +38,7 @@ public:
 	~Fireelemental() = default;
 
 	std::vector<std::string> getoutput() override;
-	void triggereffect(Player * playedby, Player * opponent, std::shared_ptr<Card> c) override;
+	void triggereffect(Player * playedby, Player * opponent, Card * c) override;
 };
 
 
@@ -48,7 +48,7 @@ public:
 	~Potionseller()= default;
 
 	std::vector<std::string> getoutput() override;
-	void triggereffect(Player * playedby, Player * opponent, std::shared_ptr<Card> c) override;
+	void triggereffect(Player * playedby, Player * opponent, Card * c) override;
 };
 
 
@@ -58,7 +58,7 @@ public:
 	~Novicepyromancer()= default; 
 
 	std::vector<std::string> getoutput() override;
-	void useMinion(Player * playedby, Player * opponent, std::shared_ptr<Card> c) override;
+	void useMinion(Player * playedby, Player * opponent, Card * c) override;
 };
 
 

@@ -84,19 +84,19 @@ void Player::loadDeck(std::string card){
         std::shared_ptr<Blizzard> p = std::make_shared<Blizzard>();
         getdeck().emplace_back(p);
     } else if (card == "Giant Strength"){
-        std::shared_ptr<Giantstrength> p = std::make_shared<Giantstrength>();
+        std::shared_ptr<Giantstrength> p = std::make_shared<Giantstrength>(nullptr);
         getdeck().emplace_back(p);
     } else if (card == "Enrage"){
-        std::shared_ptr<Enrage> p = std::make_shared<Enrage>();
+        std::shared_ptr<Enrage> p = std::make_shared<Enrage>(nullptr);
         getdeck().emplace_back(p);
     } else if (card == "Haste"){
-        std::shared_ptr<Haste> p = std::make_shared<Haste>();
+        std::shared_ptr<Haste> p = std::make_shared<Haste>(nullptr);
         getdeck().emplace_back(p);
     } else if (card == "Magic Fatigue"){
-        std::shared_ptr<Magicfatigue> p = std::make_shared<Magicfatigue>();
+        std::shared_ptr<Magicfatigue> p = std::make_shared<Magicfatigue>(nullptr);
         getdeck().emplace_back(p);
     } else if (card == "Silence"){
-        std::shared_ptr<Silence> p = std::make_shared<Silence>();
+        std::shared_ptr<Silence> p = std::make_shared<Silence>(nullptr);
         getdeck().emplace_back(p);
     } else if (card == "Dark Ritual"){
         std::shared_ptr<Darkritual> p = std::make_shared<Darkritual>();
@@ -184,15 +184,16 @@ void Player::attack(int i, Player * p, int j) {
 void Player::play(int i, Player * opponent, bool testing){
     // testing mode
     // not enough magic
+    if(i > hand.size() || i <= 0) {
+        InvalidPosition e {"No card at this position."};
+        throw e;
+    }
+    
     if (!testing && getmagic() < gethand()[i - 1]->getcost()){
         InvalidMove e {"Not enough magic."};
         throw e;
     }
 
-    if(i > hand.size() || i <= 0) {
-        InvalidPosition e {"No card at this position."};
-        throw e;
-    }
     const int m = getmagic() - gethand()[i - 1]->getcost();
     gethand()[i - 1]->playCard(this, opponent, i);
     if (testing) {
@@ -206,16 +207,16 @@ void Player::play(int i, Player * opponent, bool testing){
 void Player::play(int i, Player * opponent, bool onme, bool ritual, bool testing){
     // testing mode
     // not enough magic
-    
+    if(i > gethand().size() || i <= 0) {
+        InvalidPosition e {"No card at this position."};
+        throw e;
+    }
+
     if (!testing && getmagic() < gethand()[i - 1]->getcost()){
         InvalidMove e {"Not enough magic."};
         throw e;
     }
 
-    if(i > gethand().size() || i <= 0) {
-        InvalidPosition e {"No card at this position."};
-        throw e;
-    }
     if (onme) {
         if (getactiveRitual().size() == 0) {
             InvalidPosition e {"There is no active ritual."};
@@ -278,30 +279,29 @@ void Player::trigger(GameStage state, std::shared_ptr<Card> c, Player * opponent
         for(int i = 0; i < getminionslot().size(); i++){
             if(getminionslot()[i]->getcardName() == "Potion Seller"){
                 for(int j = 0; j < getminionslot().size(); j++){
-                    getminionslot()[i]->triggereffect(this, opponent, getminionslot()[j]);
+                    getminionslot()[i]->triggereffect(this, opponent, getminionslot()[j].get());
                 }
             }
         }
     } else if(state == GameStage::curNewMinion){
-        std::cout << getactiveRitual().size() << std::endl;
         if(getactiveRitual().size() != 0 && getactiveRitual()[0]->getcardName() == "Aura of Power"){
-            getactiveRitual()[0]->triggereffect(this, opponent, c);
+            getactiveRitual()[0]->triggereffect(this, opponent, c.get());
         } else if(getactiveRitual().size() != 0 && getactiveRitual()[0]->getcardName() == "Standstill"){
-            getactiveRitual()[0]->triggereffect(this, opponent, c);
+            getactiveRitual()[0]->triggereffect(this, opponent, c.get());
         }
     } else if(state == GameStage::oppNewMinion){
         for(int i = 0; i < getminionslot().size(); i++){
             if(getminionslot()[i]->getcardName() == "Fire Elemental"){
-                getminionslot()[i]->triggereffect(this, opponent, c);
+                getminionslot()[i]->triggereffect(this, opponent, c.get());
             }
         }
         if(getactiveRitual().size() != 0 && getactiveRitual()[0]->getcardName() == "Standstill"){
-            getactiveRitual()[0]->triggereffect(this, opponent, c);
+            getactiveRitual()[0]->triggereffect(this, opponent, c.get());
         }
     } else if(state == GameStage::minionLeave){
         for(int i = 0; i < getminionslot().size(); i++){
             if(getminionslot()[i]->getcardName() == "Bone Golem"){
-                getminionslot()[i]->triggereffect(this, opponent, getminionslot()[i]);
+                getminionslot()[i]->triggereffect(this, opponent, getminionslot()[i].get());
             }
         }
     }
@@ -357,9 +357,9 @@ void Player::use(int i, Player * opponent, int t, bool onme, bool testing){
     }
     const int m = getmagic() - getminionslot()[i - 1]->getabilityCost();
     if (onme){
-        getminionslot()[i - 1]->useMinion(this, opponent, getminionslot()[i - 1]);
+        getminionslot()[i - 1]->useMinion(this, opponent, getminionslot()[i - 1].get());
     } else {
-        getminionslot()[i - 1]->useMinion(this, opponent, opponent->getminionslot()[i - 1]);
+        getminionslot()[i - 1]->useMinion(this, opponent, opponent->getminionslot()[i - 1].get());
     }
     if (testing) {
         setmagic(0);

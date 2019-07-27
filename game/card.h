@@ -41,20 +41,15 @@ public:
 	virtual void gainaction(); // set minion's action to 1
 	virtual void toGraveyard(Player * p, int i);
 
-	virtual void triggereffect(Player * playedby, Player * opponent, std::shared_ptr<Card> c); // call ritual's or minion trigger effect
+	virtual void triggereffect(Player * playedby, Player * opponent, Card * c); // call ritual's or minion trigger effect
 
-	
 	virtual void playCard(Player * playedby, Card * target); // target on
 	virtual void useMinion(Player * playedby, Player * opponent);
-	virtual void useMinion(Player * playedby, Player * opponent, std::shared_ptr<Card> c); 
-	// virtual void useMinion(Player * playedby, Player * target); // override in minion only
-	// virtual void useMinion(Player * playedby, Card * target); // override in minion only
+	virtual void useMinion(Player * playedby, Player * opponent, Card * c); 
 
 	// for rituals
 	virtual int getcharge ();
 	virtual void setcharge (int ncharge);
-	// inspect i, hand
-	// friend std::ostream &operator<<(std::ostream &out, const Card c);
 };
 
 #endif

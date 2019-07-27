@@ -6,7 +6,7 @@ class Decorator: public Card {
 protected:
 	Minion * component;
 public:
-	Decorator(std::string cardName, int cost);
+	Decorator(std::string cardName, int cost, Minion * component);
 	~Decorator() = default;
 
 	Minion * getcomponent();
