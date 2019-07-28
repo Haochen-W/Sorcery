@@ -10,9 +10,7 @@ public:
 	~Giantstrength() = default;
 
 	std::vector<std::string> getoutput() override;
-
-	// void playCard(Player * playedby, Player * target) override;
-	// void playCard(Player * playedby, Card * target) override;
+	void playCard(Player * playedby, Player * opponent, int i, bool onme, int t) override;
 };
 
 
@@ -22,6 +20,7 @@ public:
 	~Enrage() = default;
 
 	std::vector<std::string> getoutput() override;
+	void playCard(Player * playedby, Player * opponent, int i, bool onme, int t) override;
 
 	// void playCard(Player * playedby, Player * target) override;
 	// void playCard(Player * playedby, Card * target) override;
@@ -34,6 +33,7 @@ public:
 	~Haste() = default;
 
 	std::vector<std::string> getoutput() override;
+	void playCard(Player * playedby, Player * opponent, int i, bool onme, int t) override;
 
 	// void playCard(Player * playedby, Player * target) override;
 	// void playCard(Player * playedby, Card * target) override;
@@ -46,6 +46,7 @@ public:
 	~Magicfatigue() = default;
 
 	std::vector<std::string> getoutput() override;
+	void playCard(Player * playedby, Player * opponent, int i, bool onme, int t) override;
 
 	// void playCard(Player * playedby, Player * target) override;
 	// void playCard(Player * playedby, Card * target) override;
@@ -58,6 +59,7 @@ public:
 	~Silence() = default;
 
 	std::vector<std::string> getoutput() override;
+	void playCard(Player * playedby, Player * opponent, int i, bool onme, int t) override;
 
 	// void playCard(Player * playedby, Player * target) override;
 	// void playCard(Player * playedby, Card * target) override;

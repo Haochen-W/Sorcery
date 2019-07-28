@@ -9,9 +9,9 @@
 #include "exception.h"
 using namespace std;
 
-// int myrandom (int i) {
-// 	return std::rand()%i;
-// }
+int myrandom (int i) {
+	return std::rand()%i;
+}
 
 int main(int argc, char const *argv[]){
 	// command line arguments
@@ -91,11 +91,12 @@ int main(int argc, char const *argv[]){
 		players[1]->loadDeck(card);
 	}
 
-	// std::srand(unsigned (std::time(0)));
-
-	// std::random_shuffle(players[0]->getdeck().begin(), players[0]->getdeck().end(), myrandom);
-	// std::random_shuffle(players[1]->getdeck().begin(), players[1]->getdeck().end(), myrandom);
-
+	if (!testingState){
+		std::srand(unsigned (std::time(0)));
+		std::random_shuffle(players[0]->getdeck().begin(), players[0]->getdeck().end(), myrandom);
+		std::random_shuffle(players[1]->getdeck().begin(), players[1]->getdeck().end(), myrandom);
+	}
+	
 	// load hand
 	for(int i = 0; i < 5; i++){
 		players[0]->drawcard();
@@ -214,6 +215,8 @@ int main(int argc, char const *argv[]){
 					if(p == players[currentPlayer]->getplayerNum()){
 						try {
 							players[currentPlayer]->play(i, players[nextPlayer].get(), t, true, testingState);
+							td.displayMagic(players[currentPlayer].get());
+							td.displayHand(players[currentPlayer].get());
 						}
 						catch(InvalidPosition &e){
 							cerr << e.getErrorMessage() << endl;
@@ -224,6 +227,8 @@ int main(int argc, char const *argv[]){
 					} else {
 						try {
 							players[currentPlayer]->play(i, players[nextPlayer].get(), t, false, testingState);
+							td.displayMagic(players[currentPlayer].get());
+							td.displayHand(players[currentPlayer].get());
 						}
 						catch(InvalidPosition &e){
 							cerr << e.getErrorMessage() << endl;
@@ -237,6 +242,8 @@ int main(int argc, char const *argv[]){
 					if(p == players[currentPlayer]->getplayerNum()){
 						try {
 							players[currentPlayer]->play(i, players[nextPlayer].get(), true, true, testingState);
+							td.displayMagic(players[currentPlayer].get());
+							td.displayHand(players[currentPlayer].get());
 						}
 						catch(InvalidPosition &e){
 							cerr << e.getErrorMessage() << endl;
@@ -247,6 +254,8 @@ int main(int argc, char const *argv[]){
 					} else {
 						try {
 							players[currentPlayer]->play(i, players[nextPlayer].get(), false, true, testingState);
+							td.displayMagic(players[currentPlayer].get());
+							td.displayHand(players[currentPlayer].get());
 						}
 						catch(InvalidPosition &e){
 							cerr << e.getErrorMessage() << endl;

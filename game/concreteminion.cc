@@ -24,7 +24,6 @@ std::vector<std::string> Bonegolem::getoutput(){
 }
 
 void Bonegolem::triggereffect(Player * playedby, Player * opponent, Card * c){
-	std::cout << "HI" << std::endl;
 	c->setattackval(c->getattackval() + 1);
 	c->setdefenceval(c->getdefenceval() + 1);
 }
@@ -68,6 +67,10 @@ std::vector<std::string> Novicepyromancer::getoutput(){
 
 void Novicepyromancer::useMinion(Player * playedby, Player * opponent, Card * c){
 	c->setdefenceval(c->getdefenceval() - 1);
+	if (this->getcanuse() == false) {
+		InvalidMove e {"This ability has been disabled."};
+        throw e;
+	}
 	// check death
 	if(c->miniondead()){
 		c->toGraveyard(opponent, (opponent->getminionslot()).size());
@@ -89,6 +92,11 @@ void Apprenticesummoner::useMinion(Player * playedby, Player * opponent){
 		ExceedMaximum e{"Your minionslot is full."};
         throw e;
 	}
+	if (this->getcanuse() == false) {
+		InvalidMove e {"This ability has been disabled."};
+        throw e;
+	}
+
 	std::shared_ptr<Airelemental> p = std::make_shared<Airelemental>();
 	(playedby->getminionslot()).emplace_back(p);
 	playedby->trigger(GameStage::curNewMinion, p, opponent);
@@ -104,6 +112,10 @@ std::vector<std::string> Mastersummoner::getoutput(){
 }
 
 void Mastersummoner::useMinion(Player * playedby, Player * opponent){
+	if (this->getcanuse() == false) {
+		InvalidMove e {"This ability has been disabled."};
+        throw e;
+	}
 	for(int i = 0; i < 3; i ++){
  		if((playedby->getminionslot()).size() >= 5){
  			ExceedMaximum e{"Your minionslot is full."};

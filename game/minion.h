@@ -10,6 +10,9 @@ protected:
 	int defenceval;
 	int abilityCost;
 	int action;
+	int actioneachturn;
+	std::vector<std::string> Enchantmentadded;
+	bool canuse;
 
 public:
 	Minion(std::string cardName, int cost, int attackval, int defenceval, int abilityCost);
@@ -20,10 +23,16 @@ public:
 	int getdefenceval() override;
 	int getabilityCost() override;
 	int getaction() override;
+	int getactioneachturn() override;
+	std::vector<std::string> & getEnchantmentadded() override;
+	bool getcanuse() override;
+
 	void setattackval(int nattackval) override;
 	void setdefenceval(int ndefenceval) override;
-	void setabilityCost(int nabilityCost);
+	void setabilityCost(int nabilityCost) override;
 	void setaction(int naction) override;
+	void setactioneachturn(int nactioneachturn) override;
+	void setcanuse(bool ncanuse) override;
 
 	void minionAttack(Player * target) override;
 	void minionAttack(Player * target, int i) override; // call mbeattack on target minion

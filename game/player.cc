@@ -184,7 +184,7 @@ void Player::attack(int i, Player * p, int j) {
 void Player::play(int i, Player * opponent, bool testing){
     // testing mode
     // not enough magic
-    if(i > hand.size() || i <= 0) {
+    if(i > gethand().size() || i <= 0) {
         InvalidPosition e {"No card at this position."};
         throw e;
     }
@@ -239,16 +239,14 @@ void Player::play(int i, Player * opponent, bool onme, bool ritual, bool testing
 }
 
 void Player::play(int i, Player * opponent, int t, bool onme, bool testing){
-    // testing mode
-    // not enough magic
-    if (testing) setmagic(0);
-    if (!testing && getmagic() < gethand()[i - 1]->getcost()){
-        InvalidMove e {"Not enough magic."};
+    // testing mode, not enough magic
+    if(i > gethand().size() || i <= 0) {
+        InvalidPosition e {"No card at this position."};
         throw e;
     }
 
-    if(i > gethand().size() || i <= 0) {
-        InvalidPosition e {"No card at this position."};
+    if (!testing && getmagic() < gethand()[i - 1]->getcost()){
+        InvalidMove e {"Not enough magic."};
         throw e;
     }
 
@@ -263,9 +261,14 @@ void Player::play(int i, Player * opponent, int t, bool onme, bool testing){
             throw e;
         }
     }
+
     const int m = getmagic() - gethand()[i - 1]->getcost();
     gethand()[i - 1]->playCard(this, opponent, i, onme, t);
-    setmagic(m);
+    if (testing) {
+        setmagic(0);
+    } else {
+        setmagic(m);
+    }
     this->notifyObservers();
 }
 

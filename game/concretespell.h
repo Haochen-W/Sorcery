@@ -30,7 +30,7 @@ public:
 	~Recharge() = default;
 
 	std::vector<std::string> getoutput() override;
-	void playCard(Player * playedby, Player * opponent, int i, bool onme, bool ritual) override;
+	void playCard(Player * playedby, Player * opponent, int i) override;
 };
 
 
@@ -50,7 +50,7 @@ public:
 	~Raisedead() = default;
 
 	std::vector<std::string> getoutput() override;
-	void playCard(Player * playedby, Player * opponent, int i, bool onme, bool ritual) override;
+	void playCard(Player * playedby, Player * opponent, int i) override;
 };
 
 
@@ -60,7 +60,7 @@ public:
 	~Blizzard() = default;
 
 	std::vector<std::string> getoutput() override;
-	void playCard(Player * playedby, Player * opponent, int i, bool onme, int t) override;
+	void playCard(Player * playedby, Player * opponent, int i) override;
 };
 
 #endif
