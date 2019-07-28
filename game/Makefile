@@ -1,11 +1,11 @@
 CXX = g++
-CXXFLAGS = -std=c++14 -Wall -MMD
+CXXFLAGS = -std=c++14 -I/usr/X11/include -Wall -MMD
 EXEC = myprogram
-OBJECTS = main.o concreteminion.o concretespell.o concreteritual.o concreteenchantment.o minion.o ritual.o enchantment.o spell.o card.o player.o observer.o decorator.o ascii_graphics.o textdisplay.o exception.o
+OBJECTS = main.o concreteminion.o concretespell.o concreteritual.o concreteenchantment.o minion.o ritual.o enchantment.o spell.o card.o player.o observer.o decorator.o ascii_graphics.o display.o textdisplay.o graphicdisplay.o window.o exception.o
 DEPENDS = ${OBJECTS:.o=.d}
 
 ${EXEC}: ${OBJECTS}
-	${CXX} ${CXXFLAGS} ${OBJECTS} -o ${EXEC}
+	${CXX} ${CXXFLAGS} $^ -o $@ -L/usr/X11/lib -lX11
 
 -include ${DEPENDS}
 

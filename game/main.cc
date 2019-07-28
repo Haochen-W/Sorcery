@@ -5,7 +5,9 @@
 #include <algorithm>
 #include <ctime>
 #include "player.h"
+#include "display.h"
 #include "textdisplay.h"
+#include "graphicdisplay.h"
 #include "exception.h"
 using namespace std;
 
@@ -18,6 +20,7 @@ int main(int argc, char const *argv[]){
 	bool initState = false;
 	bool testingState = false;
 	bool graphicsState = false;
+	bool textsState = true;
 	bool deck1State = false;
 	bool deck2State = false;
 	ifstream initfile;
@@ -42,6 +45,8 @@ int main(int argc, char const *argv[]){
 			deck2State = true;
 			deck2file.open(argv[i + 1]);
 			i += 1; // skip the next argument
+		} else if(string(argv[i]) == "-disabletext"){
+			textsState = false;
 		}
 	}
 
@@ -65,15 +70,30 @@ int main(int argc, char const *argv[]){
 		cin >> playername2;
 	}
 	
-	// create players and textdisplay
+	// create players and displays
 	vector<shared_ptr<Player>> players;
-	TextDisplay td{};
+	vector<shared_ptr<outputDisplay>> displays;
+
 	shared_ptr<Player> p1 = make_shared<Player>(playername1, 1);
 	shared_ptr<Player> p2 = make_shared<Player>(playername2, 2);
 	players.emplace_back(p1);
 	players.emplace_back(p2);
-	players[0]->attach(&td);
-	players[1]->attach(&td);
+	
+	if(textsState){
+		shared_ptr<TextDisplay> td = make_shared<TextDisplay>();
+		displays.emplace_back(td);
+	}
+
+	if(graphicsState){
+		shared_ptr<GraphicDisplay> gd = make_shared<GraphicDisplay>();
+		displays.emplace_back(gd);
+	}
+
+	for(int i = 0; i < displays.size(); i++){
+		players[0]->attach(displays[i].get());
+		players[1]->attach(displays[i].get());
+	}
+
 	players[0]->notifyObservers();
 	players[1]->notifyObservers();
 	int currentPlayer = 0;
@@ -106,8 +126,11 @@ int main(int argc, char const *argv[]){
 	// start player1's turn
 	cout << "Player " << players[currentPlayer]->getplayerNum() << "'s turn!"<< endl;
 	players[currentPlayer]->gainMagic();
-	td.displayMagic(players[currentPlayer].get());
-	td.displayHand(players[currentPlayer].get());
+	for(int i = 0; i < displays.size(); i++){
+		displays[i]->displayBoard();
+		displays[i]->displayMagic(players[currentPlayer].get());
+		displays[i]->displayHand(players[currentPlayer].get());
+	}
 
 	// enter game loop, change cin >> cmd to getline
 	while (true){
@@ -140,9 +163,11 @@ int main(int argc, char const *argv[]){
 			} 
 			catch(ExceedMaximum &e){}
 			players[currentPlayer]->trigger(GameStage::startTurn, nullptr, players[nextPlayer].get());
-			td.displayBoard();
-			td.displayMagic(players[currentPlayer].get());
-			td.displayHand(players[currentPlayer].get());
+			for(int i = 0; i < displays.size(); i++){
+				displays[i]->displayBoard();
+				displays[i]->displayMagic(players[currentPlayer].get());
+				displays[i]->displayHand(players[currentPlayer].get());
+			}
 		} 
 		// end game
 		else if (cmd == "quit"){
@@ -154,7 +179,9 @@ int main(int argc, char const *argv[]){
 		else if (cmd == "draw" && testingState == true){
 			try {
 				players[currentPlayer]->drawcard();
-				td.displayHand(players[currentPlayer].get());
+				for(int i = 0; i < displays.size(); i++){
+					displays[i]->displayHand(players[currentPlayer].get());
+				}
 			} 
 			catch(ExceedMaximum &e){
 				cerr << e.getErrorMessage() << endl;
@@ -173,6 +200,11 @@ int main(int argc, char const *argv[]){
 			if(!(scmd >> j)){ 
 				try{
 					players[currentPlayer]->attack(i, players[nextPlayer].get());
+					for(int i = 0; i < displays.size(); i++){
+						displays[i]->displayBoard();
+						displays[i]->displayMagic(players[currentPlayer].get());
+						displays[i]->displayHand(players[currentPlayer].get());
+					}
 				}
 				catch(InvalidPosition &e){
 					cerr << e.getErrorMessage() << endl;
@@ -183,6 +215,11 @@ int main(int argc, char const *argv[]){
 			} else {
 				try{
 					players[currentPlayer]->attack(i, players[nextPlayer].get(), j);
+					for(int i = 0; i < displays.size(); i++){
+						displays[i]->displayBoard();
+						displays[i]->displayMagic(players[currentPlayer].get());
+						displays[i]->displayHand(players[currentPlayer].get());
+					}
 				}
 				catch(InvalidPosition &e){
 					cerr << e.getErrorMessage() << endl;
@@ -199,8 +236,11 @@ int main(int argc, char const *argv[]){
 				// play i: play minion, ritual, spell with no target
 				try{
 					players[currentPlayer]->play(i, players[nextPlayer].get(), testingState);
-					td.displayMagic(players[currentPlayer].get());
-					td.displayHand(players[currentPlayer].get());
+					for(int i = 0; i < displays.size(); i++){
+						displays[i]->displayBoard();
+						displays[i]->displayMagic(players[currentPlayer].get());
+						displays[i]->displayHand(players[currentPlayer].get());
+					}
 				}
 				catch(InvalidPosition &e){
 					cerr << e.getErrorMessage() << endl;
@@ -215,8 +255,11 @@ int main(int argc, char const *argv[]){
 					if(p == players[currentPlayer]->getplayerNum()){
 						try {
 							players[currentPlayer]->play(i, players[nextPlayer].get(), t, true, testingState);
-							td.displayMagic(players[currentPlayer].get());
-							td.displayHand(players[currentPlayer].get());
+							for(int i = 0; i < displays.size(); i++){
+								displays[i]->displayBoard();
+								displays[i]->displayMagic(players[currentPlayer].get());
+								displays[i]->displayHand(players[currentPlayer].get());
+							}
 						}
 						catch(InvalidPosition &e){
 							cerr << e.getErrorMessage() << endl;
@@ -227,8 +270,11 @@ int main(int argc, char const *argv[]){
 					} else {
 						try {
 							players[currentPlayer]->play(i, players[nextPlayer].get(), t, false, testingState);
-							td.displayMagic(players[currentPlayer].get());
-							td.displayHand(players[currentPlayer].get());
+							for(int i = 0; i < displays.size(); i++){
+								displays[i]->displayBoard();
+								displays[i]->displayMagic(players[currentPlayer].get());
+								displays[i]->displayHand(players[currentPlayer].get());
+							}
 						}
 						catch(InvalidPosition &e){
 							cerr << e.getErrorMessage() << endl;
@@ -242,8 +288,11 @@ int main(int argc, char const *argv[]){
 					if(p == players[currentPlayer]->getplayerNum()){
 						try {
 							players[currentPlayer]->play(i, players[nextPlayer].get(), true, true, testingState);
-							td.displayMagic(players[currentPlayer].get());
-							td.displayHand(players[currentPlayer].get());
+							for(int i = 0; i < displays.size(); i++){
+								displays[i]->displayBoard();
+								displays[i]->displayMagic(players[currentPlayer].get());
+								displays[i]->displayHand(players[currentPlayer].get());
+							}
 						}
 						catch(InvalidPosition &e){
 							cerr << e.getErrorMessage() << endl;
@@ -254,8 +303,11 @@ int main(int argc, char const *argv[]){
 					} else {
 						try {
 							players[currentPlayer]->play(i, players[nextPlayer].get(), false, true, testingState);
-							td.displayMagic(players[currentPlayer].get());
-							td.displayHand(players[currentPlayer].get());
+							for(int i = 0; i < displays.size(); i++){
+								displays[i]->displayBoard();
+								displays[i]->displayMagic(players[currentPlayer].get());
+								displays[i]->displayHand(players[currentPlayer].get());
+							}
 						}
 						catch(InvalidPosition &e){
 							cerr << e.getErrorMessage() << endl;
@@ -330,7 +382,9 @@ int main(int argc, char const *argv[]){
 			int i;
 			scmd >> i;
 			try{
-				td.inspectCard(players[currentPlayer].get(), i);
+				for(int i = 0; i < displays.size(); i++){
+					displays[i]->inspectCard(players[currentPlayer].get(), i);
+				}
 			}
 			catch(InvalidPosition &e){
 				cerr << e.getErrorMessage() << endl;
@@ -338,11 +392,15 @@ int main(int argc, char const *argv[]){
 		} 
 		// hand: display hand
 		else if (cmd == "hand"){
-			td.displayHand(players[currentPlayer].get());
+			for(int i = 0; i < displays.size(); i++){
+				displays[i]->displayHand(players[currentPlayer].get());
+			}
 		} 
 		// board: display board
 		else if (cmd == "board"){
-			td.displayBoard();
+			for(int i = 0; i < displays.size(); i++){
+				displays[i]->displayBoard();
+			}
 		}
 	}
 	return 0;

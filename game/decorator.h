@@ -11,6 +11,8 @@ public:
 
 	Minion * getcomponent();
 	void setcomponent(Minion * ncomponent);
+	
+	virtual void playCard(Player * playedby, Player * opponent, int i, bool onme, int t);
 };
 
 #endif

@@ -59,6 +59,10 @@ std::vector<std::string> Recharge::getoutput(){
 }
 
 void Recharge::playCard(Player * playedby, Player * opponent, int i){
+    if (playedby->getactiveRitual().size() == 0) {
+        InvalidPosition e {"There is no active ritual."};
+        throw e;
+    }
 	playedby->getactiveRitual()[0]->setcharge(playedby->getactiveRitual()[0]->getcharge() + 3);
 	playedby->gethand().erase(playedby->gethand().begin() + i - 1);
 }
