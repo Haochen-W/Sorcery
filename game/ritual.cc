@@ -10,6 +10,7 @@ void Ritual::setactivationCost (int nactivationCost){activationCost = nactivatio
 void Ritual::setcharge (int ncharge){charge = ncharge;}
 
 void Ritual::playCard(Player * playedby, Player * opponent, int i){
+	playedby->getactiveRitual().clear();
 	std::shared_ptr<Card> temp{(playedby->gethand())[i - 1]};
 	(playedby->gethand()).erase((playedby->gethand()).begin() + i - 1);
 	playedby->getactiveRitual().emplace_back(temp);

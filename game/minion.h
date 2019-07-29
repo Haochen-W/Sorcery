@@ -35,7 +35,7 @@ public:
 	void setcanuse(bool ncanuse) override;
 
 	void minionAttack(Player * target) override;
-	void minionAttack(Player * target, int i) override; // call mbeattack on target minion
+	void minionAttack(Player * target, int i) override; // attack the ith minion
 	void playCard(Player * playedby, Player * opponent, int i) override; // place the minion into minion slot
 	void useMinion(Player * playedby, Player * opponent, Card * c) override;
 	void useMinion(Player * playedby, Player * opponent) override;
@@ -46,8 +46,6 @@ public:
 
 	void gainaction() override;
 	void disenchantall() override;
-	// inspect i, hand
-	// friend std::ostream &operator<<(std::ostream &out, const Card c);
 };
 
 #endif

@@ -15,11 +15,15 @@ class TextDisplay;
 
 enum class GameStage{startTurn, endTurn, curNewMinion, oppNewMinion, minionLeave};
 
+
 class Player{
 	std::string playerName;
+	std::string hero;
 	int playerNum;
 	int life;
 	int magic;
+	int hattackval;
+	bool heropowerState;
 	std::vector<Observer *> observers;
 	std::vector<std::shared_ptr<Card>> deck;
 	std::vector<std::shared_ptr<Card>> hand;
@@ -27,15 +31,17 @@ class Player{
 	std::vector<std::shared_ptr<Card>> graveyard;
 	std::vector<std::shared_ptr<Card>> activeRitual;
 	std::vector<std::string> playerCard;
-
 public:
-	Player(std::string playerName, int playerNum);
-	~Player() = default;
+	Player(std::string playerName, int playerNum, std::string hero);
+	virtual ~Player() = default;
 
 	// getter and setter
+	std::string & gethero();
 	int getplayerNum() const;
 	int getlife() const;
 	int getmagic() const;
+	int gethattackval() const;
+	bool getheropowerState() const;
 	std::vector<std::shared_ptr<Card>> & getdeck();
 	std::vector<std::shared_ptr<Card>> & gethand();
 	std::vector<std::shared_ptr<Card>> & getminionslot();
@@ -45,6 +51,13 @@ public:
 
 	void setlife (int nlife);
 	void setmagic (int nmagic);
+	void sethattackval (int nhattackval);
+	void setheropowerState (bool nheropowerState);
+
+	// // heropowers
+	void useHeropower(Player * opponent, bool testing);
+	void useHeropower(Player * opponent, bool onme, bool testing);
+	void useHeropower(Player * opponent, int t, bool onme, bool testing);
 
 	// subject
 	void attach(Observer *o);
@@ -58,7 +71,7 @@ public:
 	void attack(int i, Player * p, int j); // use minion i to attack minion j
 	void play(int i, Player * opponent, bool testing); // play the ith card, place minion, place ritual, spell effect
 	void play(int i, Player * opponent, int t, bool onme, bool testing); // play the ith card on on a player's minion t
-	void play(int i, Player * opponent, bool onme, bool ritual, bool testing); // targeting on a ritual
+	void playonRitual(int i, Player * opponent, bool onme, bool testing); // targeting on a ritual
 	void trigger(GameStage state, std::shared_ptr<Card> m, Player * opponent);
 	void use(int i, Player * opponent, bool testing); // use minion i
 	void use(int i, Player * opponent, int t, bool onme, bool testing); // use minion i on player p's minion t
@@ -66,6 +79,8 @@ public:
 	bool die();
 	void gainMagic();
 	void gainaction();
+
+	void playerability();
 };
 
 #endif

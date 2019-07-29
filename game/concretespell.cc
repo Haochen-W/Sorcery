@@ -6,7 +6,7 @@ std::vector<std::string> Banish::getoutput(){
 	std::vector<std::string> temp {display_spell("Banish", 2, "Destroy target minion or ritual")};
 	return temp;
 }
-void Banish::playCard(Player * playedby, Player * opponent, int i, bool onme, bool ritual){
+void Banish::playCardonRitual(Player * playedby, Player * opponent, int i, bool onme){
 	if (onme) {
 		playedby->getactiveRitual().clear();
 	} else {
@@ -70,6 +70,7 @@ void Unsummon::playCard(Player * playedby, Player * opponent, int i, bool onme, 
 			return;
 		}
 		auto temp{mini};
+		std::cout << "HI" << std::endl;
 		playedby->trigger(GameStage::minionLeave, nullptr, opponent);
 		opponent->trigger(GameStage::minionLeave, nullptr, playedby);
 		(opponent->getminionslot()).erase(opponent->getminionslot().begin() + t - 1);

@@ -9,7 +9,7 @@ void Card::setcost(int ncost){cost = ncost;}
 
 void Card::playCard(Player * playedby, Player * opponent, int i){return;}
 void Card::playCard(Player * playedby, Player * opponent, int i, bool onme, int t){return;}
-void Card::playCard(Player * playedby, Player * opponent, int i, bool onme, bool ritual){return;}
+void Card::playCardonRitual(Player * playedby, Player * opponent, int i, bool onme){return;}
 
 // for minions
 int Card::getattackval() const {return 0;}

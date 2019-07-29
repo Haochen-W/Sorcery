@@ -28,6 +28,7 @@ public:
 	virtual void displayMagic(Player * player) = 0;
 	virtual void inspectCard(Player * player, int i) = 0;
 	virtual void endgame(Player * player) = 0;
+	virtual void tie() = 0;
 };
 
 #endif

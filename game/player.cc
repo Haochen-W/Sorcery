@@ -5,12 +5,15 @@
 #include "concreteritual.h"
 #include "concreteenchantment.h"
 
-Player::Player(std::string playerName, int playerNum): 
-    playerName{playerName}, playerNum{playerNum}, life{20}, magic{2}{}
+Player::Player(std::string playerName, int playerNum, std::string hero): 
+    playerName{playerName}, hero{hero}, playerNum{playerNum}, life{20}, magic{2}{}
 
+std::string & Player::gethero() {return hero;}
 int Player::getplayerNum() const{return playerNum;}
 int Player::getlife() const{return life;}
 int Player::getmagic() const{return magic;}
+int Player::gethattackval() const {return hattackval;}
+bool Player::getheropowerState () const {return heropowerState;}
 std::vector<std::shared_ptr<Card>> & Player::getdeck() {return deck;}
 std::vector<std::shared_ptr<Card>> & Player::gethand() {return hand;}
 std::vector<std::shared_ptr<Card>> & Player::getminionslot() {return minionslot;}
@@ -23,6 +26,166 @@ std::vector<std::string> Player::getplayerCard() {
 
 void Player::setlife (int nlife){life = nlife;}
 void Player::setmagic (int nmagic){magic = nmagic;}
+void Player::sethattackval (int nhattackval){hattackval = nhattackval;}
+void Player::setheropowerState(bool nheropowerState){heropowerState = nheropowerState;}
+
+void Player::useHeropower(Player * opponent, bool testing){
+    if(!getheropowerState()){
+        InvalidMove e{"You can only use your hero power once per turn."};
+        throw e;
+    }
+    if(!testing && getmagic() < 2){
+        InvalidMove e {"You don't have enough magic."};
+        throw e;
+    }
+
+    if(gethero() == "Hunter"){
+        opponent->setlife(opponent->getlife() - 2);
+    } else if(gethero() == "Paladin"){
+        if(getminionslot().size() >= 5){
+            ExceedMaximum e{"Your minion slot is full."};
+            throw e;
+        }
+        std::shared_ptr<Airelemental> p = std::make_shared<Airelemental>();
+        (getminionslot()).emplace_back(p);
+        trigger(GameStage::curNewMinion, p, opponent);
+        opponent->trigger(GameStage::oppNewMinion, p, this);
+    } else if (gethero() == "Warrior"){
+        setlife(getlife() + 2);
+    } else if(gethero() == "Warlock"){
+        setlife(getlife() - 2);
+        if(deck.size() <= 0){
+            std::shared_ptr<Card> temp{deck[0]};
+            getdeck().erase(deck.begin());
+            setheropowerState(false);
+            ExceedMaximum e{"No more card in your deck."};
+            throw e;
+        }
+        // hand is full, throw exception
+        if(hand.size()>= 5){
+            std::shared_ptr<Card> temp{deck[0]};
+            getdeck().erase(deck.begin());
+            setheropowerState(false);
+            ExceedMaximum e{"Your hand is full."};
+            throw e;
+        }
+        std::shared_ptr<Card> temp{deck[0]};
+        getdeck().erase(deck.begin());
+        gethand().emplace_back(temp);
+    }
+    if(testing && getmagic() < 2) {
+        setmagic(0);
+    } else {
+        setmagic(getmagic() - 2);
+    }
+    setheropowerState(false);
+    this->notifyObservers();
+    opponent->notifyObservers();
+}
+
+void Player::useHeropower(Player * opponent, bool onme, bool testing){
+    if(!getheropowerState()){
+        InvalidMove e{"You can only use your hero power once per turn."};
+        throw e;
+    }
+    if(!testing && getmagic() < 2){
+        InvalidMove e {"You don't have enough magic."};
+        throw e;
+    }
+
+    if(gethero() == "Mage"){
+        if(onme){
+            setlife(getlife() - 1);
+        } else {
+            opponent->setlife(opponent->getlife() - 1);
+        }
+    } else if(gethero() == "Druid"){
+        if(onme){
+            InvalidMove e{"You cannot target on yourself."};
+            throw e;
+        } else {
+            sethattackval(gethattackval() + 1);
+            opponent->setlife(opponent->getlife() - gethattackval());
+            setlife(getlife() + 1);
+        }
+    }
+    if(testing && getmagic() < 2) {
+        setmagic(0);
+    } else {
+        setmagic(getmagic() - 2);
+    }
+    setheropowerState(false);
+    this->notifyObservers();
+    opponent->notifyObservers();
+}
+
+void Player::useHeropower(Player * opponent, int t, bool onme, bool testing){
+    if(!getheropowerState()){
+        InvalidMove e{"You can only use your hero power once per turn."};
+        throw e;
+    }
+    if(!testing && getmagic() < 2){
+        InvalidMove e {"You don't have enough magic."};
+        throw e;
+    }
+
+    if(gethero() == "Mage"){
+        if(onme){
+            if (t > (this->getminionslot()).size() || t <= 0) {
+                InvalidPosition e{"No minion is placed at this position."};
+                throw e;
+            }
+            getminionslot()[t - 1]->setdefenceval(getminionslot()[t - 1]->getdefenceval() - 1);
+            if(getminionslot()[t - 1]->miniondead()){
+                this->trigger(GameStage::minionLeave, nullptr, opponent);
+                opponent->trigger(GameStage::minionLeave, nullptr, this);
+                getminionslot()[t - 1]->toGraveyard(this, t);
+            }
+        } else {
+            if (t > (opponent->getminionslot()).size() || t <= 0) {
+                InvalidPosition e{"No minion is placed at this position."};
+                throw e;
+            }
+            opponent->getminionslot()[t - 1]->setdefenceval(opponent->getminionslot()[t - 1]->getdefenceval() - 1);
+            if(opponent->getminionslot()[t - 1]->miniondead()){
+                this->trigger(GameStage::minionLeave, nullptr, opponent);
+                opponent->trigger(GameStage::minionLeave, nullptr, this);
+                opponent->getminionslot()[t - 1]->toGraveyard(opponent, t);
+            }
+        }
+    } else if(gethero() == "Druid"){
+        if (onme){
+            InvalidMove e{"You can't attack your own minions"};
+            throw e;
+        } else {
+            if (t > (opponent->getminionslot()).size() || t <= 0) {
+                InvalidPosition e{"No minion is placed at this position."};
+                throw e;
+            }
+            sethattackval(gethattackval() + 1);
+            auto mini = opponent->getminionslot()[t - 1];
+            const int att = mini->getattackval();
+            const int def = mini->getdefenceval();
+            mini->setdefenceval(def - gethattackval());
+            setlife(getlife() - att + 1);
+            if(mini->miniondead()){
+                this->trigger(GameStage::minionLeave, nullptr, opponent);
+                opponent->trigger(GameStage::minionLeave, nullptr, this);
+                mini->toGraveyard(opponent, t);
+            }
+        } 
+    }
+
+    if(testing && getmagic() < 2) {
+        setmagic(0);
+    } else {
+        setmagic(getmagic() - 2);
+    }
+    setheropowerState(false);
+    this->notifyObservers();
+    opponent->notifyObservers();
+}
+
 
 void Player::attach(Observer *o){
     observers.emplace_back(o);
@@ -119,6 +282,10 @@ void Player::drawcard(){
 }
 
 void Player::disgard(int i){
+    if (i > (this->gethand()).size() || i <= 0) {
+        InvalidPosition e{"No card is placed at this position."};
+        throw e;
+    }
     gethand().erase(gethand().begin() + i - 1);
     this->notifyObservers();
 }
@@ -196,9 +363,10 @@ void Player::play(int i, Player * opponent, bool testing){
         setmagic(m);
     }
     this->notifyObservers();
+    opponent->notifyObservers();
 }
 
-void Player::play(int i, Player * opponent, bool onme, bool ritual, bool testing){
+void Player::playonRitual(int i, Player * opponent, bool onme, bool testing){
     // testing mode
     // not enough magic
     if(i > gethand().size() || i <= 0) {
@@ -223,13 +391,14 @@ void Player::play(int i, Player * opponent, bool onme, bool ritual, bool testing
         }
     }
     const int m = getmagic() - gethand()[i - 1]->getcost();
-    gethand()[i - 1]->playCard(this, opponent, i, onme, ritual);
-    if (testing) {
+    gethand()[i - 1]->playCardonRitual(this, opponent, i, onme);
+    if (testing && m < 0) {
         setmagic(0);
     } else {
         setmagic(m);
     }
     this->notifyObservers();
+    opponent->notifyObservers();
 }
 
 void Player::play(int i, Player * opponent, int t, bool onme, bool testing){
@@ -258,12 +427,13 @@ void Player::play(int i, Player * opponent, int t, bool onme, bool testing){
 
     const int m = getmagic() - gethand()[i - 1]->getcost();
     gethand()[i - 1]->playCard(this, opponent, i, onme, t);
-    if (testing) {
+    if (testing && m < 0) {
         setmagic(0);
     } else {
         setmagic(m);
     }
     this->notifyObservers();
+    opponent->notifyObservers();
 }
 
 
@@ -303,6 +473,7 @@ void Player::trigger(GameStage state, std::shared_ptr<Card> c, Player * opponent
         }
     }
     this->notifyObservers();
+    opponent->notifyObservers();
 }
 
 void Player::use(int i, Player * opponent, bool testing){
@@ -319,12 +490,13 @@ void Player::use(int i, Player * opponent, bool testing){
     }
     const int m = getmagic() - getminionslot()[i - 1]->getabilityCost();
     getminionslot()[i - 1]->useMinion(this, opponent);
-    if (testing) {
+    if (testing && m < 0) {
         setmagic(0);
     } else {
         setmagic(m);
     }
     this->notifyObservers();
+    opponent->notifyObservers();
 }
 
 
@@ -358,12 +530,13 @@ void Player::use(int i, Player * opponent, int t, bool onme, bool testing){
     } else {
         getminionslot()[i - 1]->useMinion(this, opponent, opponent->getminionslot()[i - 1].get());
     }
-    if (testing) {
+    if (testing && m < 0) {
         setmagic(0);
     } else {
         setmagic(m);
     }
     this->notifyObservers();
+    opponent->notifyObservers();
 }
 
 void Player::gainaction(){

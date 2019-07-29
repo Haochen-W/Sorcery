@@ -10,7 +10,7 @@ public:
 	~Banish() = default;
 
 	std::vector<std::string> getoutput() override;
-	void playCard(Player * playedby, Player * opponent, int i, bool onme, bool ritual) override;
+	void playCardonRitual(Player * playedby, Player * opponent, int i, bool onme) override;
 	void playCard(Player * playedby, Player * opponent, int i, bool onme, int t) override;
 };
 

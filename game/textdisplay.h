@@ -14,6 +14,7 @@ public:
 	void displayMagic(Player * player) override;
 	void inspectCard(Player * player, int i) override;
 	void endgame(Player * player) override;
+	void tie() override;
 };
 
 #endif

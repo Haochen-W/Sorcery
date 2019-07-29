@@ -1,0 +1,13 @@
+Hero:
+  Mage:
+      Heropower: deal 1 damage to any target.
+  Hunter: 
+      Heropower: deal 2 damage to opponent player.
+  Paladin:
+      Heropower: summon a 1/1 Air Elemental.
+  Warrior:
+      Heropower: add 2 health to your hero.
+  Warlock:
+      Heropower: draw a card and take 2 damage.
+  Druid:
+      Heropower: +1 attack this turn and add 1 health to your hero.

@@ -110,3 +110,9 @@ void TextDisplay::endgame(Player * player){
 		}
 	}
 }
+
+void TextDisplay::tie(){
+	for(int i = 0; i < TIE.size(); i++){
+		std::cout << TIE[i] << std::endl;
+	}
+}

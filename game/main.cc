@@ -23,6 +23,8 @@ int main(int argc, char const *argv[]){
 	bool textsState = true;
 	bool deck1State = false;
 	bool deck2State = false;
+	bool heroState = true;
+	bool notfirst = false;
 	ifstream initfile;
 	ifstream deck1file;
 	ifstream deck2file;
@@ -47,11 +49,15 @@ int main(int argc, char const *argv[]){
 			i += 1; // skip the next argument
 		} else if(string(argv[i]) == "-disabletext"){
 			textsState = false;
-		}
+		} else if(string(argv[i]) == "-disableheropower"){
+			heroState = false;
+		} 
 	}
 
 	string playername1;
 	string playername2;
+	string hero1 = "Sorcery";
+	string hero2 = "Sorcery";
 	string cmd;
 
 	cout << "Welcome to Sorcery!" << endl;
@@ -63,19 +69,100 @@ int main(int argc, char const *argv[]){
 	} else {
 		cin >> playername1;
 	}
+
+	if(heroState && testingState){
+		cout << "Please choose your hero from the following list: " << endl;
+		cout << "(Please enter \"Mage\", \"Hunter\", \"Paladin\", \"Warlock\", or \"Druid\")" << endl;
+		ifstream herofile{"hero.txt"};
+		string s;
+		while(getline(herofile, s)){
+			cout << s << endl;
+		}
+
+		if(initState && initfile >> hero1){
+			cout << hero1 << endl;
+		} else {
+			cin >> hero1;
+		}
+	}
+	// randomize heroes
+	if (heroState && !(testingState)){
+		std::srand(unsigned (std::time(0)));
+		int rand = std::rand() % 6;
+		if (rand == 0) {
+			hero1 = "Mage";
+			cout << "You are now a Mage. Your hero power is deal 1 damage to any target." << endl;
+		} else if (rand == 1) {
+			hero1 = "Hunter";
+			cout << "You are now a Hunter. Your hero power is deal 2 damage to opponent player." << endl;
+		} else if (rand == 2) {
+			hero1 = "Paladin";
+			cout << "You are now a Paladin. Your hero power is summon a 1/1 Air Elemental." << endl;
+		} else if (rand == 3) {
+			hero1 = "Warrior";
+			cout << "You are now a Warrior. Your hero power is add 2 health to your hero." << endl;
+		} else if (rand == 4) {
+			hero1 = "Warlock";
+			cout << "You are now a Warlock. Your hero power is draw a card and take 2 damage." << endl;
+		} else if (rand == 5) {
+			hero1 = "Druid";
+			cout << "You are now a Druid. Your hero power is +1 attack this turn and add 1 health to your hero." << endl;
+		}
+	}
+
 	cout << "Player 2: ";
-	if(initState && initfile >> playername1){
+	if(initState && initfile >> playername2){
 		cout << playername2 << endl;
 	} else {
 		cin >> playername2;
+	}
+
+	if (heroState && !(testingState)){
+		std::srand(unsigned (std::time(0)));
+		int rand = std::rand() % 6;
+		if (rand == 0) {
+			hero1 = "Mage";
+			cout << "You are now a Mage. Your hero power is deal 1 damage to any target." << endl;
+		} else if (rand == 1) {
+			hero1 = "Hunter";
+			cout << "You are now a Hunter. Your hero power is deal 2 damage to opponent player." << endl;
+		} else if (rand == 2) {
+			hero1 = "Paladin";
+			cout << "You are now a Paladin. Your hero power is summon a 1/1 Air Elemental." << endl;
+		} else if (rand == 3) {
+			hero1 = "Warrior";
+			cout << "You are now a Warrior. Your hero power is add 2 health to your hero." << endl;
+		} else if (rand == 4) {
+			hero1 = "Warlock";
+			cout << "You are now a Warlock. Your hero power is draw a card and take 2 damage." << endl;
+		} else if (rand == 5) {
+			hero1 = "Druid";
+			cout << "You are now a Druid. Your hero power is +1 attack this turn and add 1 health to your hero." << endl;
+		}
+	}
+
+	if(heroState && testingState){
+		cout << "Please choose your hero from the following list: " << endl;
+		cout << "(Please enter \"Mage\", \"Hunter\", \"Paladin\", \"Warlock\", or \"Druid\")" << endl;
+		ifstream herofile{"hero.txt"};
+		string s;
+		while(getline(herofile, s)){
+			cout << s << endl;
+		}
+
+		if(initState && initfile >> hero2){
+			cout << hero2 << endl;
+		} else {
+			cin >> hero2;
+		}
 	}
 	
 	// create players and displays
 	vector<shared_ptr<Player>> players;
 	vector<shared_ptr<outputDisplay>> displays;
 
-	shared_ptr<Player> p1 = make_shared<Player>(playername1, 1);
-	shared_ptr<Player> p2 = make_shared<Player>(playername2, 2);
+	shared_ptr<Player> p1 = make_shared<Player>(playername1, 1, hero1);
+	shared_ptr<Player> p2 = make_shared<Player>(playername2, 2, hero2);
 	players.emplace_back(p1);
 	players.emplace_back(p2);
 	
@@ -111,6 +198,7 @@ int main(int argc, char const *argv[]){
 		players[1]->loadDeck(card);
 	}
 
+	// randomize the deck
 	if (!testingState){
 		std::srand(unsigned (std::time(0)));
 		std::random_shuffle(players[0]->getdeck().begin(), players[0]->getdeck().end(), myrandom);
@@ -126,6 +214,7 @@ int main(int argc, char const *argv[]){
 	// start player1's turn
 	cout << "Player " << players[currentPlayer]->getplayerNum() << "'s turn!"<< endl;
 	players[currentPlayer]->gainMagic();
+	players[currentPlayer]->setheropowerState(true);
 	for(int i = 0; i < displays.size(); i++){
 		displays[i]->displayBoard();
 		displays[i]->displayMagic(players[currentPlayer].get());
@@ -158,6 +247,7 @@ int main(int argc, char const *argv[]){
 			cout << "Player" << players[currentPlayer]->getplayerNum() << "'s turn!"<< endl;
 			players[currentPlayer]->gainMagic();
 			players[currentPlayer]->gainaction();
+			players[currentPlayer]->setheropowerState(true);
 			try {
 				players[currentPlayer]->drawcard();
 			} 
@@ -172,7 +262,6 @@ int main(int argc, char const *argv[]){
 		// end game
 		else if (cmd == "quit"){
 			cout << "Bye!" << endl;
-			// delete anything if needed
 			return 0;
 		} 
 		// draw a card
@@ -189,8 +278,19 @@ int main(int argc, char const *argv[]){
 		} 
 		// disgard i: disgard the ith card in hand
 		else if (cmd == "disgard" && testingState == true){
-			// only available in testing mode
-
+			int i;
+			scmd >> i;
+			try{
+				players[currentPlayer]->disgard(i);
+				for(int i = 0; i < displays.size(); i++){
+					displays[i]->displayBoard();
+					displays[i]->displayMagic(players[currentPlayer].get());
+					displays[i]->displayHand(players[currentPlayer].get());
+				}
+			}
+			catch(InvalidPosition &e){
+				cerr << e.getErrorMessage() << endl;
+			}
 		} 
 		// attack i: minion i to attack opposing player
 		// attack i j: minion i to attact opposing player's minion j
@@ -248,6 +348,9 @@ int main(int argc, char const *argv[]){
 				catch(InvalidMove &e){
 					cerr << e.getErrorMessage() << endl;
 				}
+				catch(ExceedMaximum &e){
+					cerr << e.getErrorMessage() << endl;
+				}
 			} 
 			else {
 				if(scmd >> t){
@@ -267,6 +370,9 @@ int main(int argc, char const *argv[]){
 						catch(InvalidMove &e){
 							cerr << e.getErrorMessage() << endl;
 						}
+						catch(ExceedMaximum &e){
+							cerr << e.getErrorMessage() << endl;
+						}
 					} else {
 						try {
 							players[currentPlayer]->play(i, players[nextPlayer].get(), t, false, testingState);
@@ -282,12 +388,15 @@ int main(int argc, char const *argv[]){
 						catch(InvalidMove &e){
 							cerr << e.getErrorMessage() << endl;
 						}
+						catch(ExceedMaximum &e){
+							cerr << e.getErrorMessage() << endl;
+						}
 					}
 				} else {
 					// play i p r: play enchantment, spell on ritual
 					if(p == players[currentPlayer]->getplayerNum()){
 						try {
-							players[currentPlayer]->play(i, players[nextPlayer].get(), true, true, testingState);
+							players[currentPlayer]->playonRitual(i, players[nextPlayer].get(), true, testingState);
 							for(int i = 0; i < displays.size(); i++){
 								displays[i]->displayBoard();
 								displays[i]->displayMagic(players[currentPlayer].get());
@@ -298,11 +407,14 @@ int main(int argc, char const *argv[]){
 							cerr << e.getErrorMessage() << endl;
 						}
 						catch(InvalidMove &e){
+							cerr << e.getErrorMessage() << endl;
+						}
+						catch(ExceedMaximum &e){
 							cerr << e.getErrorMessage() << endl;
 						}
 					} else {
 						try {
-							players[currentPlayer]->play(i, players[nextPlayer].get(), false, true, testingState);
+							players[currentPlayer]->playonRitual(i, players[nextPlayer].get(), false, testingState);
 							for(int i = 0; i < displays.size(); i++){
 								displays[i]->displayBoard();
 								displays[i]->displayMagic(players[currentPlayer].get());
@@ -313,6 +425,9 @@ int main(int argc, char const *argv[]){
 							cerr << e.getErrorMessage() << endl;
 						}
 						catch(InvalidMove &e){
+							cerr << e.getErrorMessage() << endl;
+						}
+						catch(ExceedMaximum &e){
 							cerr << e.getErrorMessage() << endl;
 						}
 					}
@@ -325,56 +440,62 @@ int main(int argc, char const *argv[]){
 			if(!(scmd >> p)){
 				// use i: use minion
 				if(p == players[currentPlayer]->getplayerNum()){
-						try {
-							players[currentPlayer]->use(i, players[nextPlayer].get(), testingState);
-						}
-						catch(InvalidPosition &e){
-							cerr << e.getErrorMessage() << endl;
-						}
-						catch(InvalidMove &e){
-							cerr << e.getErrorMessage() << endl;
-						}
-						catch(ExceedMaximum &e){
-							cerr << e.getErrorMessage() << endl;
-						}
-					} else {
-						try {
-							players[currentPlayer]->use(i, players[nextPlayer].get(), testingState);
-						}
-						catch(InvalidPosition &e){
-							cerr << e.getErrorMessage() << endl;
-						}
-						catch(InvalidMove &e){
-							cerr << e.getErrorMessage() << endl;
-						}
-						catch(ExceedMaximum &e){
-							cerr << e.getErrorMessage() << endl;
-						}
+					try {
+						players[currentPlayer]->use(i, players[nextPlayer].get(), testingState);
 					}
+					catch(InvalidPosition &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+					catch(InvalidMove &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+					catch(ExceedMaximum &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+				} else {
+					try {
+						players[currentPlayer]->use(i, players[nextPlayer].get(), testingState);
+					}
+					catch(InvalidPosition &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+					catch(InvalidMove &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+					catch(ExceedMaximum &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+				}
 			} else {
 				scmd >> t;
 				// use i p t: use minion on minion
 				if(p == players[currentPlayer]->getplayerNum()){
-						try {
-							players[currentPlayer]->use(i, players[nextPlayer].get(), t, true, testingState);
-						}
-						catch(InvalidPosition &e){
-							cerr << e.getErrorMessage() << endl;
-						}
-						catch(InvalidMove &e){
-							cerr << e.getErrorMessage() << endl;
-						}
-					} else {
-						try {
-							players[currentPlayer]->use(i, players[nextPlayer].get(), t, false, testingState);
-						}
-						catch(InvalidPosition &e){
-							cerr << e.getErrorMessage() << endl;
-						}
-						catch(InvalidMove &e){
-							cerr << e.getErrorMessage() << endl;
-						}
+					try {
+						players[currentPlayer]->use(i, players[nextPlayer].get(), t, true, testingState);
 					}
+					catch(InvalidPosition &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+					catch(InvalidMove &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+					catch(ExceedMaximum &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+				} else {
+					try {
+						players[currentPlayer]->use(i, players[nextPlayer].get(), t, false, testingState);
+					}
+					catch(InvalidPosition &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+					catch(InvalidMove &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+					catch(ExceedMaximum &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+				}
 			}
 		} 
 		// inspect i: display minion i
@@ -402,6 +523,111 @@ int main(int argc, char const *argv[]){
 				displays[i]->displayBoard();
 			}
 		}
+		else if (cmd == "usepower") {
+			int p, t;
+			if(!(scmd >> p)){
+				try{
+					players[currentPlayer]->useHeropower(players[nextPlayer].get(), testingState);
+					for(int i = 0; i < displays.size(); i++){
+						displays[i]->displayBoard();
+						displays[i]->displayMagic(players[currentPlayer].get());
+						displays[i]->displayHand(players[currentPlayer].get());
+					}
+				}
+				catch(InvalidPosition &e){
+					cerr << e.getErrorMessage() << endl;
+				}
+				catch(InvalidMove &e){
+					cerr << e.getErrorMessage() << endl;
+				}
+				catch(ExceedMaximum &e){
+					cerr << e.getErrorMessage() << endl;
+				}
+			} else if(!(scmd >> t)){
+				if(p == players[currentPlayer]->getplayerNum()){
+					try{
+						players[currentPlayer]->useHeropower(players[nextPlayer].get(), true, testingState);
+						for(int i = 0; i < displays.size(); i++){
+							displays[i]->displayBoard();
+							displays[i]->displayMagic(players[currentPlayer].get());
+							displays[i]->displayHand(players[currentPlayer].get());
+						}
+					}
+					catch(InvalidPosition &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+					catch(InvalidMove &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+					catch(ExceedMaximum &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+				} else {
+					try{
+						players[currentPlayer]->useHeropower(players[nextPlayer].get(), false, testingState);
+						for(int i = 0; i < displays.size(); i++){
+							displays[i]->displayBoard();
+							displays[i]->displayMagic(players[currentPlayer].get());
+							displays[i]->displayHand(players[currentPlayer].get());
+						}
+					}
+					catch(InvalidPosition &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+					catch(InvalidMove &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+					catch(ExceedMaximum &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+				}
+			} else {
+				if(p == players[currentPlayer]->getplayerNum()){
+					try{
+						players[currentPlayer]->useHeropower(players[nextPlayer].get(), t, true, testingState);
+						for(int i = 0; i < displays.size(); i++){
+							displays[i]->displayBoard();
+							displays[i]->displayMagic(players[currentPlayer].get());
+							displays[i]->displayHand(players[currentPlayer].get());
+						}
+					}
+					catch(InvalidPosition &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+					catch(InvalidMove &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+					catch(ExceedMaximum &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+				} else {
+					try{
+						players[currentPlayer]->useHeropower(players[nextPlayer].get(), t, false, testingState);
+						for(int i = 0; i < displays.size(); i++){
+							displays[i]->displayBoard();
+							displays[i]->displayMagic(players[currentPlayer].get());
+							displays[i]->displayHand(players[currentPlayer].get());
+						}
+					}
+					catch(InvalidPosition &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+					catch(InvalidMove &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+					catch(ExceedMaximum &e){
+						cerr << e.getErrorMessage() << endl;
+					}
+				}
+			}
+		}
+		else {
+			if (notfirst){
+				cout << "Invalid Command Entered." << endl;
+				continue;
+			}
+			notfirst = true;
+		}
 		if (players[0]->die() && !(players[1]->die())){
 			for(int i = 0; i < displays.size(); i++){
 				displays[i]->endgame(players[1].get());
@@ -411,9 +637,9 @@ int main(int argc, char const *argv[]){
 				displays[i]->endgame(players[0].get());
 			}
 		} else if (players[1]->die() && players[0]->die()){
-			// for(int i = 0; i < displays.size(); i++){
-			// 	displays[i]->tie();
-			// }
+			for(int i = 0; i < displays.size(); i++){
+				displays[i]->tie();
+			}
 		}
 	}
 	return 0;
