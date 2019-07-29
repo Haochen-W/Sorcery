@@ -33,10 +33,9 @@ public:
 	~Player() = default;
 
 	// getter and setter
-	std::string getplayerName();
-	int getplayerNum();
-	int getlife();
-	int getmagic();
+	int getplayerNum() const;
+	int getlife() const;
+	int getmagic() const;
 	std::vector<std::shared_ptr<Card>> & getdeck();
 	std::vector<std::shared_ptr<Card>> & gethand();
 	std::vector<std::shared_ptr<Card>> & getminionslot();
@@ -44,16 +43,8 @@ public:
 	std::vector<std::shared_ptr<Card>> & getactiveRitual();
 	std::vector<std::string> getplayerCard();
 
-	// do we need setter?
-	void setplayerNum(int nplayerNum);
 	void setlife (int nlife);
 	void setmagic (int nmagic);
-	void setdeck (std::vector<std::shared_ptr<Card>> ndeck);
-	void sethand (std::vector<std::shared_ptr<Card>> nhand);
-	void setminionslot (std::vector<std::shared_ptr<Card>> nminionslot);
-	void setgraveyard (std::vector<std::shared_ptr<Card>> ngraveyard);
-	void setactiveRitual (std::vector<std::shared_ptr<Card>> nactiveRitual);
-	void setplayerCard (std::vector<std::string> nplayerCard);
 
 	// subject
 	void attach(Observer *o);
@@ -62,12 +53,12 @@ public:
 
 	void loadDeck(std::string card); // load deck
 	void drawcard(); // draws a card from deck, add to hand
-	void disgard(int i); // erase ith card in hand
+	void disgard(int i); // erase ith card in hand, use in testing mode
 	void attack(int i, Player * p); // use minion i to attack player
 	void attack(int i, Player * p, int j); // use minion i to attack minion j
 	void play(int i, Player * opponent, bool testing); // play the ith card, place minion, place ritual, spell effect
-	void play(int i, Player * opponent, int t, bool onme, bool testing); // play the ith card on on player p's minion t
-	void play(int i, Player * opponent, bool onme, bool ritual, bool testing);
+	void play(int i, Player * opponent, int t, bool onme, bool testing); // play the ith card on on a player's minion t
+	void play(int i, Player * opponent, bool onme, bool ritual, bool testing); // targeting on a ritual
 	void trigger(GameStage state, std::shared_ptr<Card> m, Player * opponent);
 	void use(int i, Player * opponent, bool testing); // use minion i
 	void use(int i, Player * opponent, int t, bool onme, bool testing); // use minion i on player p's minion t

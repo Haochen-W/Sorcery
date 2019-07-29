@@ -99,3 +99,14 @@ void TextDisplay::inspectCard(Player * player, int num){
 	std::cout << std::endl;
 }
 
+void TextDisplay::endgame(Player * player){
+	if(player->getplayerNum() == 1){
+		for(int i = 0; i < P1WINNER.size(); i++){
+			std::cout << P1WINNER[i] << std::endl;
+		}
+	} else if(player->getplayerNum() == 2){
+		for(int i = 0; i < P2WINNER.size(); i++){
+			std::cout << P2WINNER[i] << std::endl;
+		}
+	}
+}

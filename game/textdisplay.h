@@ -13,6 +13,7 @@ public:
 	void displayHand(Player * player) override;
 	void displayMagic(Player * player) override;
 	void inspectCard(Player * player, int i) override;
+	void endgame(Player * player) override;
 };
 
 #endif

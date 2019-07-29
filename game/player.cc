@@ -8,29 +8,21 @@
 Player::Player(std::string playerName, int playerNum): 
     playerName{playerName}, playerNum{playerNum}, life{20}, magic{2}{}
 
-std::vector<std::string> Player::getplayerCard(){
-	std::vector<std::string> temp{display_player_card(playerNum, playerName, life, magic)};
-	return temp;
-}
-int Player::getplayerNum() {return playerNum;}
-int Player::getlife() {return life;}
-int Player::getmagic() {return magic;}
+int Player::getplayerNum() const{return playerNum;}
+int Player::getlife() const{return life;}
+int Player::getmagic() const{return magic;}
 std::vector<std::shared_ptr<Card>> & Player::getdeck() {return deck;}
 std::vector<std::shared_ptr<Card>> & Player::gethand() {return hand;}
 std::vector<std::shared_ptr<Card>> & Player::getminionslot() {return minionslot;}
 std::vector<std::shared_ptr<Card>> & Player::getgraveyard() {return graveyard;}
 std::vector<std::shared_ptr<Card>> & Player::getactiveRitual() {return activeRitual;}
+std::vector<std::string> Player::getplayerCard() {
+    std::vector<std::string> temp{display_player_card(playerNum, playerName, life, magic)};
+    return temp;
+}
 
-
-void Player::setplayerNum(int nplayerNum){playerNum = nplayerNum;}
 void Player::setlife (int nlife){life = nlife;}
 void Player::setmagic (int nmagic){magic = nmagic;}
-void Player::setdeck (std::vector<std::shared_ptr<Card>> ndeck){deck = ndeck;}
-void Player::sethand (std::vector<std::shared_ptr<Card>> nhand){hand = nhand;}
-void Player::setminionslot (std::vector<std::shared_ptr<Card>> nminionslot){minionslot = nminionslot;}
-void Player::setgraveyard (std::vector<std::shared_ptr<Card>> ngraveyard){graveyard = ngraveyard;}
-void Player::setactiveRitual (std::vector<std::shared_ptr<Card>> nactiveRitual){activeRitual = nactiveRitual;}
-void Player::setplayerCard (std::vector<std::string> nplayerCard){playerCard = nplayerCard;}
 
 void Player::attach(Observer *o){
     observers.emplace_back(o);
@@ -169,16 +161,18 @@ void Player::attack(int i, Player * p, int j) {
     (this->getminionslot())[i - 1]->setaction(0);
 
     if ((this->getminionslot())[i - 1]->miniondead()) {
+        this->trigger(GameStage::minionLeave, nullptr, p);
+        p->trigger(GameStage::minionLeave, nullptr, this);
         (this->getminionslot())[i - 1]->toGraveyard(this, i);
     }
 
     if ((p->getminionslot())[j - 1]->miniondead()) {
+        this->trigger(GameStage::minionLeave, nullptr, p);
+        p->trigger(GameStage::minionLeave, nullptr, this);
         (p->getminionslot())[j - 1]->toGraveyard(p, j);
     }
     this->notifyObservers();
     p->notifyObservers();
-    this->trigger(GameStage::minionLeave, nullptr, p);
-    p->trigger(GameStage::minionLeave, nullptr, this);
 }
 
 void Player::play(int i, Player * opponent, bool testing){
@@ -381,10 +375,4 @@ void Player::gainaction(){
 bool Player::die() {return (getlife() <= 0);}
 
 void Player::gainMagic(){magic += 1;}
-
-
-
-
-
-
 

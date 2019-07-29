@@ -402,6 +402,19 @@ int main(int argc, char const *argv[]){
 				displays[i]->displayBoard();
 			}
 		}
+		if (players[0]->die() && !(players[1]->die())){
+			for(int i = 0; i < displays.size(); i++){
+				displays[i]->endgame(players[1].get());
+			}
+		} else if (players[1]->die() && !(players[0]->die())){
+			for(int i = 0; i < displays.size(); i++){
+				displays[i]->endgame(players[0].get());
+			}
+		} else if (players[1]->die() && players[0]->die()){
+			// for(int i = 0; i < displays.size(); i++){
+			// 	displays[i]->tie();
+			// }
+		}
 	}
 	return 0;
 }

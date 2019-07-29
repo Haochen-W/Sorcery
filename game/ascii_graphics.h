@@ -34,6 +34,8 @@ extern const card_template_t PLAYER_1_TEMPLATE;
 extern const card_template_t PLAYER_2_TEMPLATE;
 
 extern const std::vector<std::string> CENTRE_GRAPHIC;
+extern const std::vector<std::string> P1WINNER;
+extern const std::vector<std::string> P2WINNER;
 
 extern const std::string EXTERNAL_BORDER_CHAR_UP_DOWN;
 extern const std::string EXTERNAL_BORDER_CHAR_LEFT_RIGHT;

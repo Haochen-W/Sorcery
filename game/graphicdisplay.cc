@@ -80,3 +80,4 @@ void GraphicDisplay::inspectCard(Player * player, int num){
 	}
 }
 
+void GraphicDisplay::endgame(Player * player){}

@@ -17,15 +17,15 @@ void Banish::playCard(Player * playedby, Player * opponent, int i, bool onme, bo
 
 void Banish::playCard(Player * playedby, Player * opponent, int i, bool onme, int t){
 	if (onme) {
+		playedby->trigger(GameStage::minionLeave, nullptr, opponent);
+    	opponent->trigger(GameStage::minionLeave, nullptr, playedby);
 		(playedby->getminionslot())[t - 1]->toGraveyard(playedby, t);
 	} else {
+		playedby->trigger(GameStage::minionLeave, nullptr, opponent);
+    	opponent->trigger(GameStage::minionLeave, nullptr, playedby);
 		(opponent->getminionslot())[t - 1]->toGraveyard(opponent, t);
 	}
-	// trigger effects
 	playedby->gethand().erase(playedby->gethand().begin() + i - 1);
-    playedby->trigger(GameStage::minionLeave, nullptr, opponent);
-    opponent->trigger(GameStage::minionLeave, nullptr, playedby);
-
 }
 
 Unsummon::Unsummon(): Spell{"Unsummon", 1} {}
@@ -37,18 +37,45 @@ std::vector<std::string> Unsummon::getoutput(){
 
 void Unsummon::playCard(Player * playedby, Player * opponent, int i, bool onme, int t){
 	if (onme) {
-		std::shared_ptr<Card> temp{(playedby->getminionslot())[t - 1]};
+		if (playedby->gethand().size() >= 5){
+			InvalidMove e {"The hand is full."};
+			throw e;
+		}
+		auto mini = playedby->getminionslot()[t - 1];
+		mini->disenchantall();
+		if (mini->miniondead()){
+			playedby->trigger(GameStage::minionLeave, nullptr, opponent);
+			opponent->trigger(GameStage::minionLeave, nullptr, playedby);
+			mini->toGraveyard(playedby, t);
+			playedby->gethand().erase(playedby->gethand().begin() + i - 1);
+			return;
+		}
+		auto temp{mini};
+		playedby->trigger(GameStage::minionLeave, nullptr, opponent);
+		opponent->trigger(GameStage::minionLeave, nullptr, playedby);
 		(playedby->getminionslot()).erase(playedby->getminionslot().begin() + t - 1);
 		playedby->gethand().emplace_back(temp);
 	} else {
-		std::shared_ptr<Card> temp{(opponent->getminionslot())[t - 1]};
+		if (opponent->gethand().size() >= 5){
+			InvalidMove e {"The hand is full."};
+			throw e;
+		}
+		auto mini = opponent->getminionslot()[t - 1];
+		mini->disenchantall();
+		if (mini->miniondead()){
+			playedby->trigger(GameStage::minionLeave, nullptr, opponent);
+			opponent->trigger(GameStage::minionLeave, nullptr, playedby);
+			mini->toGraveyard(opponent, t);
+			playedby->gethand().erase(playedby->gethand().begin() + i - 1);
+			return;
+		}
+		auto temp{mini};
+		playedby->trigger(GameStage::minionLeave, nullptr, opponent);
+		opponent->trigger(GameStage::minionLeave, nullptr, playedby);
 		(opponent->getminionslot()).erase(opponent->getminionslot().begin() + t - 1);
 		opponent->gethand().emplace_back(temp);
 	}
 	playedby->gethand().erase(playedby->gethand().begin() + i - 1);
-	// trigger effects
-	playedby->trigger(GameStage::minionLeave, nullptr, opponent);
-	opponent->trigger(GameStage::minionLeave, nullptr, playedby);
 }
 
 Recharge::Recharge(): Spell{"Recharge", 1} {}
@@ -114,11 +141,15 @@ void Disenchant::playCard(Player * playedby, Player * opponent, int i, bool onme
 	playedby->gethand().erase(playedby->gethand().begin() + i - 1);
 	mini->getEnchantmentadded().erase(mini->getEnchantmentadded().begin() + index);
 	// trigger effects
-	if (mini->getdefenceval() <= 0){
+	if (mini->miniondead()){
+		if (onme){
+			mini->toGraveyard(playedby, t);
+		} else {
+			mini->toGraveyard(opponent, t);
+		}
 		playedby->trigger(GameStage::minionLeave, nullptr, opponent);
 		opponent->trigger(GameStage::minionLeave, nullptr, playedby);
 	}
-
 }
 
 Raisedead::Raisedead(): Spell{"Raise Dead", 1} {}
@@ -137,11 +168,16 @@ void Raisedead::playCard(Player * playedby, Player * opponent, int i){
 	std::shared_ptr<Card> temp{(playedby->getgraveyard())[gravesize - 1]};
 	(playedby->getgraveyard()).erase(playedby->getgraveyard().begin() + gravesize - 1);
 	temp->setdefenceval(1);
-	playedby->getminionslot().emplace_back(temp);
+	const int size = playedby->getminionslot().size();
+	if (size <= 4){
+		playedby->getminionslot().emplace_back(temp);
+	}
 	playedby->gethand().erase(playedby->gethand().begin() + i - 1);
 	// trigger effect. enter play
-	playedby->trigger(GameStage::curNewMinion, temp, opponent);
-	opponent->trigger(GameStage::oppNewMinion, temp, playedby);
+	if (size <= 4){
+		playedby->trigger(GameStage::curNewMinion, temp, opponent);
+		opponent->trigger(GameStage::oppNewMinion, temp, playedby);
+	}
 }
 
 Blizzard::Blizzard(): Spell{"Blizzard", 3} {}
@@ -160,7 +196,23 @@ void Blizzard::playCard(Player * playedby, Player * opponent, int i){
 	}
 	playedby->gethand().erase(playedby->gethand().begin() + i - 1);
 	// trigger effect
-	playedby->trigger(GameStage::minionLeave, nullptr, opponent);
-	opponent->trigger(GameStage::minionLeave, nullptr, playedby);
+	int k = 1;
+	for (auto i: playedby->getminionslot()){
+		if (i->miniondead()){
+			playedby->trigger(GameStage::minionLeave, nullptr, opponent);
+			opponent->trigger(GameStage::minionLeave, nullptr, playedby);
+			i->toGraveyard(playedby, k);
+		}
+		k += 1;
+	}
+	k = 1;
+	for (auto j: playedby->getminionslot()){
+		if (j->miniondead()){
+			playedby->trigger(GameStage::minionLeave, nullptr, opponent);
+			opponent->trigger(GameStage::minionLeave, nullptr, playedby);
+			j->toGraveyard(playedby, k);
+		}
+		k += 1;
+	}
 }
 

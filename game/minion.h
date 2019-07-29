@@ -19,13 +19,13 @@ public:
 	~Minion() = default;
 
 	// getter and setter
-	int getattackval() override;
-	int getdefenceval() override;
-	int getabilityCost() override;
-	int getaction() override;
-	int getactioneachturn() override;
+	int getattackval() const override;
+	int getdefenceval() const override;
+	int getabilityCost() const override;
+	int getaction() const override;
+	int getactioneachturn() const override;
 	std::vector<std::string> & getEnchantmentadded() override;
-	bool getcanuse() override;
+	bool getcanuse() const override;
 
 	void setattackval(int nattackval) override;
 	void setdefenceval(int ndefenceval) override;
@@ -37,7 +37,6 @@ public:
 	void minionAttack(Player * target) override;
 	void minionAttack(Player * target, int i) override; // call mbeattack on target minion
 	void playCard(Player * playedby, Player * opponent, int i) override; // place the minion into minion slot
-	// void playCard(Player * playedby, Card * target) override; // do nothing
 	void useMinion(Player * playedby, Player * opponent, Card * c) override;
 	void useMinion(Player * playedby, Player * opponent) override;
 
@@ -46,6 +45,7 @@ public:
 	bool miniondead() override;
 
 	void gainaction() override;
+	void disenchantall() override;
 	// inspect i, hand
 	// friend std::ostream &operator<<(std::ostream &out, const Card c);
 };

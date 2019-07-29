@@ -63,10 +63,14 @@ void Haste::playCard(Player * playedby, Player * opponent, int i, bool onme, int
 	std::string s = "Haste";
 	if (onme){
 		const int curr = playedby->getminionslot()[t - 1]->getactioneachturn();
+		const int now = playedby->getminionslot()[t - 1]->getaction();
+		playedby->getminionslot()[t - 1]->setaction(now + 1);
 		playedby->getminionslot()[t - 1]->setactioneachturn(curr + 1);
 		playedby->getminionslot()[t - 1]->getEnchantmentadded().emplace_back(s);
 	} else {
 		const int curr = opponent->getminionslot()[t - 1]->getactioneachturn();
+		const int now = opponent->getminionslot()[t - 1]->getaction();
+		opponent->getminionslot()[t - 1]->setaction(now + 1);
 		opponent->getminionslot()[t - 1]->setactioneachturn(curr + 1);
 		opponent->getminionslot()[t - 1]->getEnchantmentadded().emplace_back(s);
 	}

@@ -39,10 +39,10 @@ std::vector<std::string> Fireelemental::getoutput(){
 void Fireelemental::triggereffect(Player * playedby, Player * opponent, Card * c){
 	c->setdefenceval(c->getdefenceval() - 1);
 	if(c->miniondead()){
+		playedby->trigger(GameStage::minionLeave, nullptr, opponent);
+		opponent->trigger(GameStage::minionLeave, nullptr, playedby);
 		c->toGraveyard(opponent, (opponent->getminionslot()).size());
 	}
-	playedby->trigger(GameStage::minionLeave, nullptr, opponent);
-    opponent->trigger(GameStage::minionLeave, nullptr, playedby);
 }
 
 
@@ -73,10 +73,10 @@ void Novicepyromancer::useMinion(Player * playedby, Player * opponent, Card * c)
 	}
 	// check death
 	if(c->miniondead()){
+		playedby->trigger(GameStage::minionLeave, nullptr, opponent);
+    	opponent->trigger(GameStage::minionLeave, nullptr, playedby);
 		c->toGraveyard(opponent, (opponent->getminionslot()).size());
 	}
-	playedby->trigger(GameStage::minionLeave, nullptr, opponent);
-    opponent->trigger(GameStage::minionLeave, nullptr, playedby);
 }
 
 
