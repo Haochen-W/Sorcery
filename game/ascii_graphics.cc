@@ -66,27 +66,77 @@ card_template_t display_enchantment_attack_defence(std::string name,int cost,std
                                      name,cost,desc,attack,defence);
 }
 
-card_template_t display_player_card(int player_num,std::string name,int life,int mana) {
+// card_template_t display_player_card(int player_num,std::string name,int life,int mana) {
+//   std::ostringstream oss;
+//   card_template_t out = player_num == 1 ? PLAYER_1_TEMPLATE : PLAYER_2_TEMPLATE;
+//   prepare_for_replace(out);
+//   std::string centred_name = name;
+//   if (centred_name.size() < 13) {
+//     int extend = 13 - static_cast<int>(centred_name.size());
+//     oss.str("");
+//     for (int i=0;i<extend/2-1;i++) oss << ' ';
+//     oss << centred_name;
+//     centred_name = oss.str();
+//   }
+//   replace_text_left(out,'N',centred_name);
+//   oss.str("");
+//   oss << life;
+//   replace_text_right(out,'H',oss.str());
+//   oss.str("");
+//   oss << mana;
+//   replace_text_left(out,'M',oss.str());
+//   return out;
+// }
+
+
+card_template_t display_player_card(std::string name, int player_num, std::string hero, int life, int mana) {
   std::ostringstream oss;
-  card_template_t out = player_num == 1 ? PLAYER_1_TEMPLATE : PLAYER_2_TEMPLATE;
+  card_template_t out = CARD_TEMPLATE_MINION_NO_ABILITY;
   prepare_for_replace(out);
-  std::string centred_name = name;
-  if (centred_name.size() < 13) {
-    int extend = 13 - static_cast<int>(centred_name.size());
-    oss.str("");
-    for (int i=0;i<extend/2-1;i++) oss << ' ';
-    oss << centred_name;
-    centred_name = oss.str();
+  if(player_num == 1){
+    replace_text_left(out,'N',"P1: " + name);
+  } else if(player_num == 2){
+    replace_text_left(out,'N',"P2: " + name);
   }
-  replace_text_left(out,'N',centred_name);
+  oss.str("");
+  std::string desc;
+  oss << hero;
+  if(oss.str() == "Mage"){
+    replace_text_right(out,'C', "2");
+    desc = "deal 1 damage to any target.";
+  } else if(oss.str() == "Hunter"){
+    replace_text_right(out,'C', "2");
+    desc = "deal 2 damage to opponent player.";
+  } else if(oss.str() == "Paladin"){
+    replace_text_right(out,'C', "2");
+    desc = "summon a 1/1 Air Elemental.";
+  } else if(oss.str() == "Warrior"){
+    replace_text_right(out,'C', "2");
+    desc = "add 2 health to your hero.";
+  } else if(oss.str() == "Warlock"){
+    replace_text_right(out,'C', "2");
+    desc = "draw a card and take 2 damage.";
+  } else if(oss.str() == "Druid"){
+    replace_text_right(out,'C', "2");
+    desc = "+1 attack this turn and add 1 health to your hero.";
+  } else {
+    replace_text_right(out,'C', "");
+    oss.str("");
+  }
+  replace_text_right(out,'T',oss.str());
   oss.str("");
   oss << life;
-  replace_text_right(out,'H',oss.str());
+  replace_text_left(out,'A',oss.str());
   oss.str("");
   oss << mana;
-  replace_text_left(out,'M',oss.str());
+  replace_text_right(out,'D',oss.str());
+  replace_text_left(out,'E',desc);
+  oss.str("");
+  replace_text_left(out,'K',oss.str());
   return out;
 }
+
+
 
 static card_template_t display_enchantment_general(card_template_t out,std::string name,int cost,
                                                    std::string desc,std::string attack,

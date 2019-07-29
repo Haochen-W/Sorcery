@@ -19,7 +19,8 @@ card_template_t display_spell(std::string name,int cost,std::string desc);
 card_template_t display_enchantment_attack_defence(std::string name,int cost,std::string desc,
                                                    std::string attack,std::string defence);
 card_template_t display_enchantment(std::string name,int cost,std::string desc);
-card_template_t display_player_card(int player_num,std::string name,int life,int mana);
+// card_template_t display_player_card(int player_num,std::string name,int life,int mana);
+card_template_t display_player_card(std::string name, int player_num, std::string hero, int life, int mana);
 
 extern const card_template_t CARD_TEMPLATE_MINION_NO_ABILITY;
 extern const card_template_t CARD_TEMPLATE_MINION_WITH_ABILITY;

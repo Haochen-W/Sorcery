@@ -121,22 +121,22 @@ int main(int argc, char const *argv[]){
 		std::srand(unsigned (std::time(0)));
 		int rand = std::rand() % 6;
 		if (rand == 0) {
-			hero1 = "Mage";
+			hero2 = "Mage";
 			cout << "You are now a Mage. Your hero power is deal 1 damage to any target." << endl;
 		} else if (rand == 1) {
-			hero1 = "Hunter";
+			hero2 = "Hunter";
 			cout << "You are now a Hunter. Your hero power is deal 2 damage to opponent player." << endl;
 		} else if (rand == 2) {
-			hero1 = "Paladin";
+			hero2 = "Paladin";
 			cout << "You are now a Paladin. Your hero power is summon a 1/1 Air Elemental." << endl;
 		} else if (rand == 3) {
-			hero1 = "Warrior";
+			hero2 = "Warrior";
 			cout << "You are now a Warrior. Your hero power is add 2 health to your hero." << endl;
 		} else if (rand == 4) {
-			hero1 = "Warlock";
+			hero2 = "Warlock";
 			cout << "You are now a Warlock. Your hero power is draw a card and take 2 damage." << endl;
 		} else if (rand == 5) {
-			hero1 = "Druid";
+			hero2 = "Druid";
 			cout << "You are now a Druid. Your hero power is +1 attack this turn and add 1 health to your hero." << endl;
 		}
 	}
@@ -180,9 +180,6 @@ int main(int argc, char const *argv[]){
 		players[0]->attach(displays[i].get());
 		players[1]->attach(displays[i].get());
 	}
-
-	players[0]->notifyObservers();
-	players[1]->notifyObservers();
 	int currentPlayer = 0;
 	int nextPlayer = 1;
 
@@ -215,6 +212,8 @@ int main(int argc, char const *argv[]){
 	cout << "Player " << players[currentPlayer]->getplayerNum() << "'s turn!"<< endl;
 	players[currentPlayer]->gainMagic();
 	players[currentPlayer]->setheropowerState(true);
+	players[0]->notifyObservers();
+	players[1]->notifyObservers();
 	for(int i = 0; i < displays.size(); i++){
 		displays[i]->displayBoard();
 		displays[i]->displayMagic(players[currentPlayer].get());
@@ -523,7 +522,7 @@ int main(int argc, char const *argv[]){
 				displays[i]->displayBoard();
 			}
 		}
-		else if (cmd == "usepower") {
+		else if (cmd == "usepower" && heroState == true) {
 			int p, t;
 			if(!(scmd >> p)){
 				try{

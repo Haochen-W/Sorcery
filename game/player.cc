@@ -20,7 +20,7 @@ std::vector<std::shared_ptr<Card>> & Player::getminionslot() {return minionslot;
 std::vector<std::shared_ptr<Card>> & Player::getgraveyard() {return graveyard;}
 std::vector<std::shared_ptr<Card>> & Player::getactiveRitual() {return activeRitual;}
 std::vector<std::string> Player::getplayerCard() {
-    std::vector<std::string> temp{display_player_card(playerNum, playerName, life, magic)};
+    std::vector<std::string> temp{display_player_card(playerName, playerNum, hero, life, magic)};
     return temp;
 }
 
