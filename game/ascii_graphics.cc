@@ -103,40 +103,46 @@ card_template_t display_player_card(std::string name, int player_num, std::strin
   std::string desc;
   oss << hero;
   if(oss.str() == "Mage"){
+    replace_text_right(out,'T',oss.str());
     oss.str("");
     oss << heropowercost;
     replace_text_right(out,'C', oss.str());
     desc = "deal 1 damage to any target";
   } else if(oss.str() == "Hunter"){
+    replace_text_right(out,'T',oss.str());
     oss.str("");
     oss << heropowercost;
     replace_text_right(out,'C', oss.str());
     desc = "deal 2 damage to opponent player";
   } else if(oss.str() == "Paladin"){
+    replace_text_right(out,'T',oss.str());
     oss.str("");
     oss << heropowercost;
     replace_text_right(out,'C', oss.str());
     desc = "summon a 1/1 Air Elemental";
   } else if(oss.str() == "Warrior"){
+    replace_text_right(out,'T',oss.str());
     oss.str("");
     oss << heropowercost;
     replace_text_right(out,'C', oss.str());
     desc = "add 2 health to your hero";
   } else if(oss.str() == "Warlock"){
+    replace_text_right(out,'T',oss.str());
     oss.str("");
     oss << heropowercost;
     replace_text_right(out,'C', oss.str());
     desc = "draw a card and take 2 damage";
   } else if(oss.str() == "Druid"){
+    replace_text_right(out,'T',oss.str());
     oss.str("");
     oss << heropowercost;
     replace_text_right(out,'C', oss.str());
     desc = "+1 attack this turn and add 1 health to your hero";
   } else {
-    replace_text_right(out,'C', "");
     oss.str("");
+    replace_text_right(out,'T',oss.str());
+    replace_text_right(out,'C', "");
   }
-  replace_text_right(out,'T',oss.str());
   oss.str("");
   oss << life;
   replace_text_left(out,'A',oss.str());
