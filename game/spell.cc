@@ -5,4 +5,4 @@ Spell::Spell(std::string cardName, int cost):
 
 void Spell::playCard(Player * playedby, Player * opponent, int i) {return;}
 void Spell::playCard(Player * playedby, Player * opponent, int i, bool onme, int t) {return;}
-void Spell::playCard(Player * playedby, Player * opponent, int i, bool onme, bool ritual){return;}
+void Spell::playCardonRitual(Player * playedby, Player * opponent, int i, bool onme){return;}

@@ -6,8 +6,8 @@ GraphicDisplay::GraphicDisplay(): outputDisplay(){}
 void GraphicDisplay::displayBoard(){
 	w.fillRectangle(10, 10, 1350, 700, Xwindow::White);
 	w.fillRectangle(20, 20, 1300, 2, Xwindow::Black);
-	w.fillRectangle(20, 20, 2, 510, Xwindow::Black);
-	w.fillRectangle(1320, 20, 2, 510, Xwindow::Black);
+	w.fillRectangle(20, 20, 2, 600, Xwindow::Black);
+	w.fillRectangle(1320, 20, 2, 600, Xwindow::Black);
 
 	// first row
 	for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
@@ -23,41 +23,90 @@ void GraphicDisplay::displayBoard(){
 	}
 
 	w.fillRectangle(20, 270, 1300, 2, Xwindow::Black);
-	w.fillRectangle(20, 280, 1300, 2, Xwindow::Black);
+
+	int s = 50;
+
+	// s
+	w.fillRectangle(400 + s, 290, 10 * 4, 10, Xwindow::Black);
+	w.fillRectangle(400 + s, 310, 10 * 4, 10, Xwindow::Black);
+	w.fillRectangle(400 + s, 330, 10 * 4, 10, Xwindow::Black);
+	w.fillRectangle(400 + s, 300, 10, 10, Xwindow::Black);
+	w.fillRectangle(430 + s, 320, 10, 10, Xwindow::Black);
+
+	// o
+	w.fillRectangle(470 + s, 290, 10 * 4, 10, Xwindow::Black);
+	w.fillRectangle(470 + s, 330, 10 * 4, 10, Xwindow::Black);
+	w.fillRectangle(470 + s, 290, 10, 10 * 4, Xwindow::Black);
+	w.fillRectangle(500 + s, 290, 10, 10 * 4, Xwindow::Black);
+
+	// r
+	w.fillRectangle(540 + s, 290, 10, 10 * 5, Xwindow::Black);
+	w.fillRectangle(550 + s, 290, 10 * 3, 10, Xwindow::Black);
+	w.fillRectangle(550 + s, 310, 10 * 3, 10, Xwindow::Black);
+	w.fillRectangle(570 + s, 300, 10, 10, Xwindow::Black);
+	w.fillRectangle(550 + s, 320, 10, 10, Xwindow::Black);
+	w.fillRectangle(560 + s, 330, 10 * 2, 10, Xwindow::Black);
+
+	// c
+	w.fillRectangle(610 + s, 290, 10 * 4, 10, Xwindow::Black);
+	w.fillRectangle(610 + s, 330, 10 * 4, 10, Xwindow::Black);
+	w.fillRectangle(610 + s, 300, 10, 10 * 3, Xwindow::Black);
+
+	// e
+	w.fillRectangle(690 + s, 290, 10 * 3, 10, Xwindow::Black);
+	w.fillRectangle(690 + s, 310, 10 * 3, 10, Xwindow::Black);
+	w.fillRectangle(690 + s, 330, 10 * 3, 10, Xwindow::Black);
+	w.fillRectangle(680 + s, 290, 10, 10 * 5, Xwindow::Black);
+
+	// r
+	w.fillRectangle(750 + s, 290, 10, 10 * 5, Xwindow::Black);
+	w.fillRectangle(760 + s, 290, 10 * 3, 10, Xwindow::Black);
+	w.fillRectangle(760 + s, 310, 10 * 3, 10, Xwindow::Black);
+	w.fillRectangle(780 + s, 300, 10, 10, Xwindow::Black);
+	w.fillRectangle(760 + s, 320, 10, 10, Xwindow::Black);
+	w.fillRectangle(770 + s, 330, 10 * 2, 10, Xwindow::Black);
+
+	// y
+	w.fillRectangle(820 + s, 290, 10, 10 * 2, Xwindow::Black);
+	w.fillRectangle(850 + s, 290, 10, 10 * 2, Xwindow::Black);
+	w.fillRectangle(830 + s, 310, 10 * 2, 10, Xwindow::Black);
+	w.fillRectangle(835 + s, 320, 10, 10 * 2, Xwindow::Black);
+	
+	w.fillRectangle(20, 360, 1300, 2, Xwindow::Black);
 
 	// third row
 	for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 		for(int j = 0; j < 5; j++){
-			w.drawString(44 + j * 264, 310 + i * 10, displayMinionSlot2[j][i]);
+			w.drawString(44 + j * 264, 390 + i * 10, displayMinionSlot2[j][i]);
 		}
 	}
 	// fourth row
 	for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 		for(int j = 0; j < 5; j++){
-			w.drawString(44 + j * 264, 425 + i * 10, displayPlayer2[j][i]);
+			w.drawString(44 + j * 264, 505 + i * 10, displayPlayer2[j][i]);
 		}
 	}
 
-	w.fillRectangle(20, 530, 1300, 2, Xwindow::Black);
+	w.fillRectangle(20, 620, 1300, 2, Xwindow::Black);
 }
 
 void GraphicDisplay::displayHand(Player * player){
 	if(player->getplayerNum() == 1){
-		w.fillRectangle(10, 10, 1350, 700, Xwindow::White);
-		w.drawString(44, 580, "Player1's Hand:");
+		w.fillRectangle(10, 630, 1350, 150, Xwindow::White);
+		w.drawString(44, 650, "Player1's Hand:");
 
 		for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 			for(int j = 0; j < 5; j++){
-				w.drawString(44 + j * 264, 600 + i * 10, displayHand1[j][i]);
+				w.drawString(44 + j * 264, 670 + i * 10, displayHand1[j][i]);
 			}
 		}
 	} else if(player->getplayerNum() == 2){
-		w.fillRectangle(10, 10, 1350, 700, Xwindow::White);
-		w.drawString(44, 580, "Player2's Hand:");
+		w.fillRectangle(10, 630, 1350, 150, Xwindow::White);
+		w.drawString(44, 650, "Player2's Hand:");
 
 		for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 			for(int j = 0; j < 5; j++){
-				w.drawString(44 + j * 264, 600 + i * 10, displayHand2[j][i]);
+				w.drawString(44 + j * 264, 670 + i * 10, displayHand2[j][i]);
 			}
 		}
 	}
@@ -73,7 +122,7 @@ void GraphicDisplay::inspectCard(Player * player, int num){
 	}
 	std::vector<std::string> temp{(player->getminionslot()[num - 1])->getoutput()};
 	
-	w.fillRectangle(10, 10, 1350, 700, Xwindow::White);
+	w.fillRectangle(10, 10, 1350, 900, Xwindow::White);
 	w.drawString(44, 40, "Minion at position " + std::to_string(num) + " : ");
 
 	for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
@@ -123,7 +172,7 @@ void GraphicDisplay::inspectCard(Player * player, int num){
 }
 
 void GraphicDisplay::endgame(Player * player){
-	w.fillRectangle(10, 10, 1350, 700, Xwindow::White);
+	w.fillRectangle(10, 10, 1350, 900, Xwindow::White);
 
 	int s = 20;
 	int h = 350;
@@ -241,7 +290,7 @@ void GraphicDisplay::endgame(Player * player){
 }
 
 void GraphicDisplay::tie(){
-	w.fillRectangle(10, 10, 1350, 700, Xwindow::White);
+	w.fillRectangle(10, 10, 1350, 900, Xwindow::White);
 	int s = 20;
 	int h = 350;
 	int v = 175;

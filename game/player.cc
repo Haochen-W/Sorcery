@@ -452,7 +452,6 @@ void Player::trigger(GameStage state, std::shared_ptr<Card> c, Player * opponent
             }
         }
     } else if(state == GameStage::curNewMinion){
-        std::cout << getactiveRitual().size() << std::endl;
         if(getactiveRitual().size() != 0 && getactiveRitual()[0]->getcardName() == "Aura of Power"){
             getactiveRitual()[0]->triggereffect(this, opponent, c.get());
         } else if(getactiveRitual().size() != 0 && getactiveRitual()[0]->getcardName() == "Standstill"){
