@@ -15,7 +15,6 @@ class TextDisplay;
 
 enum class GameStage{startTurn, endTurn, curNewMinion, oppNewMinion, minionLeave};
 
-
 class Player{
 	std::string playerName;
 	std::string hero;

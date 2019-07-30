@@ -296,13 +296,13 @@ void Player::attack(int i, Player * p) {
         InvalidPosition e{"No minion is placed at this position."};
         throw e;
     }
-    if ((this->getminionslot())[i - 1]->getaction() == 0) {
+    if ((this->getminionslot())[i - 1]->getaction() <= 0) {
         InvalidMove e {"Not enough action points."};
         throw e;
     }
     // real attack
     (this->getminionslot())[i - 1]->minionAttack(p);
-    (this->getminionslot())[i - 1]->setaction(0);
+    (this->getminionslot())[i - 1]->setaction(getminionslot()[i - 1]->getaction() - 1);
 
     this->notifyObservers();
     p->notifyObservers();
@@ -319,14 +319,14 @@ void Player::attack(int i, Player * p, int j) {
         throw e;
     }
     // check action
-    if ((this->getminionslot())[i - 1]->getaction() == 0) {
+    if ((this->getminionslot())[i - 1]->getaction() <= 0) {
         InvalidMove e {"Not enough action points."};
         throw e;
     }
     // real attack
     (this->getminionslot())[i - 1]->minionAttack(p, j);
     (p->getminionslot())[j - 1]->minionAttack(this, i);
-    (this->getminionslot())[i - 1]->setaction(0);
+    (this->getminionslot())[i - 1]->setaction(getminionslot()[i - 1]->getaction() - 1);
 
     if ((this->getminionslot())[i - 1]->miniondead()) {
         this->trigger(GameStage::minionLeave, nullptr, p);
@@ -452,6 +452,7 @@ void Player::trigger(GameStage state, std::shared_ptr<Card> c, Player * opponent
             }
         }
     } else if(state == GameStage::curNewMinion){
+        std::cout << getactiveRitual().size() << std::endl;
         if(getactiveRitual().size() != 0 && getactiveRitual()[0]->getcardName() == "Aura of Power"){
             getactiveRitual()[0]->triggereffect(this, opponent, c.get());
         } else if(getactiveRitual().size() != 0 && getactiveRitual()[0]->getcardName() == "Standstill"){
@@ -460,11 +461,11 @@ void Player::trigger(GameStage state, std::shared_ptr<Card> c, Player * opponent
     } else if(state == GameStage::oppNewMinion){
         for(int i = 0; i < getminionslot().size(); i++){
             if(getminionslot()[i]->getcardName() == "Fire Elemental"){
-                getminionslot()[i]->triggereffect(this, opponent, c.get());
+                getminionslot()[i]->triggereffect(opponent, this, c.get());
             }
         }
         if(getactiveRitual().size() != 0 && getactiveRitual()[0]->getcardName() == "Standstill"){
-            getactiveRitual()[0]->triggereffect(this, opponent, c.get());
+            getactiveRitual()[0]->triggereffect(opponent, this, c.get());
         }
     } else if(state == GameStage::minionLeave){
         for(int i = 0; i < getminionslot().size(); i++){
@@ -484,7 +485,10 @@ void Player::use(int i, Player * opponent, bool testing){
         InvalidMove e {"Not enough magic."};
         throw e;
     }
-
+    if (!testing && getminionslot()[i - 1]->getaction() <= 0){
+        InvalidMove e {"Not enough action points."};
+        throw e;
+    }
     if(i > getminionslot().size() || i <= 0) {
         InvalidPosition e {"No card at this position."};
         throw e;
@@ -496,6 +500,7 @@ void Player::use(int i, Player * opponent, bool testing){
     } else {
         setmagic(m);
     }
+    getminionslot()[i - 1]->setaction(getminionslot()[i - 1]->getaction() - 1);
     this->notifyObservers();
     opponent->notifyObservers();
 }
@@ -506,6 +511,10 @@ void Player::use(int i, Player * opponent, int t, bool onme, bool testing){
     // not enough magic
     if (!testing && getmagic() < getminionslot()[i - 1]->getabilityCost()){
         InvalidMove e {"Not enough magic."};
+        throw e;
+    }
+    if (!testing && getminionslot()[i - 1]->getaction() <= 0){
+        InvalidMove e {"Not enough action points."};
         throw e;
     }
 
@@ -536,6 +545,7 @@ void Player::use(int i, Player * opponent, int t, bool onme, bool testing){
     } else {
         setmagic(m);
     }
+    getminionslot()[i - 1]->setaction(getminionslot()[i - 1]->getaction() - 1);
     this->notifyObservers();
     opponent->notifyObservers();
 }

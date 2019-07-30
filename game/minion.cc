@@ -28,6 +28,10 @@ void Minion::minionAttack(Player * target, int i){
 	target->getminionslot()[i - 1]->takeDamage(att);
 }
 void Minion::playCard(Player * playedby, Player * opponent, int i){
+	if (playedby->getminionslot().size() >= 5){
+		InvalidMove e {"Your minion slot is full."};
+        throw e;
+	}
 	std::shared_ptr<Card> temp{(playedby->gethand())[i - 1]};
 	(playedby->gethand()).erase((playedby->gethand()).begin() + i - 1);
 	(playedby->getminionslot()).emplace_back(temp);
@@ -54,7 +58,8 @@ void Minion::gainaction(){
 	setaction(getactioneachturn());
 }
 void Minion::disenchantall(){
-	for (int i = 0; i < getEnchantmentadded().size(); i++){
+	const int m = getEnchantmentadded().size();
+	for (int i = 0; i < m; i++){
 		int index = getEnchantmentadded().size() - 1;
 		std::string s = getEnchantmentadded()[index];
 		const int att = getattackval();

@@ -1,4 +1,5 @@
 #include "textdisplay.h"
+#include "concreteenchantment.h"
 
 TextDisplay::TextDisplay(): outputDisplay(){}
 
@@ -96,7 +97,48 @@ void TextDisplay::inspectCard(Player * player, int num){
 	for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 		std::cout << temp[i] << std::endl;
 	}
-	std::cout << std::endl;
+
+	std::vector<std::string> enchantsName{player->getminionslot()[num - 1]->getEnchantmentadded()};
+	std::vector<std::shared_ptr<Card>> enchants;
+	for(int i = 0; i < enchantsName.size(); i++){
+		std::string s{enchantsName[i]};
+		if (s == "Giant Strength"){
+			std::shared_ptr<Giantstrength> p = std::make_shared<Giantstrength>(nullptr);
+			enchants.emplace_back(p);
+		} else if (s == "Enrage"){
+			std::shared_ptr<Enrage> p = std::make_shared<Enrage>(nullptr);
+			enchants.emplace_back(p);
+		} else if (s == "Haste"){
+			std::shared_ptr<Haste> p = std::make_shared<Haste>(nullptr);
+			enchants.emplace_back(p);
+		} else if (s == "Magic Fatigue"){
+			std::shared_ptr<Magicfatigue> p = std::make_shared<Magicfatigue>(nullptr);
+			enchants.emplace_back(p);
+		} else if (s == "Silence"){
+			std::shared_ptr<Silence> p = std::make_shared<Silence>(nullptr);
+			enchants.emplace_back(p);
+		}
+	}
+	std::vector<std::vector<std::string>> enchantsoutput;
+	for(int i = 0; i < enchants.size(); i++){
+		enchantsoutput.emplace_back(enchants[i]->getoutput());
+	}
+	int rounds;
+
+	if (enchants.size() % 5 == 0){
+		rounds = enchants.size() / 5;
+	} else {
+		rounds = enchants.size() / 5 + 1;
+	}
+	for (int q = 0; q < rounds; q++){
+		for(int k = 0; k < CARD_TEMPLATE_BORDER.size(); k++){
+			for(int j = 0; j < 5 && q * 5 + j < enchants.size(); j++){
+				std::cout << enchantsoutput[q * 5 + j][k];
+			}
+			std::cout << std::endl;
+		}
+	}
+	
 }
 
 void TextDisplay::endgame(Player * player){

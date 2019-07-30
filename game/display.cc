@@ -90,5 +90,3 @@ void outputDisplay::notify(Player & whoNotified){
 		}
 	}
 }
-
-

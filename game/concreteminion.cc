@@ -88,15 +88,15 @@ std::vector<std::string> Apprenticesummoner::getoutput(){
 }
 
 void Apprenticesummoner::useMinion(Player * playedby, Player * opponent){
-	if((playedby->getminionslot()).size() >= 5){
-		ExceedMaximum e{"Your minionslot is full."};
-        throw e;
-	}
 	if (this->getcanuse() == false) {
 		InvalidMove e {"This ability has been disabled."};
         throw e;
 	}
-
+	if((playedby->getminionslot()).size() >= 5){
+		ExceedMaximum e{"Your minionslot is full."};
+        throw e;
+	}
+	
 	std::shared_ptr<Airelemental> p = std::make_shared<Airelemental>();
 	(playedby->getminionslot()).emplace_back(p);
 	playedby->trigger(GameStage::curNewMinion, p, opponent);
@@ -114,13 +114,16 @@ std::vector<std::string> Mastersummoner::getoutput(){
 void Mastersummoner::useMinion(Player * playedby, Player * opponent){
 	if (this->getcanuse() == false) {
 		InvalidMove e {"This ability has been disabled."};
-        throw e;
+		throw e;
 	}
-	for(int i = 0; i < 3; i ++){
- 		if((playedby->getminionslot()).size() >= 5){
- 			ExceedMaximum e{"Your minionslot is full."};
- 			throw e;
- 		}
+	if((playedby->getminionslot()).size() >= 5){
+		ExceedMaximum e{"Your minionslot is full."};
+		throw e;
+ 	}
+	for(int i = 0; i < 3; i++){
+	 	if((playedby->getminionslot()).size() >= 5){
+	 		return;
+	 	}
 	 	std::shared_ptr<Airelemental> p = std::make_shared<Airelemental>();
 	 	(playedby->getminionslot()).emplace_back(p);
 	 	playedby->trigger(GameStage::curNewMinion, p, opponent);

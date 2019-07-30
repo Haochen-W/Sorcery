@@ -215,4 +215,3 @@ void Blizzard::playCard(Player * playedby, Player * opponent, int i){
 		k += 1;
 	}
 }
-

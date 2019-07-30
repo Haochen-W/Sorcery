@@ -1,9 +1,10 @@
 #include "graphicdisplay.h"
+#include "concreteenchantment.h"
 
 GraphicDisplay::GraphicDisplay(): outputDisplay(){}
 
 void GraphicDisplay::displayBoard(){
-	w.fillRectangle(10, 10, 1350, 530, Xwindow::White);
+	w.fillRectangle(10, 10, 1350, 700, Xwindow::White);
 	w.fillRectangle(20, 20, 1300, 2, Xwindow::Black);
 	w.fillRectangle(20, 20, 2, 510, Xwindow::Black);
 	w.fillRectangle(1320, 20, 2, 510, Xwindow::Black);
@@ -42,7 +43,7 @@ void GraphicDisplay::displayBoard(){
 
 void GraphicDisplay::displayHand(Player * player){
 	if(player->getplayerNum() == 1){
-		w.fillRectangle(10, 560, 1350, 150, Xwindow::White);
+		w.fillRectangle(10, 10, 1350, 700, Xwindow::White);
 		w.drawString(44, 580, "Player1's Hand:");
 
 		for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
@@ -51,7 +52,7 @@ void GraphicDisplay::displayHand(Player * player){
 			}
 		}
 	} else if(player->getplayerNum() == 2){
-		w.fillRectangle(10, 560, 1350, 150, Xwindow::White);
+		w.fillRectangle(10, 10, 1350, 700, Xwindow::White);
 		w.drawString(44, 580, "Player2's Hand:");
 
 		for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
@@ -66,17 +67,58 @@ void GraphicDisplay::displayMagic(Player * player){}
 
 void GraphicDisplay::inspectCard(Player * player, int num){
 	if(num > (player->getminionslot()).size() || num <= 0){
-		w.drawString(44, 580, "No minion is placed in this position.");
+		w.drawString(44, 40, "No minion is placed in this position.");
 		InvalidPosition e{"No minion is placed in this position."};
 		throw e;
 	}
 	std::vector<std::string> temp{(player->getminionslot()[num - 1])->getoutput()};
 	
-	w.fillRectangle(10, 560, 1350, 150, Xwindow::White);
-	w.drawString(44, 580, "Minion at position " + std::to_string(num) + " : ");
+	w.fillRectangle(10, 10, 1350, 700, Xwindow::White);
+	w.drawString(44, 40, "Minion at position " + std::to_string(num) + " : ");
 
 	for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
-		w.drawString(44, 600 + i * 10, temp[i]);
+		w.drawString(44, 60 + i * 10, temp[i]);
+	}
+
+	std::vector<std::string> enchantsName{player->getminionslot()[num - 1]->getEnchantmentadded()};
+	std::vector<std::shared_ptr<Card>> enchants;
+	for(int i = 0; i < enchantsName.size(); i++){
+		std::string s{enchantsName[i]};
+		if (s == "Giant Strength"){
+			std::shared_ptr<Giantstrength> p = std::make_shared<Giantstrength>(nullptr);
+			enchants.emplace_back(p);
+		} else if (s == "Enrage"){
+			std::shared_ptr<Enrage> p = std::make_shared<Enrage>(nullptr);
+			enchants.emplace_back(p);
+		} else if (s == "Haste"){
+			std::shared_ptr<Haste> p = std::make_shared<Haste>(nullptr);
+			enchants.emplace_back(p);
+		} else if (s == "Magic Fatigue"){
+			std::shared_ptr<Magicfatigue> p = std::make_shared<Magicfatigue>(nullptr);
+			enchants.emplace_back(p);
+		} else if (s == "Silence"){
+			std::shared_ptr<Silence> p = std::make_shared<Silence>(nullptr);
+			enchants.emplace_back(p);
+		}
+	}
+	std::vector<std::vector<std::string>> enchantsoutput;
+	for(int i = 0; i < enchants.size(); i++){
+		enchantsoutput.emplace_back(enchants[i]->getoutput());
+	}
+
+	int rounds;
+
+	if (enchants.size() % 5 == 0){
+		rounds = enchants.size() / 5;
+	} else {
+		rounds = enchants.size() / 5 + 1;
+	}
+	for (int q = 0; q < rounds; q++){
+		for(int k = 0; k < CARD_TEMPLATE_BORDER.size(); k++){
+			for(int j = 0; j < 5 && q * 5 + j < enchants.size(); j++){
+				w.drawString(44 + j * 264, 175 + k * 10 + q * 115, enchantsoutput[q * 5 + j][k]);
+			}
+		}
 	}
 }
 
@@ -219,4 +261,3 @@ void GraphicDisplay::tie(){
 	w.fillRectangle(h + 420, v + 220, s * 3, s, Xwindow::Black);
 	w.fillRectangle(h + 400, v + 140, s, s * 5, Xwindow::Black);
 }
-

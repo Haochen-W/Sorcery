@@ -636,16 +636,19 @@ int main(int argc, char const *argv[]){
 				displays[i]->endgame(players[1].get());
 			}
 			cin >> c;
+			break;
 		} else if (players[1]->die() && !(players[0]->die())){
 			for(int i = 0; i < displays.size(); i++){
 				displays[i]->endgame(players[0].get());
 			}
 			cin >> c;
+			break;
 		} else if (players[1]->die() && players[0]->die()){
 			for(int i = 0; i < displays.size(); i++){
 				displays[i]->tie();
 			}
 			cin >> c;
+			break;
 		}
 	}
 	return 0;
