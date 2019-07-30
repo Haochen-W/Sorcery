@@ -70,7 +70,6 @@ void Unsummon::playCard(Player * playedby, Player * opponent, int i, bool onme, 
 			return;
 		}
 		auto temp{mini};
-		std::cout << "HI" << std::endl;
 		playedby->trigger(GameStage::minionLeave, nullptr, opponent);
 		opponent->trigger(GameStage::minionLeave, nullptr, playedby);
 		(opponent->getminionslot()).erase(opponent->getminionslot().begin() + t - 1);

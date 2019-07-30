@@ -1,3 +1,4 @@
+
 #include "ascii_graphics.h"
 #include <sstream>
 
@@ -89,7 +90,7 @@ card_template_t display_enchantment_attack_defence(std::string name,int cost,std
 // }
 
 
-card_template_t display_player_card(std::string name, int player_num, std::string hero, int life, int mana) {
+card_template_t display_player_card(std::string name, int player_num, std::string hero, int life, int mana, int heropowercost) {
   std::ostringstream oss;
   card_template_t out = CARD_TEMPLATE_MINION_NO_ABILITY;
   prepare_for_replace(out);
@@ -102,23 +103,35 @@ card_template_t display_player_card(std::string name, int player_num, std::strin
   std::string desc;
   oss << hero;
   if(oss.str() == "Mage"){
-    replace_text_right(out,'C', "2");
-    desc = "deal 1 damage to any target.";
+    oss.str("");
+    oss << heropowercost;
+    replace_text_right(out,'C', oss.str());
+    desc = "deal 1 damage to any target";
   } else if(oss.str() == "Hunter"){
-    replace_text_right(out,'C', "2");
-    desc = "deal 2 damage to opponent player.";
+    oss.str("");
+    oss << heropowercost;
+    replace_text_right(out,'C', oss.str());
+    desc = "deal 2 damage to opponent player";
   } else if(oss.str() == "Paladin"){
-    replace_text_right(out,'C', "2");
-    desc = "summon a 1/1 Air Elemental.";
+    oss.str("");
+    oss << heropowercost;
+    replace_text_right(out,'C', oss.str());
+    desc = "summon a 1/1 Air Elemental";
   } else if(oss.str() == "Warrior"){
-    replace_text_right(out,'C', "2");
-    desc = "add 2 health to your hero.";
+    oss.str("");
+    oss << heropowercost;
+    replace_text_right(out,'C', oss.str());
+    desc = "add 2 health to your hero";
   } else if(oss.str() == "Warlock"){
-    replace_text_right(out,'C', "2");
-    desc = "draw a card and take 2 damage.";
+    oss.str("");
+    oss << heropowercost;
+    replace_text_right(out,'C', oss.str());
+    desc = "draw a card and take 2 damage";
   } else if(oss.str() == "Druid"){
-    replace_text_right(out,'C', "2");
-    desc = "+1 attack this turn and add 1 health to your hero.";
+    oss.str("");
+    oss << heropowercost;
+    replace_text_right(out,'C', oss.str());
+    desc = "+1 attack this turn and add 1 health to your hero";
   } else {
     replace_text_right(out,'C', "");
     oss.str("");

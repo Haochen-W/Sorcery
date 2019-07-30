@@ -59,6 +59,7 @@ int main(int argc, char const *argv[]){
 	string hero1 = "Sorcery";
 	string hero2 = "Sorcery";
 	string cmd;
+	char c;
 
 	cout << "Welcome to Sorcery!" << endl;
 
@@ -211,7 +212,6 @@ int main(int argc, char const *argv[]){
 	// start player1's turn
 	cout << "Player " << players[currentPlayer]->getplayerNum() << "'s turn!"<< endl;
 	players[currentPlayer]->gainMagic();
-	players[currentPlayer]->setheropowerState(true);
 	players[0]->notifyObservers();
 	players[1]->notifyObservers();
 	for(int i = 0; i < displays.size(); i++){
@@ -244,13 +244,7 @@ int main(int argc, char const *argv[]){
 
 			// start next player's turn
 			cout << "Player" << players[currentPlayer]->getplayerNum() << "'s turn!"<< endl;
-			players[currentPlayer]->gainMagic();
-			players[currentPlayer]->gainaction();
-			players[currentPlayer]->setheropowerState(true);
-			try {
-				players[currentPlayer]->drawcard();
-			} 
-			catch(ExceedMaximum &e){}
+			players[currentPlayer]->initTurn();
 			players[currentPlayer]->trigger(GameStage::startTurn, nullptr, players[nextPlayer].get());
 			for(int i = 0; i < displays.size(); i++){
 				displays[i]->displayBoard();
@@ -441,6 +435,11 @@ int main(int argc, char const *argv[]){
 				if(p == players[currentPlayer]->getplayerNum()){
 					try {
 						players[currentPlayer]->use(i, players[nextPlayer].get(), testingState);
+						for(int i = 0; i < displays.size(); i++){
+								displays[i]->displayBoard();
+								displays[i]->displayMagic(players[currentPlayer].get());
+								displays[i]->displayHand(players[currentPlayer].get());
+							}
 					}
 					catch(InvalidPosition &e){
 						cerr << e.getErrorMessage() << endl;
@@ -471,6 +470,11 @@ int main(int argc, char const *argv[]){
 				if(p == players[currentPlayer]->getplayerNum()){
 					try {
 						players[currentPlayer]->use(i, players[nextPlayer].get(), t, true, testingState);
+						for(int i = 0; i < displays.size(); i++){
+								displays[i]->displayBoard();
+								displays[i]->displayMagic(players[currentPlayer].get());
+								displays[i]->displayHand(players[currentPlayer].get());
+							}
 					}
 					catch(InvalidPosition &e){
 						cerr << e.getErrorMessage() << endl;
@@ -502,8 +506,8 @@ int main(int argc, char const *argv[]){
 			int i;
 			scmd >> i;
 			try{
-				for(int i = 0; i < displays.size(); i++){
-					displays[i]->inspectCard(players[currentPlayer].get(), i);
+				for(int k = 0; k < displays.size(); k++){
+					displays[k]->inspectCard(players[currentPlayer].get(), i);
 				}
 			}
 			catch(InvalidPosition &e){
@@ -631,14 +635,17 @@ int main(int argc, char const *argv[]){
 			for(int i = 0; i < displays.size(); i++){
 				displays[i]->endgame(players[1].get());
 			}
+			cin >> c;
 		} else if (players[1]->die() && !(players[0]->die())){
 			for(int i = 0; i < displays.size(); i++){
 				displays[i]->endgame(players[0].get());
 			}
+			cin >> c;
 		} else if (players[1]->die() && players[0]->die()){
 			for(int i = 0; i < displays.size(); i++){
 				displays[i]->tie();
 			}
+			cin >> c;
 		}
 	}
 	return 0;

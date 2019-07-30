@@ -2,8 +2,8 @@
 #include "minion.h"
 
 Darkritual::Darkritual(): Ritual{"Dark Ritual", 0, 1, 5} {
-	activationCost = 1;
-	charge = 5;
+	setactivationCost(1);
+	setcharge(5);
 }
 
 std::vector<std::string> Darkritual::getoutput(){
@@ -12,13 +12,15 @@ std::vector<std::string> Darkritual::getoutput(){
 }
 
 void Darkritual::triggereffect(Player * playedby, Player * opponent, Card * c){
+	if(getcharge() < getactivationCost()){return;}
 	playedby->gainMagic();
+	setcharge(getcharge() - getactivationCost());
 }
 
 
 Auraofpower::Auraofpower(): Ritual{"Aura of Power", 1, 1, 4} {
-	activationCost = 1;
-	charge = 4;
+	setactivationCost(1);
+	setcharge(4);
 }
 
 std::vector<std::string> Auraofpower::getoutput(){
@@ -27,14 +29,16 @@ std::vector<std::string> Auraofpower::getoutput(){
 }
 
 void Auraofpower::triggereffect(Player * playedby, Player * opponent, Card * c){
+	if(getcharge() < getactivationCost()){return;}
 	c->setattackval(c->getattackval() + 1);
 	c->setdefenceval(c->getdefenceval() + 1);
+	setcharge(getcharge() - getactivationCost());
 }
 
 
 Standstill::Standstill(): Ritual{"Standstill", 3, 2, 4} {
-	activationCost = 2;
-	charge = 4;
+	setactivationCost(2);
+	setcharge(4);
 }
 
 std::vector<std::string> Standstill::getoutput(){
@@ -43,8 +47,10 @@ std::vector<std::string> Standstill::getoutput(){
 };
 
 void Standstill::triggereffect(Player * playedby, Player * opponent, Card * c){
-	c->toGraveyard(playedby, (playedby->getminionslot()).size());
+	if(getcharge() < getactivationCost()){return;}
 	playedby->trigger(GameStage::minionLeave, nullptr, opponent);
 	opponent->trigger(GameStage::minionLeave, nullptr, opponent);
+	c->toGraveyard(playedby, (playedby->getminionslot()).size());
+	setcharge(getcharge() - getactivationCost());
 }
 

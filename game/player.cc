@@ -1,4 +1,3 @@
-#include "player.h"
 #include "ascii_graphics.h"
 #include "concreteminion.h"
 #include "concretespell.h"
@@ -6,7 +5,7 @@
 #include "concreteenchantment.h"
 
 Player::Player(std::string playerName, int playerNum, std::string hero): 
-    playerName{playerName}, hero{hero}, playerNum{playerNum}, life{20}, magic{2}{}
+    playerName{playerName}, hero{hero}, playerNum{playerNum}, life{20}, magic{2}, hattackval{0}, heropowerState{true}, heropowercost{1} {}
 
 std::string & Player::gethero() {return hero;}
 int Player::getplayerNum() const{return playerNum;}
@@ -14,13 +13,14 @@ int Player::getlife() const{return life;}
 int Player::getmagic() const{return magic;}
 int Player::gethattackval() const {return hattackval;}
 bool Player::getheropowerState () const {return heropowerState;}
+int Player::getheropowercost () const {return heropowercost;}
 std::vector<std::shared_ptr<Card>> & Player::getdeck() {return deck;}
 std::vector<std::shared_ptr<Card>> & Player::gethand() {return hand;}
 std::vector<std::shared_ptr<Card>> & Player::getminionslot() {return minionslot;}
 std::vector<std::shared_ptr<Card>> & Player::getgraveyard() {return graveyard;}
 std::vector<std::shared_ptr<Card>> & Player::getactiveRitual() {return activeRitual;}
 std::vector<std::string> Player::getplayerCard() {
-    std::vector<std::string> temp{display_player_card(playerName, playerNum, hero, life, magic)};
+    std::vector<std::string> temp{display_player_card(playerName, playerNum, hero, life, magic, heropowercost)};
     return temp;
 }
 
@@ -28,13 +28,14 @@ void Player::setlife (int nlife){life = nlife;}
 void Player::setmagic (int nmagic){magic = nmagic;}
 void Player::sethattackval (int nhattackval){hattackval = nhattackval;}
 void Player::setheropowerState(bool nheropowerState){heropowerState = nheropowerState;}
+void Player::setheropowercost(int nheropowercost){heropowercost = nheropowercost;}
 
 void Player::useHeropower(Player * opponent, bool testing){
     if(!getheropowerState()){
         InvalidMove e{"You can only use your hero power once per turn."};
         throw e;
     }
-    if(!testing && getmagic() < 2){
+    if(!testing && getmagic() < getheropowercost()){
         InvalidMove e {"You don't have enough magic."};
         throw e;
     }
@@ -73,10 +74,10 @@ void Player::useHeropower(Player * opponent, bool testing){
         getdeck().erase(deck.begin());
         gethand().emplace_back(temp);
     }
-    if(testing && getmagic() < 2) {
+    if(testing && getmagic() < getheropowercost()) {
         setmagic(0);
     } else {
-        setmagic(getmagic() - 2);
+        setmagic(getmagic() - getheropowercost());
     }
     setheropowerState(false);
     this->notifyObservers();
@@ -88,7 +89,7 @@ void Player::useHeropower(Player * opponent, bool onme, bool testing){
         InvalidMove e{"You can only use your hero power once per turn."};
         throw e;
     }
-    if(!testing && getmagic() < 2){
+    if(!testing && getmagic() < getheropowercost()){
         InvalidMove e {"You don't have enough magic."};
         throw e;
     }
@@ -109,10 +110,10 @@ void Player::useHeropower(Player * opponent, bool onme, bool testing){
             setlife(getlife() + 1);
         }
     }
-    if(testing && getmagic() < 2) {
+    if(testing && getmagic() < getheropowercost()) {
         setmagic(0);
     } else {
-        setmagic(getmagic() - 2);
+        setmagic(getmagic() - getheropowercost());
     }
     setheropowerState(false);
     this->notifyObservers();
@@ -124,7 +125,7 @@ void Player::useHeropower(Player * opponent, int t, bool onme, bool testing){
         InvalidMove e{"You can only use your hero power once per turn."};
         throw e;
     }
-    if(!testing && getmagic() < 2){
+    if(!testing && getmagic() < getheropowercost()){
         InvalidMove e {"You don't have enough magic."};
         throw e;
     }
@@ -176,10 +177,10 @@ void Player::useHeropower(Player * opponent, int t, bool onme, bool testing){
         } 
     }
 
-    if(testing && getmagic() < 2) {
+    if(testing && getmagic() < getheropowercost()) {
         setmagic(0);
     } else {
-        setmagic(getmagic() - 2);
+        setmagic(getmagic() - getheropowercost());
     }
     setheropowerState(false);
     this->notifyObservers();
@@ -539,13 +540,23 @@ void Player::use(int i, Player * opponent, int t, bool onme, bool testing){
     opponent->notifyObservers();
 }
 
-void Player::gainaction(){
-    for (auto i: getminionslot()){
-        i->gainaction();
-    }
+void Player::initTurn(){
+    gainMagic();
+    gainaction();
+    setheropowerState(true);
+    try {
+        drawcard();
+    } 
+    catch(ExceedMaximum &e){}
 }
 
 bool Player::die() {return (getlife() <= 0);}
 
 void Player::gainMagic(){magic += 1;}
+
+void Player::gainaction(){
+    for (auto i: getminionslot()){
+        i->gainaction();
+    }
+}
 
