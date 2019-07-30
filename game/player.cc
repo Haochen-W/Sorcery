@@ -358,7 +358,7 @@ void Player::play(int i, Player * opponent, bool testing){
 
     const int m = getmagic() - gethand()[i - 1]->getcost();
     gethand()[i - 1]->playCard(this, opponent, i);
-    if (testing) {
+    if (testing && m < 0) {
         setmagic(0);
     } else {
         setmagic(m);
