@@ -39,7 +39,7 @@ void Minion::playCard(Player * playedby, Player * opponent, int i){
 	opponent->trigger(GameStage::oppNewMinion, temp, playedby);
 }
 void Minion::useMinion(Player * playedby, Player * opponent){return;}
-void Minion::useMinion(Player * playedby, Player * opponent, Card * c){return;}
+void Minion::useMinion(Player * playedby, Player * opponent, Card * c, int t){return;}
 
 void Minion::takeDamage(int damage){
 	defenceval -= damage;

@@ -4,19 +4,19 @@
 GraphicDisplay::GraphicDisplay(): outputDisplay(){}
 
 void GraphicDisplay::displayBoard(){
-	w.fillRectangle(10, 10, 1350, 700, Xwindow::White);
+	w.fillRectangle(10, 10, 1350, 620, Xwindow::White);
 	w.fillRectangle(20, 20, 1300, 2, Xwindow::Black);
 	w.fillRectangle(20, 20, 2, 600, Xwindow::Black);
 	w.fillRectangle(1320, 20, 2, 600, Xwindow::Black);
 
 	// first row
-	for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
+	for(unsigned int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 		for(int j = 0; j < 5; j++){
 			w.drawString(44 + j * 264, 40 + i * 10, displayPlayer1[j][i]);
 		}
 	}
 	// second row
-	for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
+	for(unsigned int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 		for(int j = 0; j < 5; j++){
 			w.drawString(44 + j * 264, 155 + i * 10, displayMinionSlot1[j][i]);
 		}
@@ -75,13 +75,13 @@ void GraphicDisplay::displayBoard(){
 	w.fillRectangle(20, 360, 1300, 2, Xwindow::Black);
 
 	// third row
-	for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
+	for(unsigned int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 		for(int j = 0; j < 5; j++){
 			w.drawString(44 + j * 264, 390 + i * 10, displayMinionSlot2[j][i]);
 		}
 	}
 	// fourth row
-	for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
+	for(unsigned int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 		for(int j = 0; j < 5; j++){
 			w.drawString(44 + j * 264, 505 + i * 10, displayPlayer2[j][i]);
 		}
@@ -95,7 +95,7 @@ void GraphicDisplay::displayHand(Player * player){
 		w.fillRectangle(10, 630, 1350, 150, Xwindow::White);
 		w.drawString(44, 650, "Player1's Hand:");
 
-		for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
+		for(unsigned int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 			for(int j = 0; j < 5; j++){
 				w.drawString(44 + j * 264, 670 + i * 10, displayHand1[j][i]);
 			}
@@ -104,7 +104,7 @@ void GraphicDisplay::displayHand(Player * player){
 		w.fillRectangle(10, 630, 1350, 150, Xwindow::White);
 		w.drawString(44, 650, "Player2's Hand:");
 
-		for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
+		for(unsigned int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 			for(int j = 0; j < 5; j++){
 				w.drawString(44 + j * 264, 670 + i * 10, displayHand2[j][i]);
 			}
@@ -115,7 +115,7 @@ void GraphicDisplay::displayHand(Player * player){
 void GraphicDisplay::displayMagic(Player * player){}
 
 void GraphicDisplay::inspectCard(Player * player, int num){
-	if(num > (player->getminionslot()).size() || num <= 0){
+	if(num > static_cast<int>((player->getminionslot()).size()) || num <= 0){
 		w.drawString(44, 40, "No minion is placed in this position.");
 		InvalidPosition e{"No minion is placed in this position."};
 		throw e;
@@ -125,13 +125,13 @@ void GraphicDisplay::inspectCard(Player * player, int num){
 	w.fillRectangle(10, 10, 1350, 900, Xwindow::White);
 	w.drawString(44, 40, "Minion at position " + std::to_string(num) + " : ");
 
-	for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
+	for(unsigned int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 		w.drawString(44, 60 + i * 10, temp[i]);
 	}
 
 	std::vector<std::string> enchantsName{player->getminionslot()[num - 1]->getEnchantmentadded()};
 	std::vector<std::shared_ptr<Card>> enchants;
-	for(int i = 0; i < enchantsName.size(); i++){
+	for(unsigned int i = 0; i < enchantsName.size(); i++){
 		std::string s{enchantsName[i]};
 		if (s == "Giant Strength"){
 			std::shared_ptr<Giantstrength> p = std::make_shared<Giantstrength>(nullptr);
@@ -151,7 +151,7 @@ void GraphicDisplay::inspectCard(Player * player, int num){
 		}
 	}
 	std::vector<std::vector<std::string>> enchantsoutput;
-	for(int i = 0; i < enchants.size(); i++){
+	for(unsigned int i = 0; i < enchants.size(); i++){
 		enchantsoutput.emplace_back(enchants[i]->getoutput());
 	}
 
@@ -163,8 +163,8 @@ void GraphicDisplay::inspectCard(Player * player, int num){
 		rounds = enchants.size() / 5 + 1;
 	}
 	for (int q = 0; q < rounds; q++){
-		for(int k = 0; k < CARD_TEMPLATE_BORDER.size(); k++){
-			for(int j = 0; j < 5 && q * 5 + j < enchants.size(); j++){
+		for(int k = 0; k < static_cast<int>(CARD_TEMPLATE_BORDER.size()); k++){
+			for(int j = 0; j < 5 && q * 5 + j < static_cast<int>(enchants.size()); j++){
 				w.drawString(44 + j * 264, 175 + k * 10 + q * 115, enchantsoutput[q * 5 + j][k]);
 			}
 		}

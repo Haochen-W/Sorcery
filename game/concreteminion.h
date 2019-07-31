@@ -58,7 +58,7 @@ public:
 	~Novicepyromancer()= default; 
 
 	std::vector<std::string> getoutput() override;
-	void useMinion(Player * playedby, Player * opponent, Card * c) override;
+	void useMinion(Player * playedby, Player * opponent, Card * c, int t) override;
 };
 
 

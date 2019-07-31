@@ -12,7 +12,10 @@ std::vector<std::string> Darkritual::getoutput(){
 }
 
 void Darkritual::triggereffect(Player * playedby, Player * opponent, Card * c){
-	if(getcharge() < getactivationCost()){return;}
+	if(getcharge() < getactivationCost()){
+		InvalidMove e{"Not enough charges"};
+		throw e;
+	}
 	playedby->gainMagic();
 	setcharge(getcharge() - getactivationCost());
 }
@@ -29,7 +32,10 @@ std::vector<std::string> Auraofpower::getoutput(){
 }
 
 void Auraofpower::triggereffect(Player * playedby, Player * opponent, Card * c){
-	if(getcharge() < getactivationCost()){return;}
+	if(getcharge() < getactivationCost()){
+		InvalidMove e{"Not enough charges"};
+		throw e;
+	}
 	c->setattackval(c->getattackval() + 1);
 	c->setdefenceval(c->getdefenceval() + 1);
 	setcharge(getcharge() - getactivationCost());
@@ -47,7 +53,10 @@ std::vector<std::string> Standstill::getoutput(){
 };
 
 void Standstill::triggereffect(Player * playedby, Player * opponent, Card * c){
-	if(getcharge() < getactivationCost()){return;}
+	if(getcharge() < getactivationCost()){
+		InvalidMove e{"Not enough charges"};
+		throw e;
+	}
 	playedby->trigger(GameStage::minionLeave, nullptr, opponent);
 	opponent->trigger(GameStage::minionLeave, nullptr, opponent);
 	c->toGraveyard(playedby, (playedby->getminionslot()).size());

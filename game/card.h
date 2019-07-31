@@ -51,7 +51,7 @@ public:
 	virtual void toGraveyard(Player * p, int i);
 	virtual void triggereffect(Player * playedby, Player * opponent, Card * c); // call ritual's or minion trigger effect
 	virtual void useMinion(Player * playedby, Player * opponent);
-	virtual void useMinion(Player * playedby, Player * opponent, Card * c); 
+	virtual void useMinion(Player * playedby, Player * opponent, Card * c, int i); 
 
 	// for rituals
 	virtual int getcharge () const;

@@ -197,20 +197,24 @@ void Blizzard::playCard(Player * playedby, Player * opponent, int i){
 	playedby->gethand().erase(playedby->gethand().begin() + i - 1);
 	// trigger effect
 	int k = 1;
-	for (auto i: playedby->getminionslot()){
-		if (i->miniondead()){
+	for (int i = 0; i < static_cast<int>(playedby->getminionslot().size()); i++){
+		if (playedby->getminionslot()[i]->miniondead()){
 			playedby->trigger(GameStage::minionLeave, nullptr, opponent);
 			opponent->trigger(GameStage::minionLeave, nullptr, playedby);
-			i->toGraveyard(playedby, k);
+			playedby->getminionslot()[i]->toGraveyard(playedby, k);
+			i -= 1;
+			k -= 1;
 		}
 		k += 1;
 	}
 	k = 1;
-	for (auto j: playedby->getminionslot()){
-		if (j->miniondead()){
+	for (int i = 0; i < static_cast<int>(opponent->getminionslot().size()); i++){
+		if (opponent->getminionslot()[i]->miniondead()){
 			playedby->trigger(GameStage::minionLeave, nullptr, opponent);
 			opponent->trigger(GameStage::minionLeave, nullptr, playedby);
-			j->toGraveyard(playedby, k);
+			opponent->getminionslot()[i]->toGraveyard(opponent, k);
+			i -= 1;
+			k -= 1;
 		}
 		k += 1;
 	}

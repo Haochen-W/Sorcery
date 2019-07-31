@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <string>
+#include <memory>
 #include "observer.h"
 #include "ascii_graphics.h"
 #include "exception.h"

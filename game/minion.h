@@ -37,7 +37,7 @@ public:
 	void minionAttack(Player * target) override;
 	void minionAttack(Player * target, int i) override; // attack the ith minion
 	void playCard(Player * playedby, Player * opponent, int i) override; // place the minion into minion slot
-	void useMinion(Player * playedby, Player * opponent, Card * c) override;
+	void useMinion(Player * playedby, Player * opponent, Card * c, int t) override;
 	void useMinion(Player * playedby, Player * opponent) override;
 
 	void takeDamage(int damage) override;// cause damage on minion

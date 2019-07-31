@@ -5,13 +5,13 @@ TextDisplay::TextDisplay(): outputDisplay(){}
 
 void TextDisplay::displayBoard(){
 	std::cout << EXTERNAL_BORDER_CHAR_TOP_LEFT;
-	for(int i = 0; i < 165; i++){
+	for(unsigned int i = 0; i < 165; i++){
 		std::cout << EXTERNAL_BORDER_CHAR_LEFT_RIGHT;
 	}
 	std::cout << EXTERNAL_BORDER_CHAR_TOP_RIGHT << std::endl;
 
 	// first row
-	for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
+	for(unsigned int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 		std::cout << EXTERNAL_BORDER_CHAR_UP_DOWN;
 		for(int j = 0; j < 5; j++){
 			std::cout << displayPlayer1[j][i];
@@ -19,7 +19,7 @@ void TextDisplay::displayBoard(){
 		std::cout << EXTERNAL_BORDER_CHAR_UP_DOWN << std::endl;
 	}
 	// second row
-	for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
+	for(unsigned int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 		std::cout << EXTERNAL_BORDER_CHAR_UP_DOWN;
 		for(int j = 0; j < 5; j++){
 			std::cout << displayMinionSlot1[j][i];
@@ -27,11 +27,11 @@ void TextDisplay::displayBoard(){
 		std::cout << EXTERNAL_BORDER_CHAR_UP_DOWN << std::endl;
 	}
 	// centre graphic
-	for(int i = 0; i < CENTRE_GRAPHIC.size(); i++){
+	for(unsigned int i = 0; i < CENTRE_GRAPHIC.size(); i++){
 		std::cout << CENTRE_GRAPHIC[i] << std::endl;
 	}
 	// third row
-	for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
+	for(unsigned int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 		std::cout << EXTERNAL_BORDER_CHAR_UP_DOWN;
 		for(int j = 0; j < 5; j++){
 			std::cout << displayMinionSlot2[j][i];
@@ -39,7 +39,7 @@ void TextDisplay::displayBoard(){
 		std::cout << EXTERNAL_BORDER_CHAR_UP_DOWN << std::endl;
 	}
 	// fourth row
-	for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
+	for(unsigned int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 		std::cout << EXTERNAL_BORDER_CHAR_UP_DOWN;
 		for(int j = 0; j < 5; j++){
 			std::cout << displayPlayer2[j][i];
@@ -48,7 +48,7 @@ void TextDisplay::displayBoard(){
 	}
 
 	std::cout << EXTERNAL_BORDER_CHAR_BOTTOM_LEFT;
-	for(int i = 0; i < 165; i++){
+	for(unsigned int i = 0; i < 165; i++){
 		std::cout << EXTERNAL_BORDER_CHAR_LEFT_RIGHT;
 	}
 	std::cout << EXTERNAL_BORDER_CHAR_BOTTOM_RIGHT << std::endl;
@@ -56,14 +56,14 @@ void TextDisplay::displayBoard(){
 
 void TextDisplay::displayHand(Player * player){
 	if(player->getplayerNum() == 1){
-		for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
+		for(unsigned int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 			for(int j = 0; j < 5; j++){
 				std::cout << displayHand1[j][i];
 			}
 			std::cout << std::endl;
 		}
 	} else if(player->getplayerNum() == 2){
-		for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
+		for(unsigned int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 			for(int j = 0; j < 5; j++){
 				std::cout << displayHand2[j][i];
 			}
@@ -89,18 +89,18 @@ void TextDisplay::displayMagic(Player * player){
 }
 
 void TextDisplay::inspectCard(Player * player, int num){
-	if(num > (player->getminionslot()).size() || num <= 0){
+	if(num > static_cast<int>((player->getminionslot()).size()) || num <= 0){
 		InvalidPosition e{"No minion is placed in this position."};
 		throw e;
 	}
 	std::vector<std::string> temp{(player->getminionslot()[num - 1])->getoutput()};
-	for(int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
+	for(unsigned int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
 		std::cout << temp[i] << std::endl;
 	}
 
 	std::vector<std::string> enchantsName{player->getminionslot()[num - 1]->getEnchantmentadded()};
 	std::vector<std::shared_ptr<Card>> enchants;
-	for(int i = 0; i < enchantsName.size(); i++){
+	for(unsigned int i = 0; i < enchantsName.size(); i++){
 		std::string s{enchantsName[i]};
 		if (s == "Giant Strength"){
 			std::shared_ptr<Giantstrength> p = std::make_shared<Giantstrength>(nullptr);
@@ -120,7 +120,7 @@ void TextDisplay::inspectCard(Player * player, int num){
 		}
 	}
 	std::vector<std::vector<std::string>> enchantsoutput;
-	for(int i = 0; i < enchants.size(); i++){
+	for(unsigned int i = 0; i < enchants.size(); i++){
 		enchantsoutput.emplace_back(enchants[i]->getoutput());
 	}
 	int rounds;
@@ -131,8 +131,8 @@ void TextDisplay::inspectCard(Player * player, int num){
 		rounds = enchants.size() / 5 + 1;
 	}
 	for (int q = 0; q < rounds; q++){
-		for(int k = 0; k < CARD_TEMPLATE_BORDER.size(); k++){
-			for(int j = 0; j < 5 && q * 5 + j < enchants.size(); j++){
+		for(int k = 0; k < static_cast<int>(CARD_TEMPLATE_BORDER.size()); k++){
+			for(int j = 0; j < 5 && q * 5 + j < static_cast<int>(enchants.size()); j++){
 				std::cout << enchantsoutput[q * 5 + j][k];
 			}
 			std::cout << std::endl;
@@ -143,18 +143,18 @@ void TextDisplay::inspectCard(Player * player, int num){
 
 void TextDisplay::endgame(Player * player){
 	if(player->getplayerNum() == 1){
-		for(int i = 0; i < P1WINNER.size(); i++){
+		for(unsigned int i = 0; i < P1WINNER.size(); i++){
 			std::cout << P1WINNER[i] << std::endl;
 		}
 	} else if(player->getplayerNum() == 2){
-		for(int i = 0; i < P2WINNER.size(); i++){
+		for(unsigned int i = 0; i < P2WINNER.size(); i++){
 			std::cout << P2WINNER[i] << std::endl;
 		}
 	}
 }
 
 void TextDisplay::tie(){
-	for(int i = 0; i < TIE.size(); i++){
+	for(unsigned int i = 0; i < TIE.size(); i++){
 		std::cout << TIE[i] << std::endl;
 	}
 }

@@ -65,17 +65,18 @@ std::vector<std::string> Novicepyromancer::getoutput(){
 	return temp;
 }
 
-void Novicepyromancer::useMinion(Player * playedby, Player * opponent, Card * c){
-	c->setdefenceval(c->getdefenceval() - 1);
+void Novicepyromancer::useMinion(Player * playedby, Player * opponent, Card * c, int t){
 	if (this->getcanuse() == false) {
 		InvalidMove e {"This ability has been disabled."};
         throw e;
 	}
+	std::cout << c->getcardName() << std::endl;
+	c->setdefenceval(c->getdefenceval() - 1);
 	// check death
 	if(c->miniondead()){
 		playedby->trigger(GameStage::minionLeave, nullptr, opponent);
     	opponent->trigger(GameStage::minionLeave, nullptr, playedby);
-		c->toGraveyard(opponent, (opponent->getminionslot()).size());
+		c->toGraveyard(opponent, t);
 	}
 }
 

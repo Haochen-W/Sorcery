@@ -39,7 +39,7 @@ void Card::disenchantall(){return;}
 void Card::toGraveyard(Player * p, int i){return;}
 void Card::triggereffect(Player * playedby, Player * opponent, Card * c){return;}
 void Card::useMinion(Player * playedby, Player * opponent){return;}
-void Card::useMinion(Player * playedby, Player * opponent, Card * c) {return;}
+void Card::useMinion(Player * playedby, Player * opponent, Card * c, int t) {return;}
 
 // for rituals
 int Card::getcharge () const {return 0;}

@@ -132,7 +132,7 @@ void Player::useHeropower(Player * opponent, int t, bool onme, bool testing){
 
     if(gethero() == "Mage"){
         if(onme){
-            if (t > (this->getminionslot()).size() || t <= 0) {
+            if (t > static_cast<int>((this->getminionslot()).size()) || t <= 0) {
                 InvalidPosition e{"No minion is placed at this position."};
                 throw e;
             }
@@ -143,7 +143,7 @@ void Player::useHeropower(Player * opponent, int t, bool onme, bool testing){
                 getminionslot()[t - 1]->toGraveyard(this, t);
             }
         } else {
-            if (t > (opponent->getminionslot()).size() || t <= 0) {
+            if (t > static_cast<int>((opponent->getminionslot()).size()) || t <= 0) {
                 InvalidPosition e{"No minion is placed at this position."};
                 throw e;
             }
@@ -159,7 +159,7 @@ void Player::useHeropower(Player * opponent, int t, bool onme, bool testing){
             InvalidMove e{"You can't attack your own minions"};
             throw e;
         } else {
-            if (t > (opponent->getminionslot()).size() || t <= 0) {
+            if (t > static_cast<int>((opponent->getminionslot()).size()) || t <= 0) {
                 InvalidPosition e{"No minion is placed at this position."};
                 throw e;
             }
@@ -283,7 +283,7 @@ void Player::drawcard(){
 }
 
 void Player::disgard(int i){
-    if (i > (this->gethand()).size() || i <= 0) {
+    if (i > static_cast<int>((this->gethand()).size()) || i <= 0) {
         InvalidPosition e{"No card is placed at this position."};
         throw e;
     }
@@ -292,7 +292,7 @@ void Player::disgard(int i){
 }
 
 void Player::attack(int i, Player * p) {
-    if (i > (this->getminionslot()).size() || i <= 0) {
+    if (i > static_cast<int>((this->getminionslot()).size()) || i <= 0) {
         InvalidPosition e{"No minion is placed at this position."};
         throw e;
     }
@@ -310,11 +310,11 @@ void Player::attack(int i, Player * p) {
 
 void Player::attack(int i, Player * p, int j) {
     // check valid input
-    if (i > (this->getminionslot()).size() || i <= 0) {
+    if (i > static_cast<int>((this->getminionslot()).size()) || i <= 0) {
         InvalidPosition e {"No minion is placed at this position in your minion slot."};
         throw e;
     }
-    if (j > (p->getminionslot()).size() || j <= 0) {
+    if (j > static_cast<int>((p->getminionslot()).size()) || j <= 0) {
         InvalidPosition e {"No minion is placed at this position in your opponent's minion slot."};
         throw e;
     }
@@ -346,7 +346,7 @@ void Player::attack(int i, Player * p, int j) {
 void Player::play(int i, Player * opponent, bool testing){
     // testing mode
     // not enough magic
-    if(i > gethand().size() || i <= 0) {
+    if(i > static_cast<int>(gethand().size()) || i <= 0) {
         InvalidPosition e {"No card at this position."};
         throw e;
     }
@@ -370,7 +370,7 @@ void Player::play(int i, Player * opponent, bool testing){
 void Player::playonRitual(int i, Player * opponent, bool onme, bool testing){
     // testing mode
     // not enough magic
-    if(i > gethand().size() || i <= 0) {
+    if(i > static_cast<int>(gethand().size()) || i <= 0) {
         InvalidPosition e {"No card at this position."};
         throw e;
     }
@@ -404,7 +404,7 @@ void Player::playonRitual(int i, Player * opponent, bool onme, bool testing){
 
 void Player::play(int i, Player * opponent, int t, bool onme, bool testing){
     // testing mode, not enough magic
-    if(i > gethand().size() || i <= 0) {
+    if(i > static_cast<int>(gethand().size()) || i <= 0) {
         InvalidPosition e {"No card at this position."};
         throw e;
     }
@@ -415,12 +415,12 @@ void Player::play(int i, Player * opponent, int t, bool onme, bool testing){
     }
 
     if(onme) {
-        if (getminionslot().size() < t || t <= 0){
+        if (static_cast<int>(getminionslot().size()) < t || t <= 0){
             InvalidPosition e {"Not a valid target at this position."};
             throw e;
         }
     } else {
-        if (opponent->getminionslot().size() < t || t <= 0){
+        if (static_cast<int>(opponent->getminionslot().size()) < t || t <= 0){
             InvalidPosition e {"Not a valid target at this position."};
             throw e;
         }
@@ -441,33 +441,49 @@ void Player::play(int i, Player * opponent, int t, bool onme, bool testing){
 void Player::trigger(GameStage state, std::shared_ptr<Card> c, Player * opponent){
     if(state == GameStage::startTurn){
         if(getactiveRitual().size() != 0 && getactiveRitual()[0]->getcardName() == "Dark Ritual"){
-            getactiveRitual()[0]->triggereffect(this, opponent, nullptr);
+            try{
+                getactiveRitual()[0]->triggereffect(this, opponent, nullptr);
+            } catch(InvalidMove &e){}
         }
     } else if(state == GameStage::endTurn){
-        for(int i = 0; i < getminionslot().size(); i++){
+        for(int i = 0; i < static_cast<int>(getminionslot().size()); i++){
             if(getminionslot()[i]->getcardName() == "Potion Seller"){
-                for(int j = 0; j < getminionslot().size(); j++){
+                for(int j = 0; j < static_cast<int>(getminionslot().size()); j++){
                     getminionslot()[i]->triggereffect(this, opponent, getminionslot()[j].get());
                 }
             }
         }
     } else if(state == GameStage::curNewMinion){
         if(getactiveRitual().size() != 0 && getactiveRitual()[0]->getcardName() == "Aura of Power"){
-            getactiveRitual()[0]->triggereffect(this, opponent, c.get());
+            try{
+                getactiveRitual()[0]->triggereffect(this, opponent, c.get());
+            } catch (InvalidMove &e){}
         } else if(getactiveRitual().size() != 0 && getactiveRitual()[0]->getcardName() == "Standstill"){
-            getactiveRitual()[0]->triggereffect(this, opponent, c.get());
+            try{
+                getactiveRitual()[0]->triggereffect(this, opponent, c.get());
+            } catch (InvalidMove &e){}
         }
     } else if(state == GameStage::oppNewMinion){
-        for(int i = 0; i < getminionslot().size(); i++){
-            if(getminionslot()[i]->getcardName() == "Fire Elemental"){
-                getminionslot()[i]->triggereffect(opponent, this, c.get());
+        if(getactiveRitual().size() != 0 && getactiveRitual()[0]->getcardName() == "Standstill"){
+            try{
+                getactiveRitual()[0]->triggereffect(opponent, this, c.get());
+            } catch (InvalidMove &e){
+                for(int i = 0; i < static_cast<int>(getminionslot().size()); i++){
+                    if(getminionslot()[i]->getcardName() == "Fire Elemental"){
+                        getminionslot()[i]->triggereffect(this, opponent, c.get());
+                    }
+                }
+            }
+        } else {
+            for(int i = 0; i < static_cast<int>(getminionslot().size()); i++){
+                if(getminionslot()[i]->getcardName() == "Fire Elemental"){
+                    getminionslot()[i]->triggereffect(this, opponent, c.get());
+                }
             }
         }
-        if(getactiveRitual().size() != 0 && getactiveRitual()[0]->getcardName() == "Standstill"){
-            getactiveRitual()[0]->triggereffect(opponent, this, c.get());
-        }
+        
     } else if(state == GameStage::minionLeave){
-        for(int i = 0; i < getminionslot().size(); i++){
+        for(int i = 0; i < static_cast<int>(getminionslot().size()); i++){
             if(getminionslot()[i]->getcardName() == "Bone Golem"){
                 getminionslot()[i]->triggereffect(this, opponent, getminionslot()[i].get());
             }
@@ -488,7 +504,7 @@ void Player::use(int i, Player * opponent, bool testing){
         InvalidMove e {"Not enough action points."};
         throw e;
     }
-    if(i > getminionslot().size() || i <= 0) {
+    if(i > static_cast<int>(getminionslot().size()) || i <= 0) {
         InvalidPosition e {"No card at this position."};
         throw e;
     }
@@ -517,27 +533,27 @@ void Player::use(int i, Player * opponent, int t, bool onme, bool testing){
         throw e;
     }
 
-    if(i > getminionslot().size() || i <= 0) {
+    if(i > static_cast<int>(getminionslot().size()) || i <= 0) {
         InvalidPosition e {"No card at this position."};
         throw e;
     }
 
     if(onme) {
-        if (getminionslot().size() < t || t <= 0){
+        if (static_cast<int>(getminionslot().size()) < t || t <= 0){
             InvalidPosition e {"Not a valid target at this position."};
             throw e;
         }
     } else {
-        if (opponent->getminionslot().size() < t || t <= 0){
+        if (static_cast<int>(opponent->getminionslot().size()) < t || t <= 0){
             InvalidPosition e {"Not a valid target at this position."};
             throw e;
         }
     }
     const int m = getmagic() - getminionslot()[i - 1]->getabilityCost();
     if (onme){
-        getminionslot()[i - 1]->useMinion(this, opponent, getminionslot()[i - 1].get());
+        getminionslot()[i - 1]->useMinion(opponent, this, getminionslot()[t - 1].get(), t);
     } else {
-        getminionslot()[i - 1]->useMinion(this, opponent, opponent->getminionslot()[i - 1].get());
+        getminionslot()[i - 1]->useMinion(this, opponent, opponent->getminionslot()[t - 1].get(), t);
     }
     if (testing && m < 0) {
         setmagic(0);
