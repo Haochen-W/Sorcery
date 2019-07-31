@@ -282,7 +282,7 @@ void Player::drawcard(){
     this->notifyObservers();
 }
 
-void Player::disgard(int i){
+void Player::discard(int i){
     if (i > static_cast<int>((this->gethand()).size()) || i <= 0) {
         InvalidPosition e{"No card is placed at this position."};
         throw e;

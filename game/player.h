@@ -69,7 +69,7 @@ public:
 
 	void loadDeck(std::string card); // load deck
 	void drawcard(); // draws a card from deck, add to hand
-	void disgard(int i); // erase ith card in hand, use in testing mode
+	void discard(int i); // erase ith card in hand, use in testing mode
 	void attack(int i, Player * p); // use minion i to attack player
 	void attack(int i, Player * p, int j); // use minion i to attack minion j
 	void play(int i, Player * opponent, bool testing); // play the ith card, place minion, place ritual, spell effect

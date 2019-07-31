@@ -277,12 +277,12 @@ int main(int argc, char const *argv[]){
 				cerr << e.getErrorMessage() << endl;
 			}
 		} 
-		// disgard i: disgard the ith card in hand
-		else if (cmd == "disgard" && testingState == true){
+		// discard i: discard the ith card in hand
+		else if (cmd == "discard" && testingState == true){
 			int i;
 			scmd >> i;
 			try{
-				players[currentPlayer]->disgard(i);
+				players[currentPlayer]->discard(i);
 				for(unsigned int i = 0; i < displays.size(); i++){
 					displays[i]->displayBoard();
 					displays[i]->displayMagic(players[currentPlayer].get());
