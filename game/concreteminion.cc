@@ -70,7 +70,6 @@ void Novicepyromancer::useMinion(Player * playedby, Player * opponent, Card * c,
 		InvalidMove e {"This ability has been disabled."};
         throw e;
 	}
-	std::cout << c->getcardName() << std::endl;
 	c->setdefenceval(c->getdefenceval() - 1);
 	// check death
 	if(c->miniondead()){

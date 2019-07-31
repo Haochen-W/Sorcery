@@ -52,7 +52,10 @@ int main(int argc, char const *argv[]){
 			textsState = false;
 		} else if(string(argv[i]) == "-disableheropower"){
 			heroState = false;
-		} 
+		} else {
+			cerr << "Invalid command line argument entered" << endl;
+			return 1;
+		}
 	}
 
 	string playername1;
@@ -206,8 +209,12 @@ int main(int argc, char const *argv[]){
 	
 	// load hand
 	for(int i = 0; i < 5; i++){
-		players[0]->drawcard();
-		players[1]->drawcard();
+		try{
+			players[0]->drawcard();
+		} catch (ExceedMaximum &e){}
+		try{
+			players[1]->drawcard();
+		} catch (ExceedMaximum &e){}
 	}
 	
 	// start player1's turn
