@@ -3,7 +3,7 @@
 Sorcery is a card game based on collectible card games such as “Hearthstone: Heroes of Warcraft” and “Magic: The Gathering”. The game is played on the terminal by entering commands, and it supports both text display and graphics display. Besides implementing all standard functionalities and cards, we also add the Hero Power feature to the game.
 
 ## Design
-The game is implemented utilizing OOP(object-oriented programming) in C++. Several different design patterns including observer pattern, decorator pattern, MVC(model-view-controller) are used in the project order to improve the code-reusability and its resilience to change. Dynamic memory is managed through C++ smart pointers and the <vector> library.
+The game is implemented utilizing OOP(object-oriented programming) in C++. Several different design patterns including observer pattern, decorator pattern, MVC(model-view-controller) are used in the project order to improve the code-reusability and its resilience to change. Dynamic memory is managed through C++ smart pointers and the \<vector\> library.
 
 ## Instruction
 The players need to give the commands in Linux. 
@@ -17,8 +17,8 @@ The players need to give the commands in Linux.
 * No limitations on magic
 * Decks and Hero Powers are no longer randomized 
 * Enables the following commands
-** _discard i_: discard the ith card in player's hand
-** _draw_: draw a card
+  * _discard i_: discard the ith card in player's hand
+  * _draw_: draw a card
 4. -graphics
 * Enables a graphical interface utilizing XWindows graphics
 5. -disabletext
