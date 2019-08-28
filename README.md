@@ -11,22 +11,22 @@ The game is implemented utilizing OOP(object-oriented programming) in C++. Sever
 The players need to give the commands in Linux. 
 ### Command Line Arguments
 * -deck1 filename and -deck2 filename
-** The argument _deck1 filename_ specifies that player 1's deck will be supplied in _filename_. If no argument is used to specified the deck, _default.deck_ is used. _deck2 filename_ works similarly. The file should only contain a list of card name.
+ ** The argument _deck1 filename_ specifies that player 1's deck will be supplied in _filename_. If no argument is used to specified the deck, _default.deck_ is used. _deck2 filename_ works similarly. The file should only contain a list of card name.
 * -init filename
-** The game will be initialized using _filename_. _Filename_ consists of a sequence of commands to read from standard input before prompting the user for additional input (this includes player names and the selected Hero Powers).
+ ** The game will be initialized using _filename_. _Filename_ consists of a sequence of commands to read from standard input before prompting the user for additional input (this includes player names and the selected Hero Powers).
 * -testing
-** The game will enter testing mode
-** No limitations on magic
-** Decks and Hero Powers are no longer randomized 
-** Enables the following commands
-  *** _discard i_: discard the ith card in player's hand
-  *** _draw_: draw a card
+ ** The game will enter testing mode
+ ** No limitations on magic
+ ** Decks and Hero Powers are no longer randomized 
+ ** Enables the following commands
+   *** _discard i_: discard the ith card in player's hand
+   *** _draw_: draw a card
 * -graphics
-** Enables a graphical interface utilizing XWindows graphics
+ ** Enables a graphical interface utilizing XWindows graphics
 * -disabletext
-** Disable text display
+ ** Disable text display
 * -disableheropower
-** Disable Hero Power feature
+ ** Disable Hero Power feature
 ### Command
 * help -- Display this message.
 * end  -- End the current player's turn.
