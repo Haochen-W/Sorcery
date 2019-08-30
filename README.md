@@ -9,6 +9,18 @@ The game is implemented utilizing OOP(object-oriented programming) in C++. Sever
 
 ## Instruction
 The players need to give the commands in Linux. 
+### Game Setup (For Linux and Mac Users in Command Line)
+* Download and unzip the repository.
+* Run the following command:
+```
+$ cd sorcery/game
+$ make
+```
+* Execute the program (with the optional command line arguments introduced in the next section):
+```
+$ ./sorcery arg1 arg2 ...
+```
+
 ### Command Line Arguments
 * -deck1 filename and -deck2 filename
   * The argument _deck1 filename_ specifies that player 1's deck will be supplied in _filename_. If no argument is used to specified the deck, _default.deck_ is used. _deck2 filename_ works similarly. The file should only contain a list of card name.
