@@ -5,7 +5,7 @@ Sorcery is a card game based on collectible card games such as “Hearthstone: H
 ![Interface](interface.png)
 
 ## Design
-The game is implemented utilizing OOP(object-oriented programming) in C++. Several different design patterns including observer pattern, decorator pattern, MVC(model-view-controller) are used in the project order to improve the code-reusability and its resilience to change. Dynamic memory is managed through C++ smart pointers and the \<vector\> library.
+The game is implemented utilizing OOP(object-oriented programming) in C++. Several different design patterns including observer pattern, decorator pattern, MVC(model-view-controller) are used in the project in order to improve the code-reusability and its resilience to change. Dynamic memory is managed through C++ smart pointers and the \<vector\> library.
 A detailed design document is available at [document.pdf](“document".pdf).
 ## Instruction
 The players need to give the commands in Linux. 
@@ -23,7 +23,7 @@ $ ./sorcery arg1 arg2 ...
 
 ### Command Line Arguments
 * -deck1 filename and -deck2 filename
-  * The argument _deck1 filename_ specifies that player 1's deck will be supplied in _filename_. If no argument is used to specified the deck, _default.deck_ is used. _deck2 filename_ works similarly. The file should only contain a list of card name.
+  * The argument _deck1 filename_ specifies that player 1's deck will be supplied in _filename_. If no argument is used to specified the deck, then _default.deck_ is used. _deck2 filename_ works similarly. The file should only contain a list of card names.
 * -init filename
   * The game will be initialized using _filename_. _Filename_ consists of a sequence of commands to read from standard input before prompting the user for additional input (this includes player names and the selected Hero Powers).
 * -testing
@@ -36,9 +36,9 @@ $ ./sorcery arg1 arg2 ...
 * -graphics
   * Enables a graphical interface utilizing XWindows graphics
 * -disabletext
-  * Disable text display
+  * Disables text display
 * -disableheropower
-  * Disable Hero Power feature
+  * Disables Hero Power feature
 ### Command
 * help -- Display this message.
 * end  -- End the current player's turn.
