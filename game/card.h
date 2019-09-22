@@ -46,7 +46,7 @@ public:
 	virtual void minionAttack(Player * target, int i); // attack ith minion
 	virtual void takeDamage(int damage); // been attacked
 	virtual bool miniondead(); // return if a minion is dead
-	virtual void gainaction(); // set minion's action each turn
+	virtual void gainAction(); // set minion's action each turn
 	virtual void disenchantall();
 	virtual void toGraveyard(Player * p, int i);
 	virtual void triggereffect(Player * playedby, Player * opponent, Card * c); // call ritual's or minion trigger effect

@@ -171,6 +171,7 @@ int main(int argc, char const *argv[]){
 	players.emplace_back(p1);
 	players.emplace_back(p2);
 	
+	// setting up graphics
 	if(textsState){
 		shared_ptr<TextDisplay> td = make_shared<TextDisplay>();
 		displays.emplace_back(td);
@@ -185,9 +186,27 @@ int main(int argc, char const *argv[]){
 		players[0]->attach(displays[i].get());
 		players[1]->attach(displays[i].get());
 	}
-	int currentPlayer = 0;
-	int nextPlayer = 1;
 
+	// tracking playing order
+	int currentPlayer = 0;
+	int nextPlayer = 0;
+
+	// randomize playing order
+	if (!testingState){
+		std::srand(unsigned (std::time(0)));
+		int rand = std::rand() % 2;
+		if (rand == 0){
+			currentPlayer = 0;
+			nextPlayer = 1;
+		} else {
+			currentPlayer = 1;
+			nextPlayer = 0;
+		}
+	} else {
+		currentPlayer = 0;
+		nextPlayer = 1;
+	}
+	
 	// load card
 	if(!deck1State) deck1file.open("default.deck");
 	if(!deck2State) deck2file.open("default.deck");
@@ -208,7 +227,7 @@ int main(int argc, char const *argv[]){
 	}
 	
 	// load hand
-	for(int i = 0; i < 5; i++){
+	for(int i = 0; i < 3; i++){
 		try{
 			players[0]->drawcard();
 		} catch (ExceedMaximum &e){}
@@ -216,14 +235,20 @@ int main(int argc, char const *argv[]){
 			players[1]->drawcard();
 		} catch (ExceedMaximum &e){}
 	}
+
+	// player who plays second gets a coin
+	players[nextPlayer]->gainCoin();
 	
-	// start player1's turn
-	cout << "Player " << players[currentPlayer]->getplayerNum() << "'s turn!"<< endl;
+	// start first player's turn
 	players[currentPlayer]->gainMagic();
 	players[0]->notifyObservers();
 	players[1]->notifyObservers();
 	for(unsigned int i = 0; i < displays.size(); i++){
 		displays[i]->displayBoard();
+	}
+
+	cout << "Player " << players[currentPlayer]->getplayerNum() << "'s turn!"<< endl;
+	for(unsigned int i = 0; i < displays.size(); i++){
 		displays[i]->displayMagic(players[currentPlayer].get());
 		displays[i]->displayHand(players[currentPlayer].get());
 	}
@@ -256,6 +281,10 @@ int main(int argc, char const *argv[]){
 			players[currentPlayer]->trigger(GameStage::startTurn, nullptr, players[nextPlayer].get());
 			for(unsigned int i = 0; i < displays.size(); i++){
 				displays[i]->displayBoard();
+			}
+
+			cout << "Player " << players[currentPlayer]->getplayerNum() << "'s turn!"<< endl;
+			for(unsigned int i = 0; i < displays.size(); i++){
 				displays[i]->displayMagic(players[currentPlayer].get());
 				displays[i]->displayHand(players[currentPlayer].get());
 			}
@@ -337,6 +366,7 @@ int main(int argc, char const *argv[]){
 				// play i: play minion, ritual, spell with no target
 				try{
 					players[currentPlayer]->play(i, players[nextPlayer].get(), testingState);
+					std::cout << "main: " << players[currentPlayer] ->getmagic() << std::endl;
 					for(unsigned int i = 0; i < displays.size(); i++){
 						displays[i]->displayBoard();
 						displays[i]->displayMagic(players[currentPlayer].get());

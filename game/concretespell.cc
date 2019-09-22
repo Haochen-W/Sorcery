@@ -219,3 +219,16 @@ void Blizzard::playCard(Player * playedby, Player * opponent, int i){
 		k += 1;
 	}
 }
+
+Coin::Coin(): Spell{"Coin", 0} {}
+
+std::vector<std::string> Coin::getoutput(){
+	std::vector<std::string> temp {display_spell("Coin", 0, "Gain 1 magic")};
+	return temp;
+}
+
+void Coin::playCard(Player * playedby, Player * opponent, int i){
+	playedby->gainMagic();
+	std::cout << "concretespell: " << playedby ->getmagic() << std::endl;
+	playedby->gethand().erase(playedby->gethand().begin() + i - 1);
+}

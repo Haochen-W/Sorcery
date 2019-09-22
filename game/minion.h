@@ -44,7 +44,7 @@ public:
 	void toGraveyard(Player * p, int i) override;
 	bool miniondead() override;
 
-	void gainaction() override;
+	void gainAction() override;
 	void disenchantall() override;
 };
 

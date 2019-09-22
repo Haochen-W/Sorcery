@@ -63,4 +63,14 @@ public:
 	void playCard(Player * playedby, Player * opponent, int i) override;
 };
 
+
+class Coin : public Spell {
+public: 
+	Coin();
+	~Coin() = default;
+
+	std::vector<std::string> getoutput() override;
+	void playCard(Player * playedby, Player * opponent, int i) override;
+};
+
 #endif
