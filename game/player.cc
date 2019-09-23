@@ -5,7 +5,7 @@
 #include "concreteenchantment.h"
 
 Player::Player(std::string playerName, int playerNum, std::string hero): 
-    playerName{playerName}, hero{hero}, playerNum{playerNum}, life{20}, magic{2}, hattackval{0}, heropowerState{true}, heropowercost{1} {}
+    playerName{playerName}, hero{hero}, playerNum{playerNum}, life{20}, magic{0}, hattackval{0}, heropowerState{true}, heropowercost{1} {}
 
 std::string & Player::gethero() {return hero;}
 int Player::getplayerNum() const{return playerNum;}
@@ -567,7 +567,7 @@ void Player::use(int i, Player * opponent, int t, bool onme, bool testing){
 
 void Player::initTurn(){
     gainMagic();
-    gainaction();
+    gainAction();
     setheropowerState(true);
     try {
         drawcard();
@@ -579,9 +579,14 @@ bool Player::die() {return (getlife() <= 0);}
 
 void Player::gainMagic(){magic += 1;}
 
-void Player::gainaction(){
+void Player::gainAction(){
     for (auto i: getminionslot()){
-        i->gainaction();
+        i->gainAction();
     }
+}
+
+void Player::gainCoin(){
+    std::shared_ptr<Coin> p = std::make_shared<Coin>();
+    gethand().emplace_back(p);
 }
 

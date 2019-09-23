@@ -3,18 +3,14 @@
 #include <sstream>
 #include <string>
 #include <algorithm>
-#include <ctime>
 #include <memory>
+#include <random>
 #include "player.h"
 #include "display.h"
 #include "textdisplay.h"
 #include "graphicdisplay.h"
 #include "exception.h"
 using namespace std;
-
-int myrandom (int i) {
-	return std::rand()%i;
-}
 
 int main(int argc, char const *argv[]){
 	// command line arguments
@@ -92,8 +88,8 @@ int main(int argc, char const *argv[]){
 	}
 	// randomize heroes
 	if (heroState && !(testingState)){
-		std::srand(unsigned (std::time(0)));
-		int rand = std::rand() % 6;
+		std::random_device rd;
+		int rand = rd() % 6;
 		if (rand == 0) {
 			hero1 = "Mage";
 			cout << "You are now a Mage. Your hero power is deal 1 damage to any target." << endl;
@@ -123,8 +119,8 @@ int main(int argc, char const *argv[]){
 	}
 
 	if (heroState && !(testingState)){
-		std::srand(unsigned (std::time(0)));
-		int rand = std::rand() % 6;
+		std::random_device rd;
+		int rand = rd() % 6;
 		if (rand == 0) {
 			hero2 = "Mage";
 			cout << "You are now a Mage. Your hero power is deal 1 damage to any target." << endl;
@@ -171,6 +167,7 @@ int main(int argc, char const *argv[]){
 	players.emplace_back(p1);
 	players.emplace_back(p2);
 	
+	// setting up graphics
 	if(textsState){
 		shared_ptr<TextDisplay> td = make_shared<TextDisplay>();
 		displays.emplace_back(td);
@@ -185,8 +182,26 @@ int main(int argc, char const *argv[]){
 		players[0]->attach(displays[i].get());
 		players[1]->attach(displays[i].get());
 	}
+
+	// tracking playing order
 	int currentPlayer = 0;
-	int nextPlayer = 1;
+	int nextPlayer = 0;
+
+	// randomize playing order
+	if (!testingState){
+		std::random_device rd;
+		int rand = rd() % 2;
+		if (rand == 0){
+			currentPlayer = 0;
+			nextPlayer = 1;
+		} else {
+			currentPlayer = 1;
+			nextPlayer = 0;
+		}
+	} else {
+		currentPlayer = 0;
+		nextPlayer = 1;
+	}
 
 	// load card
 	if(!deck1State) deck1file.open("default.deck");
@@ -202,13 +217,16 @@ int main(int argc, char const *argv[]){
 
 	// randomize the deck
 	if (!testingState){
-		std::srand(unsigned (std::time(0)));
-		std::random_shuffle(players[0]->getdeck().begin(), players[0]->getdeck().end(), myrandom);
-		std::random_shuffle(players[1]->getdeck().begin(), players[1]->getdeck().end(), myrandom);
+		std::random_device rd;
+    	std::mt19937 temp(rd());
+    	std::random_device rd2;
+    	std::mt19937 temp2(rd2());
+		std::shuffle(players[0]->getdeck().begin(), players[0]->getdeck().end(), temp);
+		std::shuffle(players[1]->getdeck().begin(), players[1]->getdeck().end(), temp2);
 	}
 	
 	// load hand
-	for(int i = 0; i < 5; i++){
+	for(int i = 0; i < 3; i++){
 		try{
 			players[0]->drawcard();
 		} catch (ExceedMaximum &e){}
@@ -216,14 +234,20 @@ int main(int argc, char const *argv[]){
 			players[1]->drawcard();
 		} catch (ExceedMaximum &e){}
 	}
+
+	// player who plays second gets a coin
+	players[nextPlayer]->gainCoin();
 	
-	// start player1's turn
-	cout << "Player " << players[currentPlayer]->getplayerNum() << "'s turn!"<< endl;
+	// start first player's turn
 	players[currentPlayer]->gainMagic();
 	players[0]->notifyObservers();
 	players[1]->notifyObservers();
 	for(unsigned int i = 0; i < displays.size(); i++){
 		displays[i]->displayBoard();
+	}
+
+	cout << "Player " << players[currentPlayer]->getplayerNum() << "'s turn!"<< endl;
+	for(unsigned int i = 0; i < displays.size(); i++){
 		displays[i]->displayMagic(players[currentPlayer].get());
 		displays[i]->displayHand(players[currentPlayer].get());
 	}
@@ -251,11 +275,13 @@ int main(int argc, char const *argv[]){
 			nextPlayer = (nextPlayer == 0) ? 1 : 0;
 
 			// start next player's turn
-			cout << "Player" << players[currentPlayer]->getplayerNum() << "'s turn!"<< endl;
+			cout << "Player " << players[currentPlayer]->getplayerNum() << "'s turn!"<< endl;
 			players[currentPlayer]->initTurn();
 			players[currentPlayer]->trigger(GameStage::startTurn, nullptr, players[nextPlayer].get());
 			for(unsigned int i = 0; i < displays.size(); i++){
 				displays[i]->displayBoard();
+			}
+			for(unsigned int i = 0; i < displays.size(); i++){
 				displays[i]->displayMagic(players[currentPlayer].get());
 				displays[i]->displayHand(players[currentPlayer].get());
 			}

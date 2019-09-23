@@ -39,24 +39,28 @@ void Minion::playCard(Player * playedby, Player * opponent, int i){
 	opponent->trigger(GameStage::oppNewMinion, temp, playedby);
 }
 void Minion::useMinion(Player * playedby, Player * opponent){return;}
+
 void Minion::useMinion(Player * playedby, Player * opponent, Card * c, int t){return;}
 
 void Minion::takeDamage(int damage){
 	defenceval -= damage;
 }
+
 void Minion::toGraveyard(Player * p, int i){
 	std::shared_ptr<Card> temp{p->getminionslot()[i - 1]};
 	p->getminionslot().erase(p->getminionslot().begin() + i - 1);
 	temp->disenchantall();
 	p->getgraveyard().emplace_back(temp);
 }
+
 bool Minion::miniondead() {
 	return (getdefenceval() <= 0);
 }
 
-void Minion::gainaction(){
+void Minion::gainAction(){
 	setaction(getactioneachturn());
 }
+
 void Minion::disenchantall(){
 	const int m = getEnchantmentadded().size();
 	for (int i = 0; i < m; i++){

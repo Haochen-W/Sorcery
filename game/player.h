@@ -81,7 +81,8 @@ public:
 	void initTurn();
 	bool die();
 	void gainMagic();
-	void gainaction();
+	void gainAction();
+	void gainCoin();
 
 };
 

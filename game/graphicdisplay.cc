@@ -92,7 +92,8 @@ void GraphicDisplay::displayBoard(){
 
 void GraphicDisplay::displayHand(Player * player){
 	if(player->getplayerNum() == 1){
-		w.fillRectangle(10, 630, 1350, 150, Xwindow::White);
+		w.fillRectangle(10, 630, 130, 30, Xwindow::White);
+		w.fillRectangle(10, 655, 1350, 130, Xwindow::White);
 		w.drawString(44, 650, "Player1's Hand:");
 
 		for(unsigned int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
@@ -101,7 +102,8 @@ void GraphicDisplay::displayHand(Player * player){
 			}
 		}
 	} else if(player->getplayerNum() == 2){
-		w.fillRectangle(10, 630, 1350, 150, Xwindow::White);
+		w.fillRectangle(10, 630, 130, 30, Xwindow::White);
+		w.fillRectangle(10, 655, 1350, 130, Xwindow::White);
 		w.drawString(44, 650, "Player2's Hand:");
 
 		for(unsigned int i = 0; i < CARD_TEMPLATE_BORDER.size(); i++){
@@ -112,7 +114,23 @@ void GraphicDisplay::displayHand(Player * player){
 	}
 }
 
-void GraphicDisplay::displayMagic(Player * player){}
+void GraphicDisplay::displayMagic(Player * player){
+	if(player->getplayerNum() == 1){
+		w.fillRectangle(140, 630, 1100, 30, Xwindow::White);
+		displayMagic1 = "";
+		for(int i = 0; i < player->getmagic(); i++){
+			displayMagic1 += "o ";
+		}
+		w.drawString(150, 650, displayMagic1);
+	} else if(player->getplayerNum() == 2){
+		w.fillRectangle(140, 630, 1100, 30, Xwindow::White);
+		displayMagic2 = "";
+		for(int i = 0; i < player->getmagic(); i++){
+			displayMagic2 += "o ";
+		}
+		w.drawString(150, 650, displayMagic2);
+	}
+}
 
 void GraphicDisplay::inspectCard(Player * player, int num){
 	if(num > static_cast<int>((player->getminionslot()).size()) || num <= 0){

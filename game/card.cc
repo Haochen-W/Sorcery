@@ -34,7 +34,7 @@ void Card::minionAttack(Player * target){return;}
 void Card::minionAttack(Player * target, int i){return;}
 void Card::takeDamage(int damage){return;}
 bool Card::miniondead(){return false;}
-void Card::gainaction(){return;}
+void Card::gainAction(){return;}
 void Card::disenchantall(){return;}
 void Card::toGraveyard(Player * p, int i){return;}
 void Card::triggereffect(Player * playedby, Player * opponent, Card * c){return;}
