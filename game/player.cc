@@ -5,7 +5,7 @@
 #include "concreteenchantment.h"
 
 Player::Player(std::string playerName, int playerNum, std::string hero): 
-    playerName{playerName}, hero{hero}, playerNum{playerNum}, life{20}, magic{2}, hattackval{0}, heropowerState{true}, heropowercost{1} {}
+    playerName{playerName}, hero{hero}, playerNum{playerNum}, life{20}, magic{0}, hattackval{0}, heropowerState{true}, heropowercost{1} {}
 
 std::string & Player::gethero() {return hero;}
 int Player::getplayerNum() const{return playerNum;}
@@ -356,8 +356,9 @@ void Player::play(int i, Player * opponent, bool testing){
         throw e;
     }
 
-    const int m = getmagic() - gethand()[i - 1]->getcost();
+    int m = gethand()[i - 1]->getcost();
     gethand()[i - 1]->playCard(this, opponent, i);
+    m = getmagic() - m;
     if (testing && m < 0) {
         setmagic(0);
     } else {

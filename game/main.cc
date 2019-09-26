@@ -3,18 +3,14 @@
 #include <sstream>
 #include <string>
 #include <algorithm>
-#include <ctime>
 #include <memory>
+#include <random>
 #include "player.h"
 #include "display.h"
 #include "textdisplay.h"
 #include "graphicdisplay.h"
 #include "exception.h"
 using namespace std;
-
-int myrandom (int i) {
-	return std::rand()%i;
-}
 
 int main(int argc, char const *argv[]){
 	// command line arguments
@@ -92,8 +88,8 @@ int main(int argc, char const *argv[]){
 	}
 	// randomize heroes
 	if (heroState && !(testingState)){
-		std::srand(unsigned (std::time(0)));
-		int rand = std::rand() % 6;
+		std::random_device rd;
+		int rand = rd() % 6;
 		if (rand == 0) {
 			hero1 = "Mage";
 			cout << "You are now a Mage. Your hero power is deal 1 damage to any target." << endl;
@@ -123,8 +119,8 @@ int main(int argc, char const *argv[]){
 	}
 
 	if (heroState && !(testingState)){
-		std::srand(unsigned (std::time(0)));
-		int rand = std::rand() % 6;
+		std::random_device rd;
+		int rand = rd() % 6;
 		if (rand == 0) {
 			hero2 = "Mage";
 			cout << "You are now a Mage. Your hero power is deal 1 damage to any target." << endl;
@@ -193,8 +189,8 @@ int main(int argc, char const *argv[]){
 
 	// randomize playing order
 	if (!testingState){
-		std::srand(unsigned (std::time(0)));
-		int rand = std::rand() % 2;
+		std::random_device rd;
+		int rand = rd() % 2;
 		if (rand == 0){
 			currentPlayer = 0;
 			nextPlayer = 1;
@@ -206,7 +202,7 @@ int main(int argc, char const *argv[]){
 		currentPlayer = 0;
 		nextPlayer = 1;
 	}
-	
+
 	// load card
 	if(!deck1State) deck1file.open("default.deck");
 	if(!deck2State) deck2file.open("default.deck");
@@ -221,9 +217,12 @@ int main(int argc, char const *argv[]){
 
 	// randomize the deck
 	if (!testingState){
-		std::srand(unsigned (std::time(0)));
-		std::random_shuffle(players[0]->getdeck().begin(), players[0]->getdeck().end(), myrandom);
-		std::random_shuffle(players[1]->getdeck().begin(), players[1]->getdeck().end(), myrandom);
+		std::random_device rd;
+    	std::mt19937 temp(rd());
+    	std::random_device rd2;
+    	std::mt19937 temp2(rd2());
+		std::shuffle(players[0]->getdeck().begin(), players[0]->getdeck().end(), temp);
+		std::shuffle(players[1]->getdeck().begin(), players[1]->getdeck().end(), temp2);
 	}
 	
 	// load hand
@@ -276,14 +275,12 @@ int main(int argc, char const *argv[]){
 			nextPlayer = (nextPlayer == 0) ? 1 : 0;
 
 			// start next player's turn
-			cout << "Player" << players[currentPlayer]->getplayerNum() << "'s turn!"<< endl;
+			cout << "Player " << players[currentPlayer]->getplayerNum() << "'s turn!"<< endl;
 			players[currentPlayer]->initTurn();
 			players[currentPlayer]->trigger(GameStage::startTurn, nullptr, players[nextPlayer].get());
 			for(unsigned int i = 0; i < displays.size(); i++){
 				displays[i]->displayBoard();
 			}
-
-			cout << "Player " << players[currentPlayer]->getplayerNum() << "'s turn!"<< endl;
 			for(unsigned int i = 0; i < displays.size(); i++){
 				displays[i]->displayMagic(players[currentPlayer].get());
 				displays[i]->displayHand(players[currentPlayer].get());
@@ -366,7 +363,6 @@ int main(int argc, char const *argv[]){
 				// play i: play minion, ritual, spell with no target
 				try{
 					players[currentPlayer]->play(i, players[nextPlayer].get(), testingState);
-					std::cout << "main: " << players[currentPlayer] ->getmagic() << std::endl;
 					for(unsigned int i = 0; i < displays.size(); i++){
 						displays[i]->displayBoard();
 						displays[i]->displayMagic(players[currentPlayer].get());

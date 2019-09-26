@@ -229,6 +229,5 @@ std::vector<std::string> Coin::getoutput(){
 
 void Coin::playCard(Player * playedby, Player * opponent, int i){
 	playedby->gainMagic();
-	std::cout << "concretespell: " << playedby ->getmagic() << std::endl;
 	playedby->gethand().erase(playedby->gethand().begin() + i - 1);
 }
