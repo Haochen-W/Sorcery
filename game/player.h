@@ -9,6 +9,13 @@
 #include "ascii_graphics.h"
 #include "exception.h"
 
+extern const int maxMagic;
+extern const int heroPowerCost;
+extern const int maxLife;
+extern const int initialMagic;
+extern const int maxMinionNum;
+extern const int maxHandNum;
+
 // declaration
 class Card;
 class Minion;
@@ -83,7 +90,6 @@ public:
 	void gainMagic();
 	void gainAction();
 	void gainCoin();
-
 };
 
 #endif

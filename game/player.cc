@@ -4,8 +4,15 @@
 #include "concreteritual.h"
 #include "concreteenchantment.h"
 
+const int maxMagic = 5;
+const int heroPowerCost = 1;
+const int maxLife = 20;
+const int initialMagic = 0;
+const int maxMinionNum = 5;
+const int maxHandNum = 5;
+
 Player::Player(std::string playerName, int playerNum, std::string hero): 
-    playerName{playerName}, hero{hero}, playerNum{playerNum}, life{20}, magic{0}, hattackval{0}, heropowerState{true}, heropowercost{1} {}
+    playerName{playerName}, hero{hero}, playerNum{playerNum}, life{maxLife}, magic{initialMagic}, hattackval{0}, heropowerState{true}, heropowercost{heroPowerCost} {}
 
 std::string & Player::gethero() {return hero;}
 int Player::getplayerNum() const{return playerNum;}
@@ -25,8 +32,21 @@ std::vector<std::string> Player::getplayerCard() {
 }
 
 void Player::setlife (int nlife){life = nlife;}
-void Player::setmagic (int nmagic){magic = nmagic;}
-void Player::sethattackval (int nhattackval){hattackval = nhattackval;}
+void Player::setmagic (int nmagic){
+    magic = nmagic;
+    if (nmagic >= maxMagic){
+        magic = maxMagic;
+    }
+    if (nmagic <= 0){
+        magic = 0;
+    }
+}
+void Player::sethattackval (int nhattackval){
+    hattackval = nhattackval;
+    if (nhattackval <= 0){
+        hattackval = 0;
+    }
+}
 void Player::setheropowerState(bool nheropowerState){heropowerState = nheropowerState;}
 void Player::setheropowercost(int nheropowercost){heropowercost = nheropowercost;}
 
@@ -43,7 +63,7 @@ void Player::useHeropower(Player * opponent, bool testing){
     if(gethero() == "Hunter"){
         opponent->setlife(opponent->getlife() - 2);
     } else if(gethero() == "Paladin"){
-        if(getminionslot().size() >= 5){
+        if(getminionslot().size() >= maxMinionNum){
             ExceedMaximum e{"Your minion slot is full."};
             throw e;
         }
@@ -63,7 +83,7 @@ void Player::useHeropower(Player * opponent, bool testing){
             throw e;
         }
         // hand is full, throw exception
-        if(hand.size()>= 5){
+        if(hand.size()>= maxHandNum){
             std::shared_ptr<Card> temp{deck[0]};
             getdeck().erase(deck.begin());
             setheropowerState(false);
@@ -272,7 +292,7 @@ void Player::drawcard(){
         throw e;
     }
     // hand is full, throw exception
-    if(hand.size()>= 5){
+    if(hand.size()>= maxHandNum){
         ExceedMaximum e{"Your hand is full."};
         throw e;
     }
@@ -578,7 +598,12 @@ void Player::initTurn(){
 
 bool Player::die() {return (getlife() <= 0);}
 
-void Player::gainMagic(){magic += 1;}
+void Player::gainMagic(){
+    magic += 1;
+    if (magic >= maxMagic){
+        magic = maxMagic;
+    }
+}
 
 void Player::gainAction(){
     for (auto i: getminionslot()){

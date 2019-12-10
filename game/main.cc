@@ -651,7 +651,7 @@ int main(int argc, char const *argv[]){
 		}
 		else {
 			if (notfirst){
-				cout << "Invalid Command Entered." << endl;
+				cerr << "Invalid Command Entered." << endl;
 				continue;
 			}
 			notfirst = true;
