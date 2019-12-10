@@ -29,7 +29,7 @@ class Player{
 	int playerNum;
 	int life;
 	int magic;
-	int rounds;
+	int round;
 	int hattackval;
 	bool heropowerState;
 	int heropowercost;
