@@ -29,6 +29,7 @@ class Player{
 	int playerNum;
 	int life;
 	int magic;
+	int rounds;
 	int hattackval;
 	bool heropowerState;
 	int heropowercost;
@@ -49,6 +50,7 @@ public:
 	int getplayerNum() const;
 	int getlife() const;
 	int getmagic() const;
+	int getround() const;
 	int gethattackval() const;
 	bool getheropowerState() const;
 	int getheropowercost() const;
@@ -88,6 +90,7 @@ public:
 	void initTurn();
 	bool die();
 	void gainMagic();
+	void nextRound();
 	void gainAction();
 	void gainCoin();
 };

@@ -12,12 +12,13 @@ const int maxMinionNum = 5;
 const int maxHandNum = 5;
 
 Player::Player(std::string playerName, int playerNum, std::string hero): 
-    playerName{playerName}, hero{hero}, playerNum{playerNum}, life{maxLife}, magic{initialMagic}, hattackval{0}, heropowerState{true}, heropowercost{heroPowerCost} {}
+    playerName{playerName}, hero{hero}, playerNum{playerNum}, life{maxLife}, magic{initialMagic}, round{1}, hattackval{0}, heropowerState{true}, heropowercost{heroPowerCost} {}
 
 std::string & Player::gethero() {return hero;}
 int Player::getplayerNum() const{return playerNum;}
 int Player::getlife() const{return life;}
 int Player::getmagic() const{return magic;}
+int Player::getround() const{return round;}
 int Player::gethattackval() const {return hattackval;}
 bool Player::getheropowerState () const {return heropowerState;}
 int Player::getheropowercost () const {return heropowercost;}
@@ -587,6 +588,7 @@ void Player::use(int i, Player * opponent, int t, bool onme, bool testing){
 }
 
 void Player::initTurn(){
+    nextRound();
     gainMagic();
     gainAction();
     setheropowerState(true);
@@ -598,12 +600,9 @@ void Player::initTurn(){
 
 bool Player::die() {return (getlife() <= 0);}
 
-void Player::gainMagic(){
-    magic += 1;
-    if (magic >= maxMagic){
-        magic = maxMagic;
-    }
-}
+void Player::gainMagic(){setmagic(getround());}
+
+void Player::nextRound(){round += 1;}
 
 void Player::gainAction(){
     for (auto i: getminionslot()){
