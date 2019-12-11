@@ -1,5 +1,5 @@
-#ifndef _DECORATOR_H_
-#define _DECORATOR_H_
+#ifndef DECORATOR_H
+#define DECORATOR_H
 #include "minion.h"
 
 class Decorator: public Card {

@@ -12,7 +12,7 @@ const int maxMinionNum = 5;
 const int maxHandNum = 5;
 
 Player::Player(std::string playerName, int playerNum, std::string hero): 
-    playerName{playerName}, hero{hero}, playerNum{playerNum}, life{maxLife}, magic{initialMagic}, round{1}, hattackval{0}, heropowerState{true}, heropowercost{heroPowerCost} {}
+    playerName{playerName}, hero{hero}, playerNum{playerNum}, life{maxLife}, magic{initialMagic}, round{0}, hattackval{0}, heropowerState{true}, heropowercost{heroPowerCost} {}
 
 std::string & Player::gethero() {return hero;}
 int Player::getplayerNum() const{return playerNum;}
@@ -615,3 +615,66 @@ void Player::gainCoin(){
     gethand().emplace_back(p);
 }
 
+double Player::evalState(Player * opponent){
+    double MIN_MARK = 0;
+    double MAX_MARK = 100;
+    int DANGER_LIFE = 2;
+
+    double mark = MIN_MARK;
+    double survive_mark = 50;
+    double minion_mark = 0;
+    double minion_num_mark = 0;
+    double minion_attack_mark = 0;
+    // adv in each minion?
+    // double minion_each_mark = 0;
+    int hand_mark = 0;
+
+    if (die() && !(opponent->die())) return MIN_MARK;
+    if (!die() && opponent->die()) return MAX_MARK;
+    if (die() && opponent->die()) return (MIN_MARK + MAX_MARK) / 2;
+    
+    int oppoTotalAttack = 0;
+    for (auto i: opponent->getminionslot()){
+        oppoTotalAttack += i->getattackval();
+    }
+    int oppo_minion_attack_total = oppoTotalAttack;
+    if (getround() >= 2){
+        if (opponent->gethero() == "Mage" || opponent->gethero() == "Druid"){
+            oppoTotalAttack += 1;
+        } else if (opponent->gethero() == "Hunter") {
+            oppoTotalAttack += 2;
+        }
+    }
+    // be dead next turn
+    if (oppoTotalAttack >= getlife()) return MIN_MARK;
+    if (oppoTotalAttack >= getlife() - DANGER_LIFE) survive_mark = 20;
+
+    int myTotalAttack = 0;
+    for (auto j: getminionslot()){
+        myTotalAttack += j->getattackval();
+    }
+    int my_minion_attack_total = myTotalAttack;
+    if (getround() >= 2){
+        if (gethero() == "Mage" || gethero() == "Druid"){
+            myTotalAttack += 1;
+        } else if (opponent->gethero() == "Hunter") {
+            myTotalAttack += 2;
+        }
+    }
+    // calculate based on hand and ability
+    // TODO!!!!
+    int net_increase = 0;
+    int net_cost = 0;
+    for(auto k: gethand()){
+        if (k->getcardName() == "Giant Strength"){
+            net_increase += 2;
+            net_cost = 1;
+        } else if (k->getcardName() == "Giant Strength"){}
+    }
+    if (myTotalAttack >= opponent->getlife()) survive_mark = 100;
+    if (myTotalAttack >= opponent->getlife() - DANGER_LIFE) survive_mark = 80;
+    // calculate minion marks
+    int diff_in_minion = my_minion_attack_total - oppo_minion_attack_total;
+    // TODO!!!!
+    return mark;
+}

@@ -28,7 +28,7 @@ void Minion::minionAttack(Player * target, int i){
 	target->getminionslot()[i - 1]->takeDamage(att);
 }
 void Minion::playCard(Player * playedby, Player * opponent, int i){
-	if (playedby->getminionslot().size() >= 5){
+	if (playedby->getminionslot().size() >= maxMinionNum){
 		InvalidMove e {"Your minion slot is full."};
         throw e;
 	}

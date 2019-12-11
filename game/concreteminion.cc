@@ -92,7 +92,7 @@ void Apprenticesummoner::useMinion(Player * playedby, Player * opponent){
 		InvalidMove e {"This ability has been disabled."};
         throw e;
 	}
-	if((playedby->getminionslot()).size() >= 5){
+	if((playedby->getminionslot()).size() >= maxMinionNum){
 		ExceedMaximum e{"Your minionslot is full."};
         throw e;
 	}
@@ -116,7 +116,7 @@ void Mastersummoner::useMinion(Player * playedby, Player * opponent){
 		InvalidMove e {"This ability has been disabled."};
 		throw e;
 	}
-	if((playedby->getminionslot()).size() >= 5){
+	if((playedby->getminionslot()).size() >= maxMinionNum){
 		ExceedMaximum e{"Your minionslot is full."};
 		throw e;
  	}

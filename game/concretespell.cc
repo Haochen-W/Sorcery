@@ -37,7 +37,7 @@ std::vector<std::string> Unsummon::getoutput(){
 
 void Unsummon::playCard(Player * playedby, Player * opponent, int i, bool onme, int t){
 	if (onme) {
-		if (playedby->gethand().size() >= 5){
+		if (playedby->gethand().size() >= maxHandNum){
 			InvalidMove e {"The hand is full."};
 			throw e;
 		}
@@ -56,7 +56,7 @@ void Unsummon::playCard(Player * playedby, Player * opponent, int i, bool onme, 
 		(playedby->getminionslot()).erase(playedby->getminionslot().begin() + t - 1);
 		playedby->gethand().emplace_back(temp);
 	} else {
-		if (opponent->gethand().size() >= 5){
+		if (opponent->gethand().size() >= maxHandNum){
 			InvalidMove e {"The hand is full."};
 			throw e;
 		}

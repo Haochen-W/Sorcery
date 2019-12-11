@@ -93,6 +93,6 @@ public:
 	void nextRound();
 	void gainAction();
 	void gainCoin();
+	double evalState(Player * opponent); // evaluate how advantage the situation is for the player
 };
-
 #endif

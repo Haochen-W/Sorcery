@@ -239,9 +239,10 @@ int main(int argc, char const *argv[]){
 	players[nextPlayer]->gainCoin();
 	
 	// start first player's turn
+	players[currentPlayer]->nextRound();
 	players[currentPlayer]->gainMagic();
-	players[0]->notifyObservers();
-	players[1]->notifyObservers();
+	players[currentPlayer]->notifyObservers();
+	players[nextPlayer]->notifyObservers();
 	for(unsigned int i = 0; i < displays.size(); i++){
 		displays[i]->displayBoard();
 	}
