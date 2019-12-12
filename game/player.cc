@@ -616,18 +616,19 @@ void Player::gainCoin(){
 }
 
 double Player::evalState(Player * opponent){
-    double MIN_MARK = 0;
-    double MAX_MARK = 100;
+    const double MIN_MARK = 0;
+    const double MAX_MARK = 100;
     int DANGER_LIFE = 2;
 
     double mark = MIN_MARK;
     double survive_mark = 50;
     double minion_mark = 0;
-    double minion_num_mark = 0;
-    double minion_attack_mark = 0;
+    double minion_num_mark = 50;
+    double minion_attack_mark = 50;
     // adv in each minion?
     // double minion_each_mark = 0;
-    int hand_mark = 0;
+    double ritual_mark = 50;
+    double hand_mark = 50;
 
     if (die() && !(opponent->die())) return MIN_MARK;
     if (!die() && opponent->die()) return MAX_MARK;
@@ -635,46 +636,203 @@ double Player::evalState(Player * opponent){
     
     int oppoTotalAttack = 0;
     for (auto i: opponent->getminionslot()){
-        oppoTotalAttack += i->getattackval();
+        oppoTotalAttack += i->getattackval() * i->getactioneachturn();
     }
     int oppo_minion_attack_total = oppoTotalAttack;
-    if (getround() >= 2){
+    int oppo_magic_available = getround() + 1;
+    if (opponent->getactiveRitual().size() != 0 && 
+        opponent->getactiveRitual()[0]->getcardName() == "Dark Ritual") oppo_magic_available+= 1;
+    if (oppo_magic_available > maxMagic) oppo_magic_available = maxMagic;
+
+    if (oppo_minion_attack_total >= 2){
         if (opponent->gethero() == "Mage" || opponent->gethero() == "Druid"){
             oppoTotalAttack += 1;
         } else if (opponent->gethero() == "Hunter") {
             oppoTotalAttack += 2;
         }
     }
+
     // be dead next turn
     if (oppoTotalAttack >= getlife()) return MIN_MARK;
-    if (oppoTotalAttack >= getlife() - DANGER_LIFE) survive_mark = 20;
+    if (oppoTotalAttack >= getlife() - DANGER_LIFE) survive_mark -= 30;
 
     int myTotalAttack = 0;
     for (auto j: getminionslot()){
-        myTotalAttack += j->getattackval();
+        myTotalAttack += j->getattackval() * j->getactioneachturn();
     }
     int my_minion_attack_total = myTotalAttack;
-    if (getround() >= 2){
-        if (gethero() == "Mage" || gethero() == "Druid"){
-            myTotalAttack += 1;
-        } else if (opponent->gethero() == "Hunter") {
-            myTotalAttack += 2;
-        }
-    }
+
+    int magic_available = getround() + 1;
+    if (getactiveRitual().size() != 0 && 
+        getactiveRitual()[0]->getcardName() == "Dark Ritual" && 
+        getactiveRitual()[0]->getcharge() >= 1) magic_available+= 1;
+        // should be using getactiveRitual()[0]->getactivationCost() above, but card does not have a member function called getactivationCost(). 
+    if (magic_available > maxMagic) magic_available = maxMagic;
     // calculate based on hand and ability
-    // TODO!!!!
-    int net_increase = 0;
-    int net_cost = 0;
+    int giant_strength_count = 0;
+    int enrage_count = 0;
+    int haste_count = 0;
     for(auto k: gethand()){
         if (k->getcardName() == "Giant Strength"){
-            net_increase += 2;
-            net_cost = 1;
-        } else if (k->getcardName() == "Giant Strength"){}
+            giant_strength_count += 1;
+        } else if (k->getcardName() == "Enrage"){
+            enrage_count += 1;
+        } else if (k->getcardName() == "Haste"){
+            haste_count += 1;
+        }
     }
-    if (myTotalAttack >= opponent->getlife()) survive_mark = 100;
-    if (myTotalAttack >= opponent->getlife() - DANGER_LIFE) survive_mark = 80;
+
+    int max_attack = 0;
+    int max_attack_val = 0;
+    int max_single_attack_val = 0;
+    int max_action_each_turn = 0;
+    for(int i = 0; i < static_cast<int>(getminionslot().size()); i++){
+        int temp = getminionslot()[i]->getattackval() * getminionslot()[i]->getactioneachturn();
+        if (getminionslot()[i]->getattackval() >= max_single_attack_val) {
+            max_single_attack_val = getminionslot()[i]->getattackval();
+        }
+        if (temp > max_attack){
+            max_attack = temp;
+            max_attack_val = getminionslot()[i]->getattackval();
+            max_action_each_turn = getminionslot()[i]->getactioneachturn();
+        }
+    }
+    std::vector<std::shared_ptr<Card>> ThreeEnchantments;
+    std::shared_ptr<Giantstrength> p1 = std::make_shared<Giantstrength>(nullptr);
+    std::shared_ptr<Enrage> p2 = std::make_shared<Enrage>(nullptr);
+    std::shared_ptr<Haste> p3 = std::make_shared<Haste>(nullptr);
+    int count_for_each_enchantment[3] = {0};
+    int ID_for_each_card[3] = {0};
+    // determine the order of using these three enchantments
+    if (max_attack_val >= 4){ // Enrage > Giant Strength
+        if (max_attack_val > 2 * max_single_attack_val){ //Enrage > Haste
+            if (max_single_attack_val > 2){ //Enrage > Haste > Giant Strength
+                ThreeEnchantments.emplace_back(p2);
+                ThreeEnchantments.emplace_back(p3);
+                ThreeEnchantments.emplace_back(p1);
+                count_for_each_enchantment[0] = enrage_count;
+                count_for_each_enchantment[1] = haste_count;
+                count_for_each_enchantment[2] = giant_strength_count;
+                ID_for_each_card[0] = 2;
+                ID_for_each_card[1] = 3;
+                ID_for_each_card[2] = 1;
+            } else { // Enrage > Giant > Haste
+                ThreeEnchantments.emplace_back(p2);
+                ThreeEnchantments.emplace_back(p1);
+                ThreeEnchantments.emplace_back(p3);
+                count_for_each_enchantment[0] = enrage_count;
+                count_for_each_enchantment[1] = giant_strength_count;
+                count_for_each_enchantment[2] = haste_count;
+                ID_for_each_card[0] = 2;
+                ID_for_each_card[1] = 1;
+                ID_for_each_card[2] = 3;
+            }
+        } else { // Enrage < Haste, so Haste > Enrage > Giant
+            ThreeEnchantments.emplace_back(p3);
+            ThreeEnchantments.emplace_back(p2);
+            ThreeEnchantments.emplace_back(p1);
+            count_for_each_enchantment[0] = haste_count;
+            count_for_each_enchantment[1] = enrage_count;
+            count_for_each_enchantment[2] = giant_strength_count;
+            ID_for_each_card[0] = 3;
+            ID_for_each_card[1] = 2;
+            ID_for_each_card[2] = 1;
+        }
+    } else { // Enrage < Giant
+        if (max_attack_val > 2 * max_single_attack_val){ // Enrage > Haste, so Giant > Enrage > Haste
+            ThreeEnchantments.emplace_back(p1);
+            ThreeEnchantments.emplace_back(p2);
+            ThreeEnchantments.emplace_back(p3);
+            count_for_each_enchantment[0] = giant_strength_count;
+            count_for_each_enchantment[1] = enrage_count;
+            count_for_each_enchantment[2] = haste_count;
+            ID_for_each_card[0] = 1;
+            ID_for_each_card[1] = 2;
+            ID_for_each_card[2] = 3;
+        } else {// Enrage < Haste
+            if (max_single_attack_val > 2){ // Haste > Giant > Enrage
+                ThreeEnchantments.emplace_back(p3);
+                ThreeEnchantments.emplace_back(p1);
+                ThreeEnchantments.emplace_back(p2);
+                count_for_each_enchantment[0] = haste_count;
+                count_for_each_enchantment[1] = enrage_count;
+                count_for_each_enchantment[2] = giant_strength_count;
+                ID_for_each_card[0] = 3;
+                ID_for_each_card[1] = 1;
+                ID_for_each_card[2] = 2;
+            } else { // Giant > Haste > Enrage
+                ThreeEnchantments.emplace_back(p1);
+                ThreeEnchantments.emplace_back(p3);
+                ThreeEnchantments.emplace_back(p2);
+                count_for_each_enchantment[0] = giant_strength_count;
+                count_for_each_enchantment[1] = haste_count;
+                count_for_each_enchantment[2] = enrage_count;
+                ID_for_each_card[0] = 1;
+                ID_for_each_card[1] = 3;
+                ID_for_each_card[2] = 2;
+            }
+        }
+    }
+    for (int i = 0; i < 3; i++){
+        int magic_need = count_for_each_enchantment[i] * ThreeEnchantments[i]->getcost();
+        if (magic_need > magic_available){
+            count_for_each_enchantment[i] = magic_available / ThreeEnchantments[i]->getcost();
+            for (int j = i; j < 3; j++){
+                count_for_each_enchantment[j] = 0;
+            }
+            break;
+        } else {
+            magic_available -= magic_need;
+        }
+    }
+    int increase_in_action = 0;
+    for (int i = 0; i < 3; i++){
+        int card = ID_for_each_card[i];
+        int count = count_for_each_enchantment[i];
+        if (card == 1){ // Giant
+            max_attack_val += 2 * count;
+            max_attack += 2 * count;
+            max_single_attack_val += 2* count;
+        } else if (card == 2){ // enrage
+            for(int j = 0; j < count; j++){
+                max_attack_val *= 2;
+                max_attack *= 2;
+            }
+        } else if (card == 3){
+            increase_in_action += 1;
+        }
+    }
+    // finalize calculating myTotalAttack (next round)
+    if (max_single_attack_val > max_attack_val){
+        myTotalAttack += max_attack + increase_in_action * max_single_attack_val;
+    } else {
+        myTotalAttack += max_attack + increase_in_action * max_attack_val;
+    }
+
+    if (myTotalAttack >= opponent->getlife()) {
+        survive_mark += 50;
+    } else if (myTotalAttack >= opponent->getlife() - DANGER_LIFE) {
+        survive_mark += 30;
+    }
     // calculate minion marks
-    int diff_in_minion = my_minion_attack_total - oppo_minion_attack_total;
-    // TODO!!!!
+    int diff_in_minion_attack = my_minion_attack_total - oppo_minion_attack_total;
+    minion_attack_mark += diff_in_minion_attack * 10;
+    if (minion_attack_mark < 0) minion_attack_mark = 0;
+    if (minion_attack_mark > 100) minion_attack_mark = 100;
+    int diff_in_minion_num = getminionslot().size() - opponent->getminionslot().size();
+    minion_num_mark += diff_in_minion_num * 10;
+    if (minion_num_mark < 0) minion_num_mark = 0;
+    if (minion_num_mark > 100) minion_num_mark = 100;
+    minion_mark = 0.8 * minion_attack_mark + 0.2 * minion_num_mark;
+
+    int diff_in_ritual = getactiveRitual().size() - opponent->getactiveRitual().size();
+    ritual_mark += diff_in_ritual * 50;
+    if (ritual_mark < 0) ritual_mark = 0;
+    if (ritual_mark > 100) ritual_mark = 100;
+    int diff_in_hand = gethand().size() - opponent->gethand().size();
+    hand_mark += diff_in_hand * 10;
+    if (hand_mark < 0) hand_mark = 0;
+    if (hand_mark > 100) hand_mark = 100;
+    mark = 0.5 * survive_mark + 0.3 * minion_mark + 0.15 * hand_mark + 0.05 * ritual_mark;
     return mark;
 }

@@ -16,7 +16,6 @@ void Darkritual::triggereffect(Player * playedby, Player * opponent, Card * c){
 		InvalidMove e{"Not enough charges"};
 		throw e;
 	}
-	playedby->gainMagic();
 	setcharge(getcharge() - getactivationCost());
 }
 

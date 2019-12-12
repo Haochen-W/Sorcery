@@ -1,8 +1,11 @@
 #include "minion.h"
 #include "concreteminion.h"
 
+const int defaultActionEachTurn = 1;
+const int defaultAction = 0;
+
 Minion::Minion(std::string cardName, int cost, int attackval, int defenceval, int abilityCost):
-  Card{cardName, cost}, attackval{attackval}, defenceval{defenceval}, abilityCost{abilityCost}, action{0}, actioneachturn{1}, canuse{true}{}
+  Card{cardName, cost}, attackval{attackval}, defenceval{defenceval}, abilityCost{abilityCost}, action{defaultAction}, actioneachturn{defaultActionEachTurn}, canuse{true}{}
 
 int Minion::getattackval() const {return attackval;}
 int Minion::getdefenceval() const {return defenceval;}

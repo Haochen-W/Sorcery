@@ -4,6 +4,9 @@
 #include <iostream>
 #include "card.h"
 
+extern const int defaultActionEachTurn;
+extern const int defaultAction;
+
 class Minion : public Card {
 protected:
 	int attackval;
