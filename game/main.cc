@@ -162,8 +162,8 @@ int main(int argc, char const *argv[]){
 	vector<shared_ptr<Player>> players;
 	vector<shared_ptr<outputDisplay>> displays;
 
-	shared_ptr<Player> p1 = make_shared<Player>(playername1, 1, hero1);
-	shared_ptr<Player> p2 = make_shared<Player>(playername2, 2, hero2);
+	shared_ptr<Player> p1 = make_shared<Player>(playername1, 1, hero1, true);
+	shared_ptr<Player> p2 = make_shared<Player>(playername2, 2, hero2, true);
 	players.emplace_back(p1);
 	players.emplace_back(p2);
 	
@@ -237,6 +237,7 @@ int main(int argc, char const *argv[]){
 
 	// player who plays second gets a coin
 	players[nextPlayer]->gainCoin();
+	players[nextPlayer]->setfirst(false);
 	
 	// start first player's turn
 	players[currentPlayer]->nextRound();

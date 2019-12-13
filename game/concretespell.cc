@@ -228,6 +228,6 @@ std::vector<std::string> Coin::getoutput(){
 }
 
 void Coin::playCard(Player * playedby, Player * opponent, int i){
-	playedby->gainMagic();
+	playedby->gainOneMagicForce();
 	playedby->gethand().erase(playedby->gethand().begin() + i - 1);
 }

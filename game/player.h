@@ -33,6 +33,7 @@ class Player{
 	int hattackval;
 	bool heropowerState;
 	int heropowercost;
+	bool first;
 	std::vector<Observer *> observers;
 	std::vector<std::shared_ptr<Card>> deck;
 	std::vector<std::shared_ptr<Card>> hand;
@@ -42,7 +43,7 @@ class Player{
 	std::vector<std::string> playerCard;
 
 public:
-	Player(std::string playerName, int playerNum, std::string hero);
+	Player(std::string playerName, int playerNum, std::string hero, bool first);
 	virtual ~Player() = default;
 
 	// getter and setter
@@ -54,6 +55,7 @@ public:
 	int gethattackval() const;
 	bool getheropowerState() const;
 	int getheropowercost() const;
+	bool getfirst() const;
 	std::vector<std::shared_ptr<Card>> & getdeck();
 	std::vector<std::shared_ptr<Card>> & gethand();
 	std::vector<std::shared_ptr<Card>> & getminionslot();
@@ -66,7 +68,7 @@ public:
 	void sethattackval (int nhattackval);
 	void setheropowerState (bool nheropowerState);
 	void setheropowercost(int nheropowercost);
-
+	void setfirst(bool nfirst);
 	// heropowers
 	void useHeropower(Player * opponent, bool testing);
 	void useHeropower(Player * opponent, bool onme, bool testing);
@@ -90,6 +92,7 @@ public:
 	void initTurn();
 	bool die();
 	void gainMagic();
+	void gainOneMagicForce();
 	void nextRound();
 	void gainAction();
 	void gainCoin();

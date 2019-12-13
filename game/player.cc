@@ -11,8 +11,8 @@ const int initialMagic = 0;
 const int maxMinionNum = 5;
 const int maxHandNum = 5;
 
-Player::Player(std::string playerName, int playerNum, std::string hero): 
-    playerName{playerName}, hero{hero}, playerNum{playerNum}, life{maxLife}, magic{initialMagic}, round{0}, hattackval{0}, heropowerState{true}, heropowercost{heroPowerCost} {}
+Player::Player(std::string playerName, int playerNum, std::string hero, bool first): 
+    playerName{playerName}, hero{hero}, playerNum{playerNum}, life{maxLife}, magic{initialMagic}, round{0}, hattackval{0}, heropowerState{true}, heropowercost{heroPowerCost}, first{first} {}
 
 std::string & Player::gethero() {return hero;}
 int Player::getplayerNum() const{return playerNum;}
@@ -22,6 +22,7 @@ int Player::getround() const{return round;}
 int Player::gethattackval() const {return hattackval;}
 bool Player::getheropowerState () const {return heropowerState;}
 int Player::getheropowercost () const {return heropowercost;}
+bool Player::getfirst () const {return first;}
 std::vector<std::shared_ptr<Card>> & Player::getdeck() {return deck;}
 std::vector<std::shared_ptr<Card>> & Player::gethand() {return hand;}
 std::vector<std::shared_ptr<Card>> & Player::getminionslot() {return minionslot;}
@@ -50,6 +51,7 @@ void Player::sethattackval (int nhattackval){
 }
 void Player::setheropowerState(bool nheropowerState){heropowerState = nheropowerState;}
 void Player::setheropowercost(int nheropowercost){heropowercost = nheropowercost;}
+void Player::setfirst(bool nfirst){first = nfirst;}
 
 void Player::useHeropower(Player * opponent, bool testing){
     if(!getheropowerState()){
@@ -602,6 +604,8 @@ bool Player::die() {return (getlife() <= 0);}
 
 void Player::gainMagic(){setmagic(getround());}
 
+void Player::gainOneMagicForce(){magic += 1;}
+
 void Player::nextRound(){round += 1;}
 
 void Player::gainAction(){
@@ -639,12 +643,17 @@ double Player::evalState(Player * opponent){
         oppoTotalAttack += i->getattackval() * i->getactioneachturn();
     }
     int oppo_minion_attack_total = oppoTotalAttack;
-    int oppo_magic_available = getround() + 1;
+    int oppo_magic_available = getround();
+    if (getfirst() == false) oppo_magic_available += 1;
+    if (oppo_magic_available > maxMagic) oppo_magic_available = maxMagic;
+    for (auto i: opponent->gethand()){
+        if (i->getcardName() == "Coin"){
+            oppo_magic_available += 1;
+        }
+    }
     if (opponent->getactiveRitual().size() != 0 && 
         opponent->getactiveRitual()[0]->getcardName() == "Dark Ritual") oppo_magic_available+= 1;
-    if (oppo_magic_available > maxMagic) oppo_magic_available = maxMagic;
-
-    if (oppo_minion_attack_total >= 2){
+    if (oppo_magic_available >= 2){
         if (opponent->gethero() == "Mage" || opponent->gethero() == "Druid"){
             oppoTotalAttack += 1;
         } else if (opponent->gethero() == "Hunter") {
@@ -663,11 +672,11 @@ double Player::evalState(Player * opponent){
     int my_minion_attack_total = myTotalAttack;
 
     int magic_available = getround() + 1;
+    if (magic_available > maxMagic) magic_available = maxMagic;
     if (getactiveRitual().size() != 0 && 
         getactiveRitual()[0]->getcardName() == "Dark Ritual" && 
         getactiveRitual()[0]->getcharge() >= 1) magic_available+= 1;
         // should be using getactiveRitual()[0]->getactivationCost() above, but card does not have a member function called getactivationCost(). 
-    if (magic_available > maxMagic) magic_available = maxMagic;
     // calculate based on hand and ability
     int giant_strength_count = 0;
     int enrage_count = 0;
@@ -799,7 +808,7 @@ double Player::evalState(Player * opponent){
                 max_attack *= 2;
             }
         } else if (card == 3){
-            increase_in_action += 1;
+            increase_in_action += count;
         }
     }
     // finalize calculating myTotalAttack (next round)
