@@ -14,6 +14,188 @@ const int maxHandNum = 5;
 Player::Player(std::string playerName, int playerNum, std::string hero, bool first): 
     playerName{playerName}, hero{hero}, playerNum{playerNum}, life{maxLife}, magic{initialMagic}, round{0}, hattackval{0}, heropowerState{true}, heropowercost{heroPowerCost}, first{first} {}
 
+//take other->deck/hand/minionslot/graveyard/activeRitual
+//make_shared, shared ptr assign
+//need the selfvec parameter to indicate which vector to load into
+static void duplicateCard(std::vector<std::shared_ptr<Card>> & selfvec, const std::vector<std::shared_ptr<Card>> & othervec){
+    for(int i = 0; i < othervec.size(); i++){
+        const auto tmp = othervec[i];
+        std::string card = tmp->getcardName(); // get card name
+        
+        // construct and do the assignment
+        if (card == "Air Elemental"){
+            std::shared_ptr<Airelemental> p = std::make_shared<Airelemental>();
+            p->setcost(tmp->getcost());
+            p->setattackval(tmp->getattackval());
+            p->setdefenceval(tmp->getdefenceval());
+            p->setabilityCost(tmp->getabilityCost());
+            p->setaction(tmp->getaction());
+            p->setactioneachturn(tmp->getactioneachturn());
+            p->getEnchantmentadded() = tmp->getEnchantmentadded();
+            p->setcanuse(tmp->getcanuse());
+            selfvec.emplace_back(p);
+        } else if (card == "Earth Elemental"){
+            std::shared_ptr<Earthelemental> p = std::make_shared<Earthelemental>();
+            p->setcost(tmp->getcost());
+            p->setattackval(tmp->getattackval());
+            p->setdefenceval(tmp->getdefenceval());
+            p->setabilityCost(tmp->getabilityCost());
+            p->setaction(tmp->getaction());
+            p->setactioneachturn(tmp->getactioneachturn());
+            p->getEnchantmentadded() = tmp->getEnchantmentadded();
+            p->setcanuse(tmp->getcanuse());
+            selfvec.emplace_back(p);
+        } else if (card == "Bone Golem"){
+            std::shared_ptr<Bonegolem> p = std::make_shared<Bonegolem>();
+            p->setcost(tmp->getcost());
+            p->setattackval(tmp->getattackval());
+            p->setdefenceval(tmp->getdefenceval());
+            p->setabilityCost(tmp->getabilityCost());
+            p->setaction(tmp->getaction());
+            p->setactioneachturn(tmp->getactioneachturn());
+            p->getEnchantmentadded() = tmp->getEnchantmentadded();
+            p->setcanuse(tmp->getcanuse());
+            selfvec.emplace_back(p);
+        } else if (card == "Fire Elemental"){
+            std::shared_ptr<Fireelemental> p = std::make_shared<Fireelemental>();
+            p->setcost(tmp->getcost());
+            p->setattackval(tmp->getattackval());
+            p->setdefenceval(tmp->getdefenceval());
+            p->setabilityCost(tmp->getabilityCost());
+            p->setaction(tmp->getaction());
+            p->setactioneachturn(tmp->getactioneachturn());
+            p->getEnchantmentadded() = tmp->getEnchantmentadded();
+            p->setcanuse(tmp->getcanuse());
+            selfvec.emplace_back(p);
+        } else if (card == "Potion Seller"){
+            std::shared_ptr<Potionseller> p = std::make_shared<Potionseller>();
+            p->setcost(tmp->getcost());
+            p->setattackval(tmp->getattackval());
+            p->setdefenceval(tmp->getdefenceval());
+            p->setabilityCost(tmp->getabilityCost());
+            p->setaction(tmp->getaction());
+            p->setactioneachturn(tmp->getactioneachturn());
+            p->getEnchantmentadded() = tmp->getEnchantmentadded();
+            p->setcanuse(tmp->getcanuse());
+            selfvec.emplace_back(p);
+        } else if (card == "Novice Pyromancer"){
+            std::shared_ptr<Novicepyromancer> p = std::make_shared<Novicepyromancer>();
+            p->setcost(tmp->getcost());
+            p->setattackval(tmp->getattackval());
+            p->setdefenceval(tmp->getdefenceval());
+            p->setabilityCost(tmp->getabilityCost());
+            p->setaction(tmp->getaction());
+            p->setactioneachturn(tmp->getactioneachturn());
+            p->getEnchantmentadded() = tmp->getEnchantmentadded();
+            p->setcanuse(tmp->getcanuse());
+            selfvec.emplace_back(p);
+        } else if (card == "Apprentice Summoner"){
+            std::shared_ptr<Apprenticesummoner> p = std::make_shared<Apprenticesummoner>();
+            p->setcost(tmp->getcost());
+            p->setattackval(tmp->getattackval());
+            p->setdefenceval(tmp->getdefenceval());
+            p->setabilityCost(tmp->getabilityCost());
+            p->setaction(tmp->getaction());
+            p->setactioneachturn(tmp->getactioneachturn());
+            p->getEnchantmentadded() = tmp->getEnchantmentadded();
+            p->setcanuse(tmp->getcanuse());
+            selfvec.emplace_back(p);
+        } else if (card == "Master Summoner"){
+            std::shared_ptr<Mastersummoner> p = std::make_shared<Mastersummoner>();
+            p->setcost(tmp->getcost());
+            p->setattackval(tmp->getattackval());
+            p->setdefenceval(tmp->getdefenceval());
+            p->setabilityCost(tmp->getabilityCost());
+            p->setaction(tmp->getaction());
+            p->setactioneachturn(tmp->getactioneachturn());
+            p->getEnchantmentadded() = tmp->getEnchantmentadded();
+            p->setcanuse(tmp->getcanuse());
+            selfvec.emplace_back(p);
+        } else if (card == "Banish"){
+            std::shared_ptr<Banish> p = std::make_shared<Banish>();
+            p->setcost(tmp->getcost());
+            selfvec.emplace_back(p);
+        } else if (card == "Unsummon"){
+            std::shared_ptr<Unsummon> p = std::make_shared<Unsummon>();
+            p->setcost(tmp->getcost());
+            selfvec.emplace_back(p);
+        } else if (card == "Recharge"){
+            std::shared_ptr<Recharge> p = std::make_shared<Recharge>();
+            p->setcost(tmp->getcost());
+            selfvec.emplace_back(p);
+        } else if (card == "Disenchant"){
+            std::shared_ptr<Disenchant> p = std::make_shared<Disenchant>();
+            p->setcost(tmp->getcost());
+            selfvec.emplace_back(p);
+        } else if (card == "Raise Dead"){
+            std::shared_ptr<Raisedead> p = std::make_shared<Raisedead>();
+            p->setcost(tmp->getcost());
+            selfvec.emplace_back(p);
+        } else if (card == "Blizzard"){
+            std::shared_ptr<Blizzard> p = std::make_shared<Blizzard>();
+            p->setcost(tmp->getcost());
+            selfvec.emplace_back(p);
+        } else if (card == "Giant Strength"){
+            std::shared_ptr<Giantstrength> p = std::make_shared<Giantstrength>(nullptr);
+            p->setcost(tmp->getcost());
+            selfvec.emplace_back(p);
+        } else if (card == "Enrage"){
+            std::shared_ptr<Enrage> p = std::make_shared<Enrage>(nullptr);
+            p->setcost(tmp->getcost());
+            selfvec.emplace_back(p);
+        } else if (card == "Haste"){
+            std::shared_ptr<Haste> p = std::make_shared<Haste>(nullptr);
+            p->setcost(tmp->getcost());
+            selfvec.emplace_back(p);
+        } else if (card == "Magic Fatigue"){
+            std::shared_ptr<Magicfatigue> p = std::make_shared<Magicfatigue>(nullptr);
+            p->setcost(tmp->getcost());
+            selfvec.emplace_back(p);
+        } else if (card == "Silence"){
+            std::shared_ptr<Silence> p = std::make_shared<Silence>(nullptr);
+            p->setcost(tmp->getcost());
+            selfvec.emplace_back(p);
+        } else if (card == "Dark Ritual"){
+            std::shared_ptr<Darkritual> p = std::make_shared<Darkritual>();
+            p->setcost(tmp->getcost());
+            p->setactivationCost(tmp->getactivationCost());
+            p->setcharge(tmp->getcharge());
+            selfvec.emplace_back(p);
+        } else if (card == "Aura of Power"){
+            std::shared_ptr<Auraofpower> p = std::make_shared<Auraofpower>();
+            p->setcost(tmp->getcost());
+            p->setactivationCost(tmp->getactivationCost());
+            p->setcharge(tmp->getcharge());
+            selfvec.emplace_back(p);
+        } else if (card == "Standstill"){
+            std::shared_ptr<Standstill> p = std::make_shared<Standstill>();
+            p->setcost(tmp->getcost());
+            p->setactivationCost(tmp->getactivationCost());
+            p->setcharge(tmp->getcharge());
+            selfvec.emplace_back(p);
+        } else if (card == "Coin"){
+            std::shared_ptr<Coin> p = std::make_shared<Coin>();
+            p->setcost(tmp->getcost());
+            selfvec.emplace_back(p);
+        }
+    }
+}
+
+// copy ctor
+Player::Player(const Player & other):
+    playerName{other.playerName}, hero{other.hero}, 
+    playerNum{other.playerNum}, life{other.life}, magic{other.magic}, 
+    round{other.round}, hattackval{other.hattackval}, 
+    heropowerState{other.heropowerState}, heropowercost{other.heropowercost} {    
+        //ignoring the observers, and player card? they are for display only
+        //duplicate all cards
+        duplicateCard(deck, other.deck);
+        duplicateCard(hand, other.hand);
+        duplicateCard(minionslot, other.minionslot);
+        duplicateCard(graveyard, other.graveyard);
+        duplicateCard(activeRitual, other.activeRitual);       
+    }
+
 std::string & Player::gethero() {return hero;}
 int Player::getplayerNum() const{return playerNum;}
 int Player::getlife() const{return life;}

@@ -44,6 +44,7 @@ class Player{
 
 public:
 	Player(std::string playerName, int playerNum, std::string hero, bool first);
+	Player(const Player & other);
 	virtual ~Player() = default;
 
 	// getter and setter

@@ -22,6 +22,7 @@ std::vector<std::string> & Card::getEnchantmentadded(){
 	return *temp;
 }
 bool Card::getcanuse() const {return true;}
+int Card::getactivationCost() const {return 0;}
 
 void Card::setattackval(int nattackval){return;}
 void Card::setdefenceval(int ndefenceval){return;}
@@ -29,6 +30,8 @@ void Card::setabilityCost(int nabilityCost){return;}
 void Card::setaction(int naction){return;}
 void Card::setactioneachturn(int nactioneachturn){return;}
 void Card::setcanuse(bool ncanuse){return;}
+void Card::setactivationCost(int nactivationCost){return;}
+
 
 void Card::minionAttack(Player * target){return;}
 void Card::minionAttack(Player * target, int i){return;}

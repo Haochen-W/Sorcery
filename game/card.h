@@ -26,7 +26,7 @@ public:
 	virtual void playCard(Player * playedby, Player * opponent, int i, bool onme, int t); // play ith card on t's minion
 	virtual void playCardonRitual(Player * playedby, Player * opponent, int i, bool onme); // play ith card on ritual
 
-	// for minions
+	// getters for minions
 	virtual int getattackval() const;
 	virtual int getdefenceval() const;
 	virtual int getabilityCost() const;
@@ -35,12 +35,19 @@ public:
 	virtual std::vector<std::string> & getEnchantmentadded();
 	virtual bool getcanuse() const;
 
+	// getters for ritual
+	virtual int getactivationCost() const;
+
+	// setters for minions
 	virtual void setattackval(int nattackval);
 	virtual void setdefenceval(int ndefenceval);
 	virtual void setabilityCost(int nabilityCost);
 	virtual void setaction(int naction);
 	virtual void setactioneachturn(int nactioneachturn);
 	virtual void setcanuse(bool ncanuse);
+
+	// setters for ritual
+	virtual void setactivationCost(int nactivationCost);
 
 	virtual void minionAttack(Player * target); // attack player
 	virtual void minionAttack(Player * target, int i); // attack ith minion

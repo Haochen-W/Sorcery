@@ -422,7 +422,7 @@ int main(int argc, char const *argv[]){
 						}
 					}
 				} else {
-					// play i p r: play enchantment, spell on ritual
+					// play i p r: play spell on ritual
 					if(p == players[currentPlayer]->getplayerNum()){
 						try {
 							players[currentPlayer]->playonRitual(i, players[nextPlayer].get(), true, testingState);

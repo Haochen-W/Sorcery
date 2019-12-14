@@ -13,9 +13,9 @@ public:
 	Ritual(std::string cardName, int cost, int activationCost, int charge);
 	~Ritual() = default;
 
-	int getactivationCost () const;
+	int getactivationCost () const override;
 	int getcharge () const override;
-	void setactivationCost (int nactivationCost);
+	void setactivationCost (int nactivationCost) override;
 	void setcharge (int ncharge) override;
 
 	void playCard(Player * playedby, Player * opponent, int i) override; // place ritual on ritual slot
