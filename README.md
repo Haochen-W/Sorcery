@@ -50,4 +50,4 @@ $ ./sorcery arg1 arg2 ...
 * inspect minion -- View a minion's card and all enchantments on that minion.
 * hand -- Describe all cards in your hand.
 * board -- Describe all cards on the board.
-* usepower \[target-player target-card] -- use hero power, optionally targeting target-player or target-card owned by target-player.
+* usepower \[target-player] \[target-card] -- use hero power, optionally targeting target-player or target-card owned by target-player.

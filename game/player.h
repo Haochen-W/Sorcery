@@ -31,19 +31,21 @@ class Player{
 	int magic;
 	int round;
 	int hattackval;
-	bool heropowerState;
+	bool heropowerFlag; //enable hero power mode
+	bool heropowerState; //haven't use hero power in this turn
 	int heropowercost;
-	bool first;
+	bool first; //first player who starts the game
 	std::vector<Observer *> observers;
 	std::vector<std::shared_ptr<Card>> deck;
 	std::vector<std::shared_ptr<Card>> hand;
 	std::vector<std::shared_ptr<Card>> minionslot;
 	std::vector<std::shared_ptr<Card>> graveyard;
 	std::vector<std::shared_ptr<Card>> activeRitual;
+	std::vector<std::string> op; //a list of possible operations
 	std::vector<std::string> playerCard;
 
 public:
-	Player(std::string playerName, int playerNum, std::string hero, bool first);
+	Player(std::string playerName, int playerNum, std::string hero, bool heropowerFlag, bool first);
 	Player(const Player & other);
 	virtual ~Player() = default;
 
@@ -98,5 +100,6 @@ public:
 	void gainAction();
 	void gainCoin();
 	double evalState(Player * opponent); // evaluate how advantage the situation is for the player
+	void possiOperation(Player * opponent);
 };
 #endif

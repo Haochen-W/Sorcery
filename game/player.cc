@@ -11,16 +11,17 @@ const int initialMagic = 0;
 const int maxMinionNum = 5;
 const int maxHandNum = 5;
 
-Player::Player(std::string playerName, int playerNum, std::string hero, bool first): 
-    playerName{playerName}, hero{hero}, playerNum{playerNum}, life{maxLife}, magic{initialMagic}, round{0}, hattackval{0}, heropowerState{true}, heropowercost{heroPowerCost}, first{first} {}
+Player::Player(std::string playerName, int playerNum, std::string hero, bool heropowerFlag, bool first): 
+    playerName{playerName}, hero{hero}, playerNum{playerNum}, life{maxLife}, magic{initialMagic}, round{0}, hattackval{0}, 
+    heropowerFlag{heropowerFlag}, heropowerState{true}, heropowercost{heroPowerCost}, first{first} {}
 
 //take other->deck/hand/minionslot/graveyard/activeRitual
 //make_shared, shared ptr assign
 //need the selfvec parameter to indicate which vector to load into
 static void duplicateCard(std::vector<std::shared_ptr<Card>> & selfvec, const std::vector<std::shared_ptr<Card>> & othervec){
     for(int i = 0; i < othervec.size(); i++){
-        const auto tmp = othervec[i];
-        std::string card = tmp->getcardName(); // get card name
+        Card * tmp = othervec[i].get();
+        const std::string card = tmp->getcardName(); // get card name
         
         // construct and do the assignment
         if (card == "Air Elemental"){
@@ -185,7 +186,7 @@ static void duplicateCard(std::vector<std::shared_ptr<Card>> & selfvec, const st
 Player::Player(const Player & other):
     playerName{other.playerName}, hero{other.hero}, 
     playerNum{other.playerNum}, life{other.life}, magic{other.magic}, 
-    round{other.round}, hattackval{other.hattackval}, 
+    round{other.round}, hattackval{other.hattackval}, heropowerFlag{other.heropowerFlag},
     heropowerState{other.heropowerState}, heropowercost{other.heropowercost} {    
         //ignoring the observers, and player card? they are for display only
         //duplicate all cards
@@ -1027,3 +1028,188 @@ double Player::evalState(Player * opponent){
     mark = 0.5 * survive_mark + 0.3 * minion_mark + 0.15 * hand_mark + 0.05 * ritual_mark;
     return mark;
 }
+
+
+//find possible single operations
+//TRIGGER EFFECTS??
+void Player::possiOperation(Player * opponent){
+    op.clear();
+    
+    //deal with hand
+    for(int i = 0; i < hand.size(); i++){
+        const std::string card = hand[i]->getcardName();
+        const int cost = hand[i]->getcost();
+        std::string cmd = "play " + std::to_string(i + 1);
+
+        //not enough magic, skip this card
+        if(cost > magic) {continue;}
+
+        if(card == "Air Elemental" || card == "Novice Pyromancer" || card == "Apprentice Summoner" ||
+            card == "Bone Golem" || card == "Fire Elemental" || card == "Potion Seller" ||
+            card == "Earth Elemental" || card == "Master Summoner"){
+            //minion, place the minion into minion slot
+            op.emplace_back(cmd);
+        } else if(card == "Dark Ritual" || card == "Aura of Power" || card == "Standstill"){
+            //ritual, place the ritual into active ritual slot
+            op.emplace_back(cmd);
+        } else if(card == "Giant Strength" || card == "Enrage" || card == "Haste" ||
+            card == "Magic Fatigue" || card == "Silence"){
+            //enchantment, apply enchantment on target minion
+            //play on minion: play i p t
+            for(int j = 0; j < minionslot.size(); j++){
+                cmd = "play " + std::to_string(i + 1) + " " + std::to_string(playerNum) + " " + std::to_string(j + 1);
+                op.emplace_back(cmd);
+            }
+            for(int j = 0; j < opponent->getminionslot().size(); j++){
+                cmd = "play " + std::to_string(i + 1) + " " + std::to_string(opponent->getplayerNum()) + " " + std::to_string(j + 1);
+                op.emplace_back(cmd);
+            }
+        } else if(card == "Banish"){ //Destroy target minion or ritual
+            //play on minion: play i p t
+            for(int j = 0; j < minionslot.size(); j++){
+                cmd = "play " + std::to_string(i + 1) + " " + std::to_string(playerNum) + " " + std::to_string(j + 1);
+                op.emplace_back(cmd);
+            }
+            for(int j = 0; j < opponent->getminionslot().size(); j++){
+                cmd = "play " + std::to_string(i + 1) + " " + std::to_string(opponent->getplayerNum()) + " " + std::to_string(j + 1);
+                op.emplace_back(cmd);
+            }
+            //play on ritual: play i p r
+            if(!activeRitual.empty()){
+                cmd = "play " + std::to_string(i + 1) + " " + std::to_string(playerNum) + " r";
+                op.emplace_back(cmd);
+            }
+            if(!opponent->getactiveRitual().empty()){
+                cmd = "play " + std::to_string(i + 1) + " " + std::to_string(opponent->getplayerNum()) + " r";
+                op.emplace_back(cmd);
+            }
+        } else if(card == "Unsummon"){ //Return target minion to its owner's hand **check hand full???
+            //play on minion: play i p t
+            for(int j = 0; j < minionslot.size(); j++){
+                cmd = "play " + std::to_string(i + 1) + " " + std::to_string(playerNum) + " " + std::to_string(j + 1);
+                op.emplace_back(cmd);
+            }
+            for(int j = 0; j < opponent->getminionslot().size(); j++){
+                cmd = "play " + std::to_string(i + 1) + " " + std::to_string(opponent->getplayerNum()) + " " + std::to_string(j + 1);
+                op.emplace_back(cmd);
+            }
+        } else if(card == "Recharge"){ //Your ritual gains 3 charges
+            //play on ritual: play i p r
+            if(!activeRitual.empty()){
+                cmd += " " + std::to_string(playerNum) + " r";
+                op.emplace_back(cmd);
+            }
+        } else if(card == "Disenchant"){ //Destroy the top enchantment on target minion
+            //play on minion: play i p t
+            for(int j = 0; j < minionslot.size(); j++){
+                cmd = "play " + std::to_string(i + 1) + " " + std::to_string(playerNum) + " " + std::to_string(j + 1);
+                op.emplace_back(cmd);
+            }
+            for(int j = 0; j < opponent->getminionslot().size(); j++){
+                cmd = "play " + std::to_string(i + 1) + " " + std::to_string(opponent->getplayerNum()) + " " + std::to_string(j + 1);
+                op.emplace_back(cmd);
+            }
+        } else if(card == "Raise Dead"){ //Resurrect the top minion in your graveyard and set its defence to 1
+            if(!graveyard.empty()){
+                op.emplace_back(cmd);
+            }
+        } else if(card == "Blizzard" || card == "Coin"){ //Deal 2 damage to all minions
+            op.emplace_back(cmd);
+        }
+    }
+
+    //deal with minion attack, attack minion or player, cost action point
+    for(int i = 0; i < minionslot.size(); i++){
+        const int action = minionslot[i]->getaction();
+        std::string cmd = "attack " + std::to_string(i + 1);
+
+        //not enough action, skip this card
+        if(action <= 0) {continue;}
+
+        //attack player: attack i
+        op.emplace_back(cmd);
+        
+        //attack minion: attack i j
+        for(int j = 0; j < opponent->getminionslot().size(); j++){
+            cmd = "attack " + std::to_string(i + 1) + " " + std::to_string(j + 1);
+            op.emplace_back(cmd);
+        }
+    }
+    
+    //deal with minion effect (use command), cost magic and action point
+    for(int i = 0; i < minionslot.size(); i++){
+        const std::string card = minionslot[i]->getcardName();
+        const int cost = minionslot[i]->getcost();
+        const int action = minionslot[i]->getaction();
+        std::string cmd = "use " + std::to_string(i + 1);
+
+        //not enough magic or action, minion with no effect, skip this card
+        if(cost > magic || action <= 0 || card == "Air Elemental" || card == "Earth Elemental") {continue;}
+
+        if(card == "Novice Pyromancer"){ //Deal 1 damage to target minion
+            //use on minion: use i p t
+            for(int j = 0; j < minionslot.size(); j++){
+                cmd = "use " + std::to_string(i + 1) + " " + std::to_string(playerNum) + " " + std::to_string(j + 1);
+                op.emplace_back(cmd);
+            }
+            for(int j = 0; j < opponent->getminionslot().size(); j++){
+                cmd = "use " + std::to_string(i + 1) + " " + std::to_string(opponent->getplayerNum()) + " " + std::to_string(j + 1);
+                op.emplace_back(cmd);
+            }
+        } else if(card == "Apprentice Summoner"){ //Summon a 1/1 air elemental
+            //use on player: use i
+            op.emplace_back(cmd);
+        } else if(card == "Master Summoner") {//Summon up to three 1/1 air elementals
+            //use on player: use i
+            op.emplace_back(cmd);
+        }
+        
+    }
+
+    //deal with heropower (use power command), cost magic
+    if(heropowerFlag){
+        const std::string heroname = hero;
+        std::string cmd = "usepower";
+
+        //need to have enough magic
+        if(heroPowerCost <= magic && heropowerState){
+            if(heroname == "Mage"){ //Deal 1 damage to any target
+                //usepower p
+                cmd = "usepower " + std::to_string(playerNum);
+                op.emplace_back(cmd);
+                cmd = "usepower " + std::to_string(opponent->getplayerNum());
+                op.emplace_back(cmd);
+                
+                //usepower p t
+                for(int j = 0; j < minionslot.size(); j++){
+                    cmd = "usepower " + std::to_string(playerNum) + " " + std::to_string(j + 1);
+                    op.emplace_back(cmd);
+                }
+                for(int j = 0; j < opponent->getminionslot().size(); j++){
+                    cmd = "usepower " + std::to_string(opponent->getplayerNum()) + " " + std::to_string(j + 1);
+                    op.emplace_back(cmd);
+                }
+            } else if(heroname == "Hunter" || heroname == "Paladin" || heroname == "Warrior" || heroname == "Warlock"){
+                //usepower
+                op.emplace_back(cmd);
+            } else if(heroname == "Druid"){ //+1 attack this turn and add 1 health to your hero
+                //usepower p
+                cmd = "usepower " + std::to_string(opponent->getplayerNum());
+                op.emplace_back(cmd);
+                
+                //usepower p t
+                for(int j = 0; j < opponent->getminionslot().size(); j++){
+                    cmd = "usepower " + std::to_string(opponent->getplayerNum()) + " " + std::to_string(j + 1);
+                    op.emplace_back(cmd);
+                }
+            }
+        }
+    }
+
+    //for testing
+    for(int i = 0; i < op.size(); i++){
+        std::cout << op[i] << "\n";
+    }
+}
+
+//generate all possible combinations

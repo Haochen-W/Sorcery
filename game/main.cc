@@ -88,7 +88,7 @@ int main(int argc, char const *argv[]){
 	}
 	// randomize heroes
 	if (heroState && !(testingState)){
-		std::random_device rd;
+		random_device rd;
 		int rand = rd() % 6;
 		if (rand == 0) {
 			hero1 = "Mage";
@@ -119,7 +119,7 @@ int main(int argc, char const *argv[]){
 	}
 
 	if (heroState && !(testingState)){
-		std::random_device rd;
+		random_device rd;
 		int rand = rd() % 6;
 		if (rand == 0) {
 			hero2 = "Mage";
@@ -162,8 +162,8 @@ int main(int argc, char const *argv[]){
 	vector<shared_ptr<Player>> players;
 	vector<shared_ptr<outputDisplay>> displays;
 
-	shared_ptr<Player> p1 = make_shared<Player>(playername1, 1, hero1, true);
-	shared_ptr<Player> p2 = make_shared<Player>(playername2, 2, hero2, true);
+	shared_ptr<Player> p1 = make_shared<Player>(playername1, 1, hero1, heroState, true);
+	shared_ptr<Player> p2 = make_shared<Player>(playername2, 2, hero2, heroState, true);
 	players.emplace_back(p1);
 	players.emplace_back(p2);
 	
@@ -189,7 +189,7 @@ int main(int argc, char const *argv[]){
 
 	// randomize playing order
 	if (!testingState){
-		std::random_device rd;
+		random_device rd;
 		int rand = rd() % 2;
 		if (rand == 0){
 			currentPlayer = 0;
@@ -217,12 +217,12 @@ int main(int argc, char const *argv[]){
 
 	// randomize the deck
 	if (!testingState){
-		std::random_device rd;
-    	std::mt19937 temp(rd());
-    	std::random_device rd2;
-    	std::mt19937 temp2(rd2());
-		std::shuffle(players[0]->getdeck().begin(), players[0]->getdeck().end(), temp);
-		std::shuffle(players[1]->getdeck().begin(), players[1]->getdeck().end(), temp2);
+		random_device rd;
+    	mt19937 temp(rd());
+    	random_device rd2;
+    	mt19937 temp2(rd2());
+		shuffle(players[0]->getdeck().begin(), players[0]->getdeck().end(), temp);
+		shuffle(players[1]->getdeck().begin(), players[1]->getdeck().end(), temp2);
 	}
 	
 	// load hand
@@ -236,8 +236,8 @@ int main(int argc, char const *argv[]){
 	}
 
 	// player who plays second gets a coin
-	players[nextPlayer]->gainCoin();
 	players[nextPlayer]->setfirst(false);
+	players[nextPlayer]->gainCoin();
 	
 	// start first player's turn
 	players[currentPlayer]->nextRound();
@@ -555,7 +555,7 @@ int main(int argc, char const *argv[]){
 		}
 		else if (cmd == "usepower" && heroState == true) {
 			int p, t;
-			if(!(scmd >> p)){
+			if(!(scmd >> p)){ //usepower
 				try{
 					players[currentPlayer]->useHeropower(players[nextPlayer].get(), testingState);
 					for(unsigned int i = 0; i < displays.size(); i++){
@@ -573,8 +573,8 @@ int main(int argc, char const *argv[]){
 				catch(ExceedMaximum &e){
 					cerr << e.getErrorMessage() << endl;
 				}
-			} else if(!(scmd >> t)){
-				if(p == players[currentPlayer]->getplayerNum()){
+			} else if(!(scmd >> t)){ //usepower p 
+				if(p == players[currentPlayer]->getplayerNum()){ //to self
 					try{
 						players[currentPlayer]->useHeropower(players[nextPlayer].get(), true, testingState);
 						for(unsigned int i = 0; i < displays.size(); i++){
@@ -592,7 +592,7 @@ int main(int argc, char const *argv[]){
 					catch(ExceedMaximum &e){
 						cerr << e.getErrorMessage() << endl;
 					}
-				} else {
+				} else { //to opponent
 					try{
 						players[currentPlayer]->useHeropower(players[nextPlayer].get(), false, testingState);
 						for(unsigned int i = 0; i < displays.size(); i++){
@@ -611,7 +611,7 @@ int main(int argc, char const *argv[]){
 						cerr << e.getErrorMessage() << endl;
 					}
 				}
-			} else {
+			} else { //usepower p t
 				if(p == players[currentPlayer]->getplayerNum()){
 					try{
 						players[currentPlayer]->useHeropower(players[nextPlayer].get(), t, true, testingState);
@@ -650,6 +650,10 @@ int main(int argc, char const *argv[]){
 					}
 				}
 			}
+		}
+		//for testing: possOP
+		else if (cmd == "generate"){
+			players[currentPlayer]->possiOperation(players[nextPlayer].get());
 		}
 		else {
 			if (notfirst){
