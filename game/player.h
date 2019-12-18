@@ -57,6 +57,7 @@ public:
 	int getround() const;
 	int gethattackval() const;
 	bool getheropowerState() const;
+	bool getheropowerFlag() const;
 	int getheropowercost() const;
 	bool getfirst() const;
 	std::vector<std::shared_ptr<Card>> & getdeck();
@@ -70,6 +71,7 @@ public:
 	void setmagic (int nmagic);
 	void sethattackval (int nhattackval);
 	void setheropowerState (bool nheropowerState);
+	void setheropowerFlag (bool nheropowerFlag);
 	void setheropowercost(int nheropowercost);
 	void setfirst(bool nfirst);
 	// heropowers

@@ -204,6 +204,7 @@ int Player::getmagic() const{return magic;}
 int Player::getround() const{return round;}
 int Player::gethattackval() const {return hattackval;}
 bool Player::getheropowerState () const {return heropowerState;}
+bool Player::getheropowerFlag () const {return heropowerFlag;}
 int Player::getheropowercost () const {return heropowercost;}
 bool Player::getfirst () const {return first;}
 std::vector<std::shared_ptr<Card>> & Player::getdeck() {return deck;}
@@ -233,6 +234,7 @@ void Player::sethattackval (int nhattackval){
     }
 }
 void Player::setheropowerState(bool nheropowerState){heropowerState = nheropowerState;}
+void Player::setheropowerFlag(bool nheropowerFlag){heropowerState = nheropowerFlag;}
 void Player::setheropowercost(int nheropowercost){heropowercost = nheropowercost;}
 void Player::setfirst(bool nfirst){first = nfirst;}
 
@@ -836,7 +838,7 @@ double Player::evalState(Player * opponent){
     }
     if (opponent->getactiveRitual().size() != 0 && 
         opponent->getactiveRitual()[0]->getcardName() == "Dark Ritual") oppo_magic_available+= 1;
-    if (oppo_magic_available >= 2){
+    if (oppo_magic_available >= opponent->getheropowercost() && getheropowerFlag()){
         if (opponent->gethero() == "Mage" || opponent->gethero() == "Druid"){
             oppoTotalAttack += 1;
         } else if (opponent->gethero() == "Hunter") {
@@ -1001,6 +1003,16 @@ double Player::evalState(Player * opponent){
         myTotalAttack += max_attack + increase_in_action * max_attack_val;
     }
 
+    if (magic_available >= getheropowercost() && getheropowerFlag()){
+        if (gethero() == "Mage" || gethero() == "Druid"){
+            myTotalAttack += 1;
+            magic_available -= getheropowercost();
+        } else if (gethero() == "Hunter") {
+            myTotalAttack += 2;
+            magic_available -= getheropowercost();
+        }
+    }
+
     if (myTotalAttack >= opponent->getlife()) {
         survive_mark += 50;
     } else if (myTotalAttack >= opponent->getlife() - DANGER_LIFE) {
@@ -1048,7 +1060,9 @@ void Player::possiOperation(Player * opponent){
             card == "Bone Golem" || card == "Fire Elemental" || card == "Potion Seller" ||
             card == "Earth Elemental" || card == "Master Summoner"){
             //minion, place the minion into minion slot
-            op.emplace_back(cmd);
+            if(minionslot.size() < maxMinionNum){
+                op.emplace_back(cmd);
+            }
         } else if(card == "Dark Ritual" || card == "Aura of Power" || card == "Standstill"){
             //ritual, place the ritual into active ritual slot
             op.emplace_back(cmd);
@@ -1083,15 +1097,19 @@ void Player::possiOperation(Player * opponent){
                 cmd = "play " + std::to_string(i + 1) + " " + std::to_string(opponent->getplayerNum()) + " r";
                 op.emplace_back(cmd);
             }
-        } else if(card == "Unsummon"){ //Return target minion to its owner's hand **check hand full???
+        } else if(card == "Unsummon"){ //Return target minion to its owner's hand
             //play on minion: play i p t
-            for(int j = 0; j < minionslot.size(); j++){
+            if(hand.size() < maxHandNum){
+                for(int j = 0; j < minionslot.size(); j++){
                 cmd = "play " + std::to_string(i + 1) + " " + std::to_string(playerNum) + " " + std::to_string(j + 1);
                 op.emplace_back(cmd);
+                }
             }
-            for(int j = 0; j < opponent->getminionslot().size(); j++){
+            if(opponen†->gethand().size() < maxHandNum){
+                for(int j = 0; j < opponent->getminionslot().size(); j++){
                 cmd = "play " + std::to_string(i + 1) + " " + std::to_string(opponent->getplayerNum()) + " " + std::to_string(j + 1);
                 op.emplace_back(cmd);
+                }
             }
         } else if(card == "Recharge"){ //Your ritual gains 3 charges
             //play on ritual: play i p r
@@ -1167,7 +1185,7 @@ void Player::possiOperation(Player * opponent){
     }
 
     //deal with heropower (use power command), cost magic
-    if(heropowerFlag){
+    if(getheropowerFlag()){
         const std::string heroname = hero;
         std::string cmd = "usepower";
 
