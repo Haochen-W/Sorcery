@@ -51,3 +51,7 @@ $ ./sorcery arg1 arg2 ...
 * hand -- Describe all cards in your hand.
 * board -- Describe all cards on the board.
 * usepower \[target-player] \[target-card] -- use hero power, optionally targeting target-player or target-card owned by target-player.
+
+## License
+
+This project is licensed under the GPL License - see the [LICENSE](LICENSE) file for details.
