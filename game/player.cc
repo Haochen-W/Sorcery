@@ -1105,7 +1105,7 @@ void Player::possiOperation(Player * opponent){
                 op.emplace_back(cmd);
                 }
             }
-            if(opponen†->gethand().size() < maxHandNum){
+            if(opponent->gethand().size() < maxHandNum){
                 for(int j = 0; j < opponent->getminionslot().size(); j++){
                 cmd = "play " + std::to_string(i + 1) + " " + std::to_string(opponent->getplayerNum()) + " " + std::to_string(j + 1);
                 op.emplace_back(cmd);
@@ -1120,15 +1120,19 @@ void Player::possiOperation(Player * opponent){
         } else if(card == "Disenchant"){ //Destroy the top enchantment on target minion
             //play on minion: play i p t
             for(int j = 0; j < minionslot.size(); j++){
-                cmd = "play " + std::to_string(i + 1) + " " + std::to_string(playerNum) + " " + std::to_string(j + 1);
-                op.emplace_back(cmd);
+                if(!minionslot[j]->getEnchantmentadded().empty()){
+                    cmd = "play " + std::to_string(i + 1) + " " + std::to_string(playerNum) + " " + std::to_string(j + 1);
+                    op.emplace_back(cmd);
+                }
             }
             for(int j = 0; j < opponent->getminionslot().size(); j++){
-                cmd = "play " + std::to_string(i + 1) + " " + std::to_string(opponent->getplayerNum()) + " " + std::to_string(j + 1);
-                op.emplace_back(cmd);
+                if(!opponent->getminionslot()[j]->getEnchantmentadded().empty()){
+                    cmd = "play " + std::to_string(i + 1) + " " + std::to_string(opponent->getplayerNum()) + " " + std::to_string(j + 1);
+                    op.emplace_back(cmd);
+                }
             }
         } else if(card == "Raise Dead"){ //Resurrect the top minion in your graveyard and set its defence to 1
-            if(!graveyard.empty()){
+            if(!graveyard.empty() && hand.size() < maxHandNum){
                 op.emplace_back(cmd);
             }
         } else if(card == "Blizzard" || card == "Coin"){ //Deal 2 damage to all minions
@@ -1176,10 +1180,14 @@ void Player::possiOperation(Player * opponent){
             }
         } else if(card == "Apprentice Summoner"){ //Summon a 1/1 air elemental
             //use on player: use i
-            op.emplace_back(cmd);
+            if(minionslot.size() < maxMinionNum){
+                op.emplace_back(cmd);
+            }
         } else if(card == "Master Summoner") {//Summon up to three 1/1 air elementals
             //use on player: use i
-            op.emplace_back(cmd);
+            if(minionslot.size() < maxMinionNum){
+                op.emplace_back(cmd);
+            }
         }
         
     }
@@ -1207,14 +1215,23 @@ void Player::possiOperation(Player * opponent){
                     cmd = "usepower " + std::to_string(opponent->getplayerNum()) + " " + std::to_string(j + 1);
                     op.emplace_back(cmd);
                 }
-            } else if(heroname == "Hunter" || heroname == "Paladin" || heroname == "Warrior" || heroname == "Warlock"){
+            } else if(heroname == "Hunter" || heroname == "Warrior"){
                 //usepower
                 op.emplace_back(cmd);
+            } else if(heroname == "Paladin"){
+                //usepower
+                if(hand.size() < maxHandNum){
+                    op.emplace_back(cmd);
+                }
+            } else if(heroname == "Warlock"){
+                //usepower
+                if(!deck.empty()){
+                    op.emplace_back(cmd);
+                }
             } else if(heroname == "Druid"){ //+1 attack this turn and add 1 health to your hero
                 //usepower p
                 cmd = "usepower " + std::to_string(opponent->getplayerNum());
                 op.emplace_back(cmd);
-                
                 //usepower p t
                 for(int j = 0; j < opponent->getminionslot().size(); j++){
                     cmd = "usepower " + std::to_string(opponent->getplayerNum()) + " " + std::to_string(j + 1);
